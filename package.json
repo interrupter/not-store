@@ -1,0 +1,24 @@
+{
+  "name": "not-store",
+  "version": "0.0.1",
+  "description": "file storage interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "not",
+    "store",
+    "file",
+    "unified"
+  ],
+  "author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
+  "license": "ISC",
+	"dependencies": {
+		"chance": "*",
+		"mkdirp": "*",
+		"is-stream": "*",
+		"streamifier": "*",
+		"sharp": "*"
+	}
+}

@@ -1,5 +1,6 @@
 const OPT_SUB_DIR_NAME_LENGTH = 6,
 	chance = require('chance').Chance();
+	
 var interfaces = {},
 	mongooseModel = null;
 

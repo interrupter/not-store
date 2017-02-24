@@ -1,8 +1,9 @@
 {
   "name": "not-store",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "description": "file storage interface",
   "main": "index.js",
+	"repository": "https://github.com/interrupter/not-store",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +20,7 @@
 		"mkdirp": "*",
 		"is-stream": "*",
 		"streamifier": "*",
-		"sharp": "*"
+		"sharp": "*",
+		"valid-url":"*"
 	}
 }

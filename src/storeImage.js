@@ -8,7 +8,10 @@ const fs = require('fs'),
 	path = require('path'),
 	mkdirp = require('mkdirp'),
 	store = require('./store'),
+	http = require('http'),
+	https = require('https'),
 	isStream = require('is-stream'),
+	isUrl = require('valid-url'),
 	streamifier = require('streamifier'),
 	sharp = require('sharp');
 
@@ -72,13 +75,29 @@ class notStoreImage {
 		}
 	}
 
-	convertToReadableStream(source) {
+	convertToReadableStream(source, callback) {
 		if (typeof source === 'string') {
 			if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
 				//guess this is file path, but lets check it on existence
-				let stat = fs.lstatSync(source);
-				if (stat.isFile()) {
-					return fs.createReadStream(source);
+				if (isUrl.isUri(source)) {
+					console.log('uri');
+					if(isUrl.isHttpsUri(source)){
+						console.log('https');
+						https.get(source, callback);
+					}else{
+						if(isUrl.isHttpUri(source)){
+							console.log('http');
+							http.get(source, callback);
+						}
+					}
+				} else {
+					let stat = fs.lstatSync(source);
+					if (stat.isFile()) {
+						console.log('file');
+						callback(fs.createReadStream(source));
+					}else{
+						callback(null);
+					}
 				}
 			} else {
 				//file as string
@@ -95,33 +114,38 @@ class notStoreImage {
 	}
 
 	stashFile(file, next){
+		console.log('stash');
 		let name = store.createFileName(),
 			fullName = path.join(this.options.tmp, name),
-			streamIn = this.convertToReadableStream(file),
 			dirName = path.dirname(fullName);
-		mkdirp.sync(dirName);
-		let streamOut = fs.createWriteStream(fullName)
-		streamOut.on('finish', function(err) {
-			if (err) {
-				//return error
-				if (next) {
-					next(err, null);
-				}
-			} else {
-				//return image name in store
-				let img = sharp(fullName).metadata(function(err, metadata){
+
+		this.convertToReadableStream(file, function(streamIn){
+			console.log(file);
+			mkdirp.sync(dirName);
+			console.log(dirName);
+			let streamOut = fs.createWriteStream(fullName)
+			streamOut.on('finish', function(err) {
+				if (err) {
+					//return error
 					if (next) {
-						if (err){
-							next(err);
-						}else{
-							metadata.fullName = fullName;
-							next(err, metadata);
-						}
+						next(err, null);
 					}
-				});
-			}
+				} else {
+					//return image name in store
+					let img = sharp(fullName).metadata(function(err, metadata) {
+						if (next) {
+							if (err) {
+								next(err);
+							} else {
+								metadata.fullName = fullName;
+								next(err, metadata);
+							}
+						}
+					});
+				}
+			});
+			streamIn.pipe(streamOut);
 		});
-		streamIn.pipe(streamOut);
 	}
 
 	/* input file as base64 string */

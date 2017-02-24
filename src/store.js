@@ -1,6 +1,6 @@
 const OPT_SUB_DIR_NAME_LENGTH = 6,
 	chance = require('chance').Chance();
-	
+
 var interfaces = {},
 	mongooseModel = null;
 
@@ -47,7 +47,7 @@ var createStandartCall = function(methodName) {
 		if (interfaceExists(interfaceName) && interfaceMethodExists(interfaceName, methodName)) {
 			//no need to pass interfaceName to interface instance
 			let [trash, ...useful] = arguments;
-			getInterface(interfaceName)[methodName](...useful);
+			return getInterface(interfaceName)[methodName](...useful);
 		}
 	};
 };

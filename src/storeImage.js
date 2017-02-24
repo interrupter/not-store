@@ -123,22 +123,22 @@ class notStoreImage {
 				dirName = path.dirname(fullName);
 			this.convertToReadableStream(file)
 				.then((streamIn) => {
-					console.log(file);
-					mkdirp.sync(dirName);
+					console.log('stream in successfull');
 					console.log(dirName);
+					mkdirp.sync(dirName);
 					let streamOut = fs.createWriteStream(fullName)
 					streamOut.on('finish', function(err) {
 						if (err) {
 							//return error
-							reject(err, null);
+							reject(err);
 						} else {
 							//return image name in store
 							let img = sharp(fullName).metadata(function(err, metadata) {
 								if (err) {
-									reject(err, null);
+									reject(err);
 								} else {
 									metadata.fullName = fullName;
-									resolve(err, metadata);
+									resolve(metadata);
 								}
 							});
 						}
@@ -156,7 +156,7 @@ class notStoreImage {
 	add(file) {
 		return new Promise((resolve, reject) => {
 			this.stashFile(file)
-				.then((err, metadata) => {
+				.then((metadata) => {
 					let name = store.createFileName(),
 						pathName = store.getPathFromHash(name),
 						fullName = this.getFullName(name, null, metadata.format),
@@ -164,11 +164,11 @@ class notStoreImage {
 					mkdirp.sync(dirName);
 					fs.rename(metadata.fullName, fullName, (err) => {
 						if (err) {
-							resolve(err, null);
+							reject(err);
 						} else {
 							delete metadata.fullName;
 							metadata.name = name;
-							resolve(null, metadata);
+							resolve(metadata);
 							this.makeThumbs(metadata.name);
 						}
 					})
@@ -209,7 +209,7 @@ class notStoreImage {
 
 	update(name, file) {
 		return new Promise((resolve, reject) => {
-			this.stashFile(file).then((err, metadata) => {
+			this.stashFile(file).then((metadata) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -219,11 +219,11 @@ class notStoreImage {
 						mkdirp.sync(dirName);
 						fs.rename(metadata.fullName, fullName, (err) => {
 							if (err) {
-								reject(err, null);
+								reject(err);
 							} else {
 								delete metadata.fullName;
 								metadata.name = name;
-								resolve(null, metadata);
+								resolve(metadata);
 								this.makeThumbs(metadata.name);
 							}
 						});

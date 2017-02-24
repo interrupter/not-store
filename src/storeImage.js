@@ -50,9 +50,14 @@ class notStoreImage {
 		let stat, fullname;
 		for (let i of OPT_DEFAULT_EXTENSIONS) {
 			fullname = this.getFullName(name, thumb, i);
-			stat = fs.lstatSync(fullname);
-			if (stat.isFile()) {
-				return fullname;
+			try{
+				stat = fs.lstatSync(fullname);
+				if (stat && stat.isFile()) {
+					return fullname;
+				}
+			}
+			catch(e){
+				console.error(e);
 			}
 		}
 		return false;

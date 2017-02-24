@@ -43,15 +43,15 @@ class notStoreImage {
 
 	getFullName(name, thumb, ext) {
 		let pathName = store.getPathFromHash(name);
-		return path.join(this.options.root, pathName) + (thumb ? ('.' + thumb) : '')+'.'+(ext?ext:OPT_DEFAULT_EXTENSION);
+		return path.join(this.options.root, pathName) + (thumb ? ('.' + thumb) : '') + '.' + (ext ? ext : OPT_DEFAULT_EXTENSION);
 	}
 
-	resolveFileFullName(name, thumb){
+	resolveFileFullName(name, thumb) {
 		let stat, fullname;
-		for(let i of OPT_DEFAULT_EXTENSIONS){
+		for (let i of OPT_DEFAULT_EXTENSIONS) {
 			fullname = this.getFullName(name, thumb, i);
 			stat = fs.lstatSync(fullname);
-			if (stat.isFile()){
+			if (stat.isFile()) {
 				return fullname;
 			}
 		}
@@ -68,110 +68,115 @@ class notStoreImage {
 
 	makeThumb(name, thumb, profile) {
 		let fullName = this.resolveFileFullName(name);
-		if (fullName){
+		if (fullName) {
 			let image = sharp(fullName),
 				thumbFullName = this.getFullName(name, thumb, OPT_DEFAULT_THUMB_EXTENSION);
 			image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
 		}
 	}
 
-	convertToReadableStream(source, callback) {
-		if (typeof source === 'string') {
-			if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
-				//guess this is file path, but lets check it on existence
-				if (isUrl.isUri(source)) {
-					console.log('uri');
-					if(isUrl.isHttpsUri(source)){
-						console.log('https');
-						https.get(source, callback);
-					}else{
-						if(isUrl.isHttpUri(source)){
-							console.log('http');
-							http.get(source, callback);
-						}
-					}
-				} else {
-					let stat = fs.lstatSync(source);
-					if (stat.isFile()) {
-						console.log('file');
-						callback(fs.createReadStream(source));
-					}else{
-						callback(null);
-					}
-				}
-			} else {
-				//file as string
-				return streamifier.createReadStream(source);
-			}
-		} else if (source instanceof Buffer) {
-			//file as buffer
-			return streamifier.createReadStream(source);
-		} else if (isStream(source)) {
-			return source;
-		} else {
-			return null;
-		}
-	}
-
-	stashFile(file, next){
-		console.log('stash');
-		let name = store.createFileName(),
-			fullName = path.join(this.options.tmp, name),
-			dirName = path.dirname(fullName);
-
-		this.convertToReadableStream(file, function(streamIn){
-			console.log(file);
-			mkdirp.sync(dirName);
-			console.log(dirName);
-			let streamOut = fs.createWriteStream(fullName)
-			streamOut.on('finish', function(err) {
-				if (err) {
-					//return error
-					if (next) {
-						next(err, null);
-					}
-				} else {
-					//return image name in store
-					let img = sharp(fullName).metadata(function(err, metadata) {
-						if (next) {
-							if (err) {
-								next(err);
-							} else {
-								metadata.fullName = fullName;
-								next(err, metadata);
+	convertToReadableStream(source) {
+		return new Promise(function(resolve, reject) {
+			if (typeof source === 'string') {
+				if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
+					//guess this is file path, but lets check it on existence
+					if (isUrl.isUri(source)) {
+						console.log('uri');
+						if (isUrl.isHttpsUri(source)) {
+							console.log('https');
+							https.get(source, resolve);
+						} else {
+							if (isUrl.isHttpUri(source)) {
+								console.log('http');
+								http.get(source, resolve);
 							}
 						}
-					});
+					} else {
+						let stat = fs.lstatSync(source);
+						if (stat.isFile()) {
+							console.log('file');
+							resolve(fs.createReadStream(source));
+						} else {
+							reject('string but not file or URL');
+						}
+					}
+				} else {
+					//file as string
+					resolve(streamifier.createReadStream(source));
 				}
-			});
-			streamIn.pipe(streamOut);
+			} else if (source instanceof Buffer) {
+				//file as buffer
+				resolve(streamifier.createReadStream(source));
+			} else if (isStream(source)) {
+				resolve(source);
+			} else {
+				reject('not streamable');
+			}
+		});
+	}
+
+	stashFile(file) {
+		console.log('stash');
+		return new Promise((resolve, reject) => {
+			let name = store.createFileName(),
+				fullName = path.join(this.options.tmp, name),
+				dirName = path.dirname(fullName);
+			this.convertToReadableStream(file)
+				.then((streamIn) => {
+					console.log(file);
+					mkdirp.sync(dirName);
+					console.log(dirName);
+					let streamOut = fs.createWriteStream(fullName)
+					streamOut.on('finish', function(err) {
+						if (err) {
+							//return error
+							reject(err, null);
+						} else {
+							//return image name in store
+							let img = sharp(fullName).metadata(function(err, metadata) {
+								if (err) {
+									reject(err, null);
+								} else {
+									metadata.fullName = fullName;
+									resolve(err, metadata);
+								}
+							});
+						}
+					});
+					streamIn.pipe(streamOut);
+				})
+				.catch((e) => {
+					reject(e);
+				});
 		});
 	}
 
 	/* input file as base64 string */
 	/* input file[string, path, buffer, stream] */
-	add(file, next) {
-		this.stashFile(file, function(err, metadata){
-			if (err){
-				next(err);
-			}else{
-				let name = store.createFileName(),
-					pathName = store.getPathFromHash(name),
-					fullName = this.getFullName(name, null, metadata.format),
-					dirName = path.dirname(fullName);
-				mkdirp.sync(dirName);
-				fs.rename(metadata.fullName, fullName, function(err){
-					if (err) {
-						next(err, null);
-					}else{
-						delete metadata.fullName;
-						metadata.name = name;
-						next(null, metadata);
-						this.makeThumbs(metadata.name);
-					}
-				}.bind(this));
-			}
-		}.bind(this));
+	add(file) {
+		return new Promise((resolve, reject) => {
+			this.stashFile(file)
+				.then((err, metadata) => {
+					let name = store.createFileName(),
+						pathName = store.getPathFromHash(name),
+						fullName = this.getFullName(name, null, metadata.format),
+						dirName = path.dirname(fullName);
+					mkdirp.sync(dirName);
+					fs.rename(metadata.fullName, fullName, (err) => {
+						if (err) {
+							resolve(err, null);
+						} else {
+							delete metadata.fullName;
+							metadata.name = name;
+							resolve(null, metadata);
+							this.makeThumbs(metadata.name);
+						}
+					})
+				})
+				.catch((e) => {
+					reject(e);
+				});
+		});
 	}
 
 	/*
@@ -202,40 +207,48 @@ class notStoreImage {
 
 	}
 
-	update(name, file, next) {
-		this.stashFile(file, function(err, metadata){
-			if (err){
-				next(err);
-			}else{
-				let pathName = store.getPathFromHash(name),
-					fullName = this.getFullName(name, null, metadata.format),
-					dirName = path.dirname(fullName);
-				mkdirp.sync(dirName);
-				fs.rename(metadata.fullName, fullName, function(err){
+	update(name, file) {
+		return new Promise((resolve, reject) => {
+			this.stashFile(file).then((err, metadata) => {
 					if (err) {
-						next(err, null);
-					}else{
-						delete metadata.fullName;
-						metadata.name = name;
-						next(null, metadata);
-						this.makeThumbs(metadata.name);
+						reject(err);
+					} else {
+						let pathName = store.getPathFromHash(name),
+							fullName = this.getFullName(name, null, metadata.format),
+							dirName = path.dirname(fullName);
+						mkdirp.sync(dirName);
+						fs.rename(metadata.fullName, fullName, (err) => {
+							if (err) {
+								reject(err, null);
+							} else {
+								delete metadata.fullName;
+								metadata.name = name;
+								resolve(null, metadata);
+								this.makeThumbs(metadata.name);
+							}
+						});
 					}
-				}.bind(this));
+				})
+				.catch(e => {
+					reject(e)
+				});
+		});
+	}
+
+	delete(name) {
+		return new Promise((resolve, reject)=>{
+			let fullName = this.resolveFileFullName(name);
+			if (fullName) {
+				fs.unlink(fullName, (e)=>{ e?reject(e):resolve(name)});
+			} else {
+				reject();
 			}
-		}.bind(this));
+			this.deleteThumbs(name);
+		});
+
 	}
 
-	delete(name, callback) {
-		let fullName = this.resolveFileFullName(name);
-		if (fullName){
-			fs.unlink(fullName, callback);
-		}else{
-			callback();
-		}
-		this.deleteThumbs(name);
-	}
-
-	deleteThumbs(name){
+	deleteThumbs(name) {
 		let thumbFullName;
 		if (this.options.thumbs) {
 			for (let tName in this.options.thumbs) {

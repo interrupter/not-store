@@ -1,6 +1,7 @@
 const OPT_DEFAULT_EXTENSION = 'png',
 	OPT_DEFAULT_THUMB_EXTENSION = 'jpeg',
 	OPT_DEFAULT_THUMB_QUALITY = 0.8,
+	OPT_ORIGINAL_THUMB = 'original',
 	OPT_MAX_INPUT_PATH_LENGTH = 256,
 	OPT_DEFAULT_EXTENSIONS = ['jpeg', 'png', 'webp', 'gif', 'svg', 'tiff'];
 
@@ -202,7 +203,7 @@ class notStoreImage {
 			fullName = this.resolveFileFullName(arguments[0])
 			streamOut = arguments[1];
 		} else if (arguments.length == 3) {
-			fullName = this.resolveFileFullName(arguments[0], arguments[1])
+			fullName = this.resolveFileFullName(arguments[0], arguments[1] === OPT_ORIGINAL_THUMB ? undefined : arguments[1])
 			streamOut = arguments[2];
 		}
 		if (fullName) {

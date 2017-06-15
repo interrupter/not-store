@@ -219,6 +219,24 @@ class notStoreImage {
 		}
 	}
 
+	/*
+	name, streamOut(express.io/response)
+	name, thumb, streamOut(express.io/response)
+	*/
+	download() {
+		let fullName, streamOut;
+		if (arguments.length == 2) {
+			fullName = this.resolveFileFullName(arguments[0])
+			streamOut = arguments[1];
+		} else if (arguments.length == 3) {
+			fullName = this.resolveFileFullName(arguments[0], arguments[1])
+			streamOut = arguments[2];
+		}
+		if (fullName) {
+			streamOut.sendFile(fullName);
+		}
+	}
+
 	list() {
 
 	}

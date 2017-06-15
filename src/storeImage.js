@@ -50,17 +50,25 @@ class notStoreImage {
 		let stat, fullname;
 		for (let i of OPT_DEFAULT_EXTENSIONS) {
 			fullname = this.getFullName(name, thumb, i);
-			try{
+			try {
 				stat = fs.lstatSync(fullname);
 				if (stat && stat.isFile()) {
 					return fullname;
 				}
-			}
-			catch(e){
+			} catch (e) {
 				//console.error(e);
 			}
 		}
 		return false;
+	}
+
+	resolveFileExtension(name) {
+		for (let i of OPT_DEFAULT_EXTENSIONS) {
+			if (name.indexOf(i) === name.length - i.length) {
+				return name;
+			}
+		}
+		return '';
 	}
 
 	makeThumbs(name) {
@@ -81,7 +89,7 @@ class notStoreImage {
 	}
 
 	convertToReadableStream(source) {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			if (typeof source === 'string') {
 				if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
 					//guess this is file path, but lets check it on existence
@@ -132,13 +140,13 @@ class notStoreImage {
 					console.log(dirName);
 					mkdirp.sync(dirName);
 					let streamOut = fs.createWriteStream(fullName)
-					streamOut.on('finish', function(err) {
+					streamOut.on('finish', function (err) {
 						if (err) {
 							//return error
 							reject(err);
 						} else {
 							//return image name in store
-							let img = sharp(fullName).metadata(function(err, metadata) {
+							let img = sharp(fullName).metadata(function (err, metadata) {
 								if (err) {
 									reject(err);
 								} else {
@@ -185,7 +193,7 @@ class notStoreImage {
 	}
 
 	/*
-	name, streamOut
+	name, streamOut(response)
 	name, thumb, streamOut
 	*/
 	get() {
@@ -198,10 +206,13 @@ class notStoreImage {
 			streamOut = arguments[2];
 		}
 		if (fullName) {
-			fs.lstat(fullName, function(err, stat) {
+			fs.lstat(fullName, (err, stat) => {
 				if (err) {
 					streamOut.end();
 				} else {
+					if (streamOut.type) {
+						streamOut.type(this.resolveFileExtension(fullName));
+					}
 					fs.createReadStream(fullName).pipe(streamOut);
 				}
 			});
@@ -241,10 +252,12 @@ class notStoreImage {
 	}
 
 	delete(name) {
-		return new Promise((resolve, reject)=>{
+		return new Promise((resolve, reject) => {
 			let fullName = this.resolveFileFullName(name);
 			if (fullName) {
-				fs.unlink(fullName, (e)=>{ e?reject(e):resolve(name)});
+				fs.unlink(fullName, (e) => {
+					e ? reject(e) : resolve(name)
+				});
 			} else {
 				reject();
 			}

@@ -1,18 +1,19 @@
 const OPT_SUB_DIR_NAME_LENGTH = 6,
-	chance = require('chance').Chance();
+	OPT_TOKEN_LENGTH = 48,
+	crypto = require('crypto');
 
 var interfaces = {},
 	mongooseModel = null;
 
-var interfaceExists = function(interfaceName) {
+var interfaceExists = function (interfaceName) {
 	return interfaces.hasOwnProperty(interfaceName);
 };
 
-var getInterface = function(interfaceName) {
+var getInterface = function (interfaceName) {
 	return interfaces[interfaceName];
 };
 
-var removeInterface = function(interfaceName) {
+var removeInterface = function (interfaceName) {
 	delete interfaces[interfaceName];
 };
 
@@ -38,12 +39,12 @@ const getAllMethods = (obj) => {
 	return props;
 };
 
-var interfaceMethodExists = function(interfaceName, methodName) {
+var interfaceMethodExists = function (interfaceName, methodName) {
 	return getAllMethods(interfaces[interfaceName]).indexOf(methodName) > -1;
 };
 
-var createStandartCall = function(methodName) {
-	return function(interfaceName, fileData /*, some other not standart arguments*/ ) {
+var createStandartCall = function (methodName) {
+	return function (interfaceName, fileData /*, some other not standart arguments*/ ) {
 		if (interfaceExists(interfaceName) && interfaceMethodExists(interfaceName, methodName)) {
 			//no need to pass interfaceName to interface instance
 			let [trash, ...useful] = arguments;
@@ -53,7 +54,7 @@ var createStandartCall = function(methodName) {
 };
 
 
-var extendFromInterface = function(storeInterface) {
+var extendFromInterface = function (storeInterface) {
 	for (let i of getAllMethods(storeInterface)) {
 		if (!exports.hasOwnProperty(i)) {
 			console.log('add new methods for interface forwarding', i);
@@ -62,7 +63,7 @@ var extendFromInterface = function(storeInterface) {
 	}
 };
 
-exports.addInterface = function(name, storeInterface) {
+exports.addInterface = function (name, storeInterface) {
 	if (interfaceExists(name)) {
 		return false;
 	} else {
@@ -72,7 +73,7 @@ exports.addInterface = function(name, storeInterface) {
 	}
 };
 
-exports.getInterface = function(name) {
+exports.getInterface = function (name) {
 	if (interfaceExists(name)) {
 		return getInterface(name);
 	} else {
@@ -80,14 +81,14 @@ exports.getInterface = function(name) {
 	}
 };
 
-exports.removeInterface = function(name, storeInterface) {
+exports.removeInterface = function (name, storeInterface) {
 	if (interfaceExists(name)) {
 		removeInterface(name);
 	}
 	return true;
 };
 
-exports.getPathFromHash = function(hash) {
+exports.getPathFromHash = function (hash) {
 	var len = OPT_SUB_DIR_NAME_LENGTH;
 	var result = [];
 	while (len < hash.length) {
@@ -98,6 +99,8 @@ exports.getPathFromHash = function(hash) {
 	return result.join('/');
 };
 
-exports.createFileName = function() {
-	return chance.hash();
+exports.createFileName = function () {
+	let t = crypto.randomBytes(OPT_TOKEN_LENGTH),
+		token = t.toString('hex');
+	return token;
 };

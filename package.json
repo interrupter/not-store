@@ -1,6 +1,6 @@
 {
   "name": "not-store",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "description": "file storage interface",
   "main": "index.js",
 	"repository": "https://github.com/interrupter/not-store",
@@ -16,7 +16,6 @@
   "author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
   "license": "ISC",
 	"dependencies": {
-		"chance": "*",
 		"mkdirp": "*",
 		"is-stream": "*",
 		"streamifier": "*",

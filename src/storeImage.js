@@ -25,6 +25,7 @@ class notStoreImage {
 	options = {
 		root - строка - полный путь к директории где находится хранилице,
 		tmp - строка - полный путь к директории где находится временное хранилице,
+		extension - строка - тип файла
 		thumbs:{
 			small: {
 				width: 60,
@@ -84,7 +85,7 @@ class notStoreImage {
 		let fullName = this.resolveFileFullName(name);
 		if (fullName) {
 			let image = sharp(fullName),
-				thumbFullName = this.getFullName(name, thumb, OPT_DEFAULT_THUMB_EXTENSION);
+				thumbFullName = this.getFullName(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
 			image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
 		}
 	}

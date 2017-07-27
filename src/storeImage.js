@@ -218,6 +218,8 @@ class notStoreImage {
 					fs.createReadStream(fullName).pipe(streamOut);
 				}
 			});
+		} else {
+			streamOut.close();
 		}
 	}
 

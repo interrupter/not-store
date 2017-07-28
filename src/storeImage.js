@@ -219,7 +219,7 @@ class notStoreImage {
 				}
 			});
 		} else {
-			streamOut.close();
+			streamOut.end();
 		}
 	}
 

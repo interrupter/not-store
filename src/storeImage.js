@@ -96,20 +96,16 @@ class notStoreImage {
 				if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
 					//guess this is file path, but lets check it on existence
 					if (isUrl.isUri(source)) {
-						console.log('uri');
 						if (isUrl.isHttpsUri(source)) {
-							console.log('https');
 							https.get(source, resolve);
 						} else {
 							if (isUrl.isHttpUri(source)) {
-								console.log('http');
 								http.get(source, resolve);
 							}
 						}
 					} else {
 						let stat = fs.lstatSync(source);
 						if (stat.isFile()) {
-							console.log('file');
 							resolve(fs.createReadStream(source));
 						} else {
 							reject('string but not file or URL');
@@ -131,7 +127,6 @@ class notStoreImage {
 	}
 
 	stashFile(file) {
-		console.log('stash');
 		return new Promise((resolve, reject) => {
 			let name = store.createFileName(),
 				fullName = path.join(this.options.tmp, name),
@@ -238,6 +233,8 @@ class notStoreImage {
 		}
 		if (fullName) {
 			streamOut.sendFile(fullName);
+		} else {
+			streamOut.end();
 		}
 	}
 

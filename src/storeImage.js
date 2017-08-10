@@ -48,6 +48,11 @@ class notStoreImage {
 		return path.join(this.options.root, pathName) + (thumb ? ('.' + thumb) : '') + '.' + (ext ? ext : OPT_DEFAULT_EXTENSION);
 	}
 
+	getFullNameFromRoot(name, thumb, ext) {
+		let pathName = store.getPathFromHash(name);
+		return pathName + ((thumb ? ('.' + thumb) : '') + '.' + (ext ? ext : OPT_DEFAULT_EXTENSION));
+	}
+
 	resolveFileFullName(name, thumb) {
 		let stat, fullname;
 		for (let i of OPT_DEFAULT_EXTENSIONS) {
@@ -71,6 +76,16 @@ class notStoreImage {
 			}
 		}
 		return '';
+	}
+
+	getThumbsNames(name) {
+		let names = {};
+		if (this.options.thumbs) {
+			for (let thumb in this.options.thumbs) {
+				names[thumb] = this.getFullNameFromRoot(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
+			}
+		}
+		return names;
 	}
 
 	makeThumbs(name) {
@@ -133,8 +148,6 @@ class notStoreImage {
 				dirName = path.dirname(fullName);
 			this.convertToReadableStream(file)
 				.then((streamIn) => {
-					console.log('stream in successfull');
-					console.log(dirName);
 					mkdirp.sync(dirName);
 					let streamOut = fs.createWriteStream(fullName)
 					streamOut.on('finish', function (err) {
@@ -170,14 +183,17 @@ class notStoreImage {
 					let name = store.createFileName(),
 						pathName = store.getPathFromHash(name),
 						fullName = this.getFullName(name, null, metadata.format),
+						fullNameFromRoot = this.getFullNameFromRoot(name, null, metadata.format),
 						dirName = path.dirname(fullName);
 					mkdirp.sync(dirName);
+					metadata.originalFile = fullNameFromRoot;
 					fs.rename(metadata.fullName, fullName, (err) => {
 						if (err) {
 							reject(err);
 						} else {
 							delete metadata.fullName;
 							metadata.name = name;
+							metadata.thumb = this.getThumbsNames(name);
 							resolve(metadata);
 							this.makeThumbs(metadata.name);
 						}

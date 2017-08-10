@@ -3,7 +3,7 @@ const OPT_DEFAULT_EXTENSION = 'png',
 	OPT_DEFAULT_THUMB_QUALITY = 0.8,
 	OPT_ORIGINAL_THUMB = 'original',
 	OPT_MAX_INPUT_PATH_LENGTH = 256,
-	OPT_DEFAULT_EXTENSIONS = ['jpeg', 'png', 'webp', 'gif', 'svg', 'tiff'];
+	OPT_DEFAULT_EXTENSIONS = ['jpeg', 'png', 'webp', 'gif', 'svg', 'tiff', 'tif'];
 
 const fs = require('fs'),
 	path = require('path'),
@@ -24,6 +24,7 @@ class notStoreImage {
 	/*
 	options = {
 		root - строка - полный путь к директории где находится хранилице,
+		uriRoot - строка - префикс пути к для доступа к файлу на прямую (для реверс прокси),
 		tmp - строка - полный путь к директории где находится временное хранилице,
 		extension - строка - тип файла
 		thumbs:{
@@ -234,6 +235,26 @@ class notStoreImage {
 		} else {
 			streamOut.end();
 		}
+	}
+
+	/*
+	meta
+	*/
+	getURIs(meta) {
+		let paths = {
+			original: this.getURI(meta.path.original),
+			thumb: {}
+		};
+		if (meta.path.thumb) {
+			for (let thumb in meta.path.thumb) {
+				paths.thumb[thumb] = this.getURI(meta.path.thumb[thumb]);
+			}
+		}
+		return paths;
+	}
+
+	getURI(path) {
+		return path.join(this.options.uriRoot || '/', path);
 	}
 
 	/*

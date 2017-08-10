@@ -253,8 +253,8 @@ class notStoreImage {
 		return paths;
 	}
 
-	getURI(path) {
-		return path.join(this.options.uriRoot || '/', path);
+	getURI(p) {
+		return path.join(this.options.uriRoot || '/', p);
 	}
 
 	/*

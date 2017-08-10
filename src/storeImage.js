@@ -186,14 +186,16 @@ class notStoreImage {
 						fullNameFromRoot = this.getFullNameFromRoot(name, null, metadata.format),
 						dirName = path.dirname(fullName);
 					mkdirp.sync(dirName);
-					metadata.originalFile = fullNameFromRoot;
+					metadata.path = {
+						original: fullNameFromRoot
+					};
 					fs.rename(metadata.fullName, fullName, (err) => {
 						if (err) {
 							reject(err);
 						} else {
 							delete metadata.fullName;
 							metadata.name = name;
-							metadata.thumb = this.getThumbsNames(name);
+							metadata.path.thumb = this.getThumbsNames(name);
 							resolve(metadata);
 							this.makeThumbs(metadata.name);
 						}

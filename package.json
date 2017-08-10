@@ -1,6 +1,6 @@
 {
   "name": "not-store",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "file storage interface",
   "main": "index.js",
 	"repository": "https://github.com/interrupter/not-store",

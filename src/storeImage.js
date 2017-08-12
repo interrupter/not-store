@@ -333,6 +333,43 @@ class notStoreImage {
 			}
 		}
 	}
+
+	getSize() {
+		return new Promise((resolve, reject) => {
+			this.getFolderSize(this.options.root, (err, size) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(size);
+				}
+			});
+		});
+	}
+
+	getFolderSize(path, cb) {
+		fs.lstat(path, (err, stats) => {
+			if (!err && stats.isDirectory()) {
+				var total = stats.size;
+				fs.readdir(path, (err, list) => {
+					if (err) return cb(err);
+					async.forEach(
+						list,
+						(diritem, callback) => {
+							this.getFolderSize(path.join(path, diritem), (err, size) => {
+								total += size;
+								callback(err);
+							});
+						},
+						(err) => {
+							cb(err, total);
+						}
+					);
+				});
+			} else {
+				cb(err);
+			}
+		});
+	}
 }
 
 module.exports = notStoreImage;

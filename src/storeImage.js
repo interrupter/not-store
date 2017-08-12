@@ -347,16 +347,16 @@ class notStoreImage {
 		});
 	}
 
-	getFolderSize(path, cb) {
-		fs.lstat(path, (err, stats) => {
+	getFolderSize(item, cb) {
+		fs.lstat(item, (err, stats) => {
 			if (!err && stats.isDirectory()) {
 				var total = stats.size;
-				fs.readdir(path, (err, list) => {
+				fs.readdir(item, (err, list) => {
 					if (err) return cb(err);
 					async.forEach(
 						list,
 						(diritem, callback) => {
-							this.getFolderSize(path.join(path, diritem), (err, size) => {
+							this.getFolderSize(path.join(item, diritem), (err, size) => {
 								total += size;
 								callback(err);
 							});

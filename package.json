@@ -1,6 +1,6 @@
 {
   "name": "not-store",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "file storage interface",
   "main": "index.js",
 	"repository": "https://github.com/interrupter/not-store",
@@ -20,6 +20,7 @@
 		"is-stream": "*",
 		"streamifier": "*",
 		"sharp": "*",
+		"async": "*",
 		"valid-url":"*"
 	}
 }

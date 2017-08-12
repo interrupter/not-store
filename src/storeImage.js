@@ -7,6 +7,7 @@ const OPT_DEFAULT_EXTENSION = 'png',
 
 const fs = require('fs'),
 	path = require('path'),
+	async = require('async'),
 	mkdirp = require('mkdirp'),
 	store = require('./store'),
 	http = require('http'),

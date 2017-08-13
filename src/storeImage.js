@@ -65,7 +65,7 @@ class notStoreImage {
 					return fullname;
 				}
 			} catch (e) {
-				//console.error(e);				
+				//console.error(e);
 			}
 		}
 		return false;
@@ -131,6 +131,7 @@ class notStoreImage {
 			try {
 				let image = sharp(fullName),
 					thumbFullName = this.getFullName(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
+				console.info('creating thumb', thumbFullName);
 				image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
 			} catch (e) {
 				console.error(e);

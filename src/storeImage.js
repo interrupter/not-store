@@ -129,9 +129,13 @@ class notStoreImage {
 	makeThumb(name, thumb, profile) {
 		let fullName = this.resolveFileFullName(name);
 		if (fullName) {
-			let image = sharp(fullName),
-				thumbFullName = this.getFullName(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
-			image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
+			try {
+				let image = sharp(fullName),
+					thumbFullName = this.getFullName(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
+				image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
+			} catch (e) {
+				console.error(e);
+			}
 		}
 	}
 
@@ -375,30 +379,6 @@ class notStoreImage {
 		});
 	}
 
-	getFolderSize(item, cb) {
-		fs.lstat(item, (err, stats) => {
-			if (!err && stats.isDirectory()) {
-				var total = stats.size;
-				fs.readdir(item, (err, list) => {
-					if (err) return cb(err);
-					async.forEach(
-						list,
-						(diritem, callback) => {
-							this.getFolderSize(path.join(item, diritem), (err, size) => {
-								total += size;
-								callback(err);
-							});
-						},
-						(err) => {
-							cb(err, total);
-						}
-					);
-				});
-			} else {
-				cb(err);
-			}
-		});
-	}
 }
 
 module.exports = notStoreImage;

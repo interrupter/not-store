@@ -113,7 +113,6 @@ class notStoreImage {
 	}
 
 	fileExists(meta) {
-		let result = true;
 		if (!this.resolveFileFullName(meta.name)) {
 			return false;
 		}
@@ -124,7 +123,7 @@ class notStoreImage {
 				}
 			}
 		}
-		return result;
+		return true;
 	}
 
 	makeThumb(name, thumb, profile) {

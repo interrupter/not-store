@@ -65,8 +65,7 @@ class notStoreImage {
 					return fullname;
 				}
 			} catch (e) {
-				//console.error(e);
-				return false;
+				//console.error(e);				
 			}
 		}
 		return false;

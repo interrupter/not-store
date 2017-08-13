@@ -90,6 +90,18 @@ class notStoreImage {
 		return names;
 	}
 
+	getPaths(meta) {
+		let paths = {
+			original: this.getFullNameFromRoot(meta.name, null, meta.format)
+		};
+		if (this.options.thumbs) {
+			for (let thumb in this.options.thumbs) {
+				paths[thumb] = this.getFullNameFromRoot(meta.name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
+			}
+		}
+		return paths;
+	}
+
 	makeThumbs(name) {
 		if (this.options.thumbs) {
 			for (let tName in this.options.thumbs) {

@@ -66,6 +66,7 @@ class notStoreImage {
 				}
 			} catch (e) {
 				//console.error(e);
+				return false;
 			}
 		}
 		return false;
@@ -109,6 +110,21 @@ class notStoreImage {
 				this.makeThumb(name, tName, this.options.thumbs[tName]);
 			}
 		}
+	}
+
+	fileExists(meta) {
+		let result = true;
+		if (!this.resolveFileFullName(meta.name)) {
+			return false;
+		}
+		if (this.options.thumbs) {
+			for (let tName in this.options.thumbs) {
+				if (!this.resolveFileFullName(meta.name, tName)) {
+					return false;
+				}
+			}
+		}
+		return result;
 	}
 
 	makeThumb(name, thumb, profile) {

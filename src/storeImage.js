@@ -1,13 +1,13 @@
-const OPT_DEFAULT_EXTENSION = 'png',
-	OPT_DEFAULT_THUMB_EXTENSION = 'jpeg',
-	OPT_DEFAULT_THUMB_QUALITY = 0.8,
-	OPT_ORIGINAL_THUMB = 'original',
-	OPT_MAX_INPUT_PATH_LENGTH = 256,
-	OPT_DEFAULT_EXTENSIONS = ['jpeg', 'png', 'webp', 'gif', 'svg', 'tiff', 'tif'];
+
+const OPT_DEFAULT_EXTENSION = 'png';
+const OPT_DEFAULT_THUMB_EXTENSION = 'jpeg';
+const OPT_ORIGINAL_THUMB = 'original';
+const OPT_MAX_INPUT_PATH_LENGTH = 256;
+const OPT_DEFAULT_EXTENSIONS = ['jpeg', 'png', 'webp', 'gif', 'svg', 'tiff', 'tif'];
 
 const fs = require('fs'),
+	log = require('not-log')(module),
 	path = require('path'),
-	async = require('async'),
 	mkdirp = require('mkdirp'),
 	store = require('./store'),
 	http = require('http'),
@@ -131,10 +131,10 @@ class notStoreImage {
 			try {
 				let image = sharp(fullName),
 					thumbFullName = this.getFullName(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
-				console.info('creating thumb', thumbFullName);
+				log.info('creating thumb', thumbFullName);
 				image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
 			} catch (e) {
-				console.error(e);
+				log.error(e);
 			}
 		}
 	}
@@ -144,7 +144,7 @@ class notStoreImage {
 			if (typeof source === 'string') {
 				if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
 					//guess this is file path, but lets check it on existence
-					if (isUrl.isUri(source)) {
+					if (isUrl.isUri(encodeURI(source))) {
 						if (isUrl.isHttpsUri(source)) {
 							https.get(source, resolve);
 						} else {
@@ -183,14 +183,14 @@ class notStoreImage {
 			this.convertToReadableStream(file)
 				.then((streamIn) => {
 					mkdirp.sync(dirName);
-					let streamOut = fs.createWriteStream(fullName)
+					let streamOut = fs.createWriteStream(fullName);
 					streamOut.on('finish', function (err) {
 						if (err) {
 							//return error
 							reject(err);
 						} else {
 							//return image name in store
-							let img = sharp(fullName).metadata(function (err, metadata) {
+							sharp(fullName).metadata(function (err, metadata) {
 								if (err) {
 									reject(err);
 								} else {
@@ -215,7 +215,6 @@ class notStoreImage {
 			this.stashFile(file)
 				.then((metadata) => {
 					let name = store.createFileName(),
-						pathName = store.getPathFromHash(name),
 						fullName = this.getFullName(name, null, metadata.format),
 						fullNameFromRoot = this.getFullNameFromRoot(name, null, metadata.format),
 						dirName = path.dirname(fullName);
@@ -233,7 +232,7 @@ class notStoreImage {
 							resolve(metadata);
 							this.makeThumbs(metadata.name);
 						}
-					})
+					});
 				})
 				.catch((e) => {
 					reject(e);
@@ -248,14 +247,14 @@ class notStoreImage {
 	get() {
 		let fullName, streamOut;
 		if (arguments.length == 2) {
-			fullName = this.resolveFileFullName(arguments[0])
+			fullName = this.resolveFileFullName(arguments[0]);
 			streamOut = arguments[1];
 		} else if (arguments.length == 3) {
-			fullName = this.resolveFileFullName(arguments[0], arguments[1] === OPT_ORIGINAL_THUMB ? undefined : arguments[1])
+			fullName = this.resolveFileFullName(arguments[0], arguments[1] === OPT_ORIGINAL_THUMB ? undefined : arguments[1]);
 			streamOut = arguments[2];
 		}
 		if (fullName) {
-			fs.lstat(fullName, (err, stat) => {
+			fs.lstat(fullName, (err) => {
 				if (err) {
 					streamOut.end();
 				} else {
@@ -297,10 +296,10 @@ class notStoreImage {
 	download() {
 		let fullName, streamOut;
 		if (arguments.length == 2) {
-			fullName = this.resolveFileFullName(arguments[0])
+			fullName = this.resolveFileFullName(arguments[0]);
 			streamOut = arguments[1];
 		} else if (arguments.length == 3) {
-			fullName = this.resolveFileFullName(arguments[0], arguments[1])
+			fullName = this.resolveFileFullName(arguments[0], arguments[1]);
 			streamOut = arguments[2];
 		}
 		if (fullName) {
@@ -316,29 +315,23 @@ class notStoreImage {
 
 	update(name, file) {
 		return new Promise((resolve, reject) => {
-			this.stashFile(file).then((metadata) => {
-					if (err) {
-						reject(err);
-					} else {
-						let pathName = store.getPathFromHash(name),
-							fullName = this.getFullName(name, null, metadata.format),
-							dirName = path.dirname(fullName);
-						mkdirp.sync(dirName);
-						fs.rename(metadata.fullName, fullName, (err) => {
-							if (err) {
-								reject(err);
-							} else {
-								delete metadata.fullName;
-								metadata.name = name;
-								resolve(metadata);
-								this.makeThumbs(metadata.name);
-							}
-						});
-					}
+			this.stashFile(file)
+				.then((metadata) => {
+					let fullName = this.getFullName(name, null, metadata.format),
+						dirName = path.dirname(fullName);
+					mkdirp.sync(dirName);
+					fs.rename(metadata.fullName, fullName, (err) => {
+						if (err) {
+							reject(err);
+						} else {
+							delete metadata.fullName;
+							metadata.name = name;
+							resolve(metadata);
+							this.makeThumbs(metadata.name);
+						}
+					});
 				})
-				.catch(e => {
-					reject(e)
-				});
+				.catch(reject);
 		});
 	}
 
@@ -347,14 +340,13 @@ class notStoreImage {
 			let fullName = this.resolveFileFullName(name);
 			if (fullName) {
 				fs.unlink(fullName, (e) => {
-					e ? reject(e) : resolve(name)
+					e ? reject(e) : resolve(name);
 				});
 			} else {
 				reject();
 			}
 			this.deleteThumbs(name);
 		});
-
 	}
 
 	deleteThumbs(name) {

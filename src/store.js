@@ -1,9 +1,9 @@
 const OPT_SUB_DIR_NAME_LENGTH = 6,
 	OPT_TOKEN_LENGTH = 48,
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	log = require('not-log')(module);
 
-var interfaces = {},
-	mongooseModel = null;
+var interfaces = {};
 
 var interfaceExists = function (interfaceName) {
 	return interfaces.hasOwnProperty(interfaceName);
@@ -29,13 +29,13 @@ const getAllMethods = (obj) => {
 				p !== 'constructor' && //not the constructor
 				(i == 0 || p !== arr[i - 1]) && //not overriding in this prototype
 				props.indexOf(p) === -1 //not overridden in a child
-			)
+			);
 		props = props.concat(l);
 	}
 	while (
 		(obj = Object.getPrototypeOf(obj)) && //walk-up the prototype chain
 		Object.getPrototypeOf(obj) //not the the Object prototype methods (hasOwnProperty, etc...)
-	)
+	);
 	return props;
 };
 
@@ -44,10 +44,10 @@ var interfaceMethodExists = function (interfaceName, methodName) {
 };
 
 var createStandartCall = function (methodName) {
-	return function (interfaceName, fileData /*, some other not standart arguments*/ ) {
+	return function (interfaceName/*, some other not standart arguments*/ ) {
 		if (interfaceExists(interfaceName) && interfaceMethodExists(interfaceName, methodName)) {
 			//no need to pass interfaceName to interface instance
-			let [trash, ...useful] = arguments;
+			let [...useful] = Array.splice.call(arguments, 1);
 			return getInterface(interfaceName)[methodName](...useful);
 		}
 	};
@@ -57,7 +57,7 @@ var createStandartCall = function (methodName) {
 var extendFromInterface = function (storeInterface) {
 	for (let i of getAllMethods(storeInterface)) {
 		if (!exports.hasOwnProperty(i)) {
-			console.log('add new methods for interface forwarding', i);
+			log.info('Add new methods for interface forwarding', i);
 			exports[i] = createStandartCall(i);
 		}
 	}
@@ -81,7 +81,7 @@ exports.getInterface = function (name) {
 	}
 };
 
-exports.removeInterface = function (name, storeInterface) {
+exports.removeInterface = function (name) {
 	if (interfaceExists(name)) {
 		removeInterface(name);
 	}

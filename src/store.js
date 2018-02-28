@@ -47,7 +47,7 @@ var createStandartCall = function (methodName) {
 	return function (interfaceName/*, some other not standart arguments*/ ) {
 		if (interfaceExists(interfaceName) && interfaceMethodExists(interfaceName, methodName)) {
 			//no need to pass interfaceName to interface instance
-			let [...useful] = Array.splice.call(arguments, 1);
+			let [...useful] = Array.prototype.splice.call(arguments, 1);
 			return getInterface(interfaceName)[methodName](...useful);
 		}
 	};

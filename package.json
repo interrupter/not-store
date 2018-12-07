@@ -24,7 +24,7 @@
 		"is-stream": "*",
 		"streamifier": "*",
 		"sharp": "*",
-		"async": "*",
+		"async": "2.5.0",
 		"not-log": "*",
 		"valid-url": "*"
 	},

@@ -294,8 +294,14 @@ class notStoreAWS {
 				let image = sharp(filename);
 				image.resize(profile.width || profile.max, profile.height || profile.max);
 				image.toFormat(this.getThumbFormat(), this.getThumbFormatOptions());
-				let buffer = image.toBuffer();
-				resolve(streamifier.createReadStream(buffer));
+				image.toBuffer()
+					.then((err, data, info)=>{
+						if(err){
+							throw err;
+						}else{
+							resolve(streamifier.createReadStream(data));
+						}
+					});
 			} catch (e) {
 				reject(e);
 			}

@@ -11,6 +11,7 @@ const OPT_DEFAULT_ENDPOINT = {
 
 const fs = require('fs');
 const path = require('path');
+const Stream = require('stream');
 const http = require('http');
 const https = require('https');
 const isStream = require('is-stream');
@@ -157,7 +158,11 @@ class notStoreAWS {
 	add(file){
 		return this.stashFile(file)
 			.then(this.uploadOriginal.bind(this))
-			.then(this.createThumbs.bind(this));
+			.then(this.createThumbs.bind(this))
+			.then((metadata)=>{
+				fs.unlink(metadata.tmpName);
+				return metadata;
+			});
 	}
 
 	uploadOriginal(metadata){
@@ -227,6 +232,14 @@ class notStoreAWS {
 		});
 	}
 
+
+	bufferToStream(buffer) {
+  	let stream = new Stream.Duplex();
+  	stream.push(buffer);
+  	stream.push(null);
+  	return stream;
+	}
+
 	/**
 	*	Thumbnails creation routine
 	*	@param	{object}	metadata	image metadata extracted by sharp, with tmpName, uuid fields added
@@ -263,7 +276,14 @@ class notStoreAWS {
 	*/
 	createThumb(filename, uuid, thumb, profile){
 		return this.resizeImage(filename, profile)
-			.then(this.uploadStream.bind(this, [uuid, thumb]));
+			.then((thumbFilename)=>{
+				let key = this.getFullFilename(uuid, thumb, this.getThumbFormat());
+				return this.uploadStream(fs.createReadStream(thumbFilename), key);
+			})
+			.then((key)=>{
+				fs.unlink(thumbFilename);
+				return key;
+			});
 	}
 
 
@@ -288,17 +308,18 @@ class notStoreAWS {
 	*	@param	{Object}	profile	information about required manipulations
 	*	@returns{Promise}	ReadableStream
 	*/
-	resizeImage(filename, profile) {
+	resizeImage(filename, profile, thumb) {
 		return new Promise((resolve, reject)=>{
 			try {
-				let image = sharp(filename);
+				let image = sharp(filename),
+					thumbFilename = filename + '_'+thumb;
 				image.resize(profile.width || profile.max, profile.height || profile.max);
 				image.toFormat(this.getThumbFormat(), this.getThumbFormatOptions());
-				image.toBuffer()
-					.then((data, info)=>{
-						resolve(streamifier.createReadStream(data));
+				image.toFile(thumbFilename)
+					.then((info)=>{
+						resolve(thumbFilename);
 					});
-			} catch (e) {
+			}catch (e) {
 				reject(e);
 			}
 		});

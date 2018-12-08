@@ -154,8 +154,8 @@ class notStoreAWS {
   *  @param {String|Path|Buffer|Stream}  file file content in various forms
   *  @returns {Promise}
   **/
-	add(){
-		return this.stashFile()
+	add(file){
+		return this.stashFile(file)
 			.then(this.uploadOriginal.bind(this))
 			.then(this.createThumbs.bind(this));
 	}

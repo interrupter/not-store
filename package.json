@@ -20,12 +20,13 @@
 	"author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
 	"license": "ISC",
 	"dependencies": {
-		"mkdirp": "*",
-		"is-stream": "*",
-		"streamifier": "*",
-		"sharp": "*",
 		"async": "*",
+		"aws-sdk": "^2.372.0",
+		"is-stream": "*",
+		"mkdirp": "*",
 		"not-log": "*",
+		"sharp": "*",
+		"streamifier": "*",
 		"valid-url": "*"
 	},
 	"devDependencies": {

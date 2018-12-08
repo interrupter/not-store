@@ -1,5 +1,5 @@
-const OPT_SUB_DIR_NAME_LENGTH = 6,
-	OPT_TOKEN_LENGTH = 48,
+const OPT_SUB_DIR_NAME_LENGTH = 8,
+	OPT_TOKEN_LENGTH = 24,
 	crypto = require('crypto'),
 	log = require('not-log')(module);
 

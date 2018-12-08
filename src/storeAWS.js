@@ -295,12 +295,8 @@ class notStoreAWS {
 				image.resize(profile.width || profile.max, profile.height || profile.max);
 				image.toFormat(this.getThumbFormat(), this.getThumbFormatOptions());
 				image.toBuffer()
-					.then((err, data, info)=>{
-						if(err){
-							throw err;
-						}else{
-							resolve(streamifier.createReadStream(data));
-						}
+					.then((data, info)=>{
+						resolve(streamifier.createReadStream(data));
 					});
 			} catch (e) {
 				reject(e);

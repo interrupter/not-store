@@ -357,6 +357,23 @@ class notStoreAWS {
 			}
 		});
 	}
+
+	getURIs(meta) {
+		let paths = {
+			original: this.getURI(this.getFullFilename(meta.uuid, null, meta.format)),
+			thumb: {}
+		};
+		if (this.options.thumbs) {
+			for (let thumb in this.options.thumbs) {
+				paths.thumb[thumb] = this.getURI(this.getFullFilename(meta.uuid, thumb, this.getThumbFormat()));
+			}
+		}
+		return paths;
+	}
+
+	getURI(filename) {
+		return path.join(this.options.host, filename);
+	}
 }
 
 module.exports = notStoreAWS;

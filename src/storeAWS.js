@@ -188,7 +188,7 @@ class notStoreAWS {
 		return this.stashFile(file)
 			.then(this.uploadOriginal.bind(this))
 			.then(this.createThumbs.bind(this))
-			.then((metadata)=>{
+			.then(async (metadata)=>{
 				await this.removeLocalFile(metadata.tmpName);
 				return metadata;
 			});

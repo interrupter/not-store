@@ -1,6 +1,6 @@
 {
 	"name": "not-store",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "file storage interface",
 	"main": "index.js",
 	"repository": "https://github.com/interrupter/not-store",
@@ -21,6 +21,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"async": "*",
+		"uuid": "*",
 		"aws-sdk": "^2.372.0",
 		"is-stream": "*",
 		"mkdirp": "*",

@@ -50,6 +50,10 @@ class notStoreAWS {
 		return this;
 	}
 
+	/**
+	*	Returns UUID4 name for file
+	*	@returns	{string}	UUIDv4 name
+	*/
 	randomFilename(){
 		return UUID.v4();
 	}
@@ -117,7 +121,11 @@ class notStoreAWS {
 		});
 	}
 
-
+	/**
+	*	Downloads file and saves to tmp folder
+	*	@param		{String|Buffer|Stream}	file	file in some form or his URI
+	*	@returns	{Promise}	of image metadata extracted with sharp with extra fields: uuid, tmpName
+	*/
 	stashFile(file) {
 		return new Promise((resolve, reject) => {
 			let name = this.randomFilename(),
@@ -125,13 +133,13 @@ class notStoreAWS {
 			this.convertToReadableStream(file)
 				.then((streamIn) => {
 					let streamOut = fs.createWriteStream(tmpName);
-					streamOut.on('finish', function (err) {
+					streamOut.on('finish', (err) => {
 						if (err) {
 							//return error
 							reject(err);
 						} else {
 							//return image name in store
-							sharp(tmpName).metadata(function (err, metadata) {
+							sharp(tmpName).metadata((err, metadata) => {
 								if (err) {
 									reject(err);
 								} else {
@@ -151,6 +159,27 @@ class notStoreAWS {
 	}
 
 	/**
+	*	Removes local file by full filename
+	*	@param	{String}	filename	filename with path
+	*	@returns{Promise}
+	*/
+	removeLocalFile(filename){
+		return new Promsie((resolve, reject)=>{
+			try{
+				fs.unlink(filename, (err)=>{
+					if(err){
+						reject(err);
+					}else{
+						resolve(filename);
+					}
+				});
+			}catch(e){
+				reject(e);
+			}
+		});
+	}
+
+	/**
   * Input file as base64 string
   *  @param {String|Path|Buffer|Stream}  file file content in various forms
   *  @returns {Promise}
@@ -160,11 +189,16 @@ class notStoreAWS {
 			.then(this.uploadOriginal.bind(this))
 			.then(this.createThumbs.bind(this))
 			.then((metadata)=>{
-				fs.unlink(metadata.tmpName);
+				await this.removeLocalFile(metadata.tmpName);
 				return metadata;
 			});
 	}
 
+	/**
+	*	Uploading original file to AWS bucket
+	*	@param		{object}		metadata	metadata of sharp for this image with uuid and tmpName
+	*	@returns	{Promise}		of metadata
+	*/
 	uploadOriginal(metadata){
 		let key = this.getFullFilename(metadata.uuid, '', metadata.format),
 			stream = fs.createReadStream(metadata.tmpName);
@@ -278,12 +312,11 @@ class notStoreAWS {
 		return this.resizeImage(filename, profile)
 			.then((thumbFilename)=>{
 				let key = this.getFullFilename(uuid, thumb, this.getThumbFormat());
-				return this.uploadStream(fs.createReadStream(thumbFilename), key);
+				return this.uploadStream(fs.createReadStream(thumbFilename), key).then(()=>{
+					return thumbFilename;
+				});
 			})
-			.then((key)=>{
-				fs.unlink(thumbFilename);
-				return key;
-			});
+			.then(this.removeLocalFile.bind(this));
 	}
 
 

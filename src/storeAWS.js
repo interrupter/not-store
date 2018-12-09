@@ -164,7 +164,7 @@ class notStoreAWS {
 	*	@returns{Promise}
 	*/
 	removeLocalFile(filename){
-		return new Promsie((resolve, reject)=>{
+		return new Promise((resolve, reject)=>{
 			try{
 				fs.unlink(filename, (err)=>{
 					if(err){

@@ -309,7 +309,7 @@ class notStoreAWS {
 	*	@returns	{Promise}
 	*/
 	createThumb(filename, uuid, thumb, profile){
-		return this.resizeImage(filename, profile)
+		return this.resizeImage(filename, profile, thumb)
 			.then((thumbFilename)=>{
 				let key = this.getFullFilename(uuid, thumb, this.getThumbFormat());
 				return this.uploadStream(fs.createReadStream(thumbFilename), key).then(()=>{
@@ -345,7 +345,7 @@ class notStoreAWS {
 		return new Promise((resolve, reject)=>{
 			try {
 				let image = sharp(filename),
-					thumbFilename = filename + '_'+thumb;
+					thumbFilename = filename + '_' + thumb;
 				image.resize(profile.width || profile.max, profile.height || profile.max);
 				image.toFormat(this.getThumbFormat(), this.getThumbFormatOptions());
 				image.toFile(thumbFilename)

@@ -1,4 +1,5 @@
 const OPT_MAX_INPUT_PATH_LENGTH = 255;
+const OPT_DEFAULT_ACL = 'private';
 const OPT_DEFAULT_THUMB_EXTENSION = 'jpeg';
 const OPT_DEFAULT_THUMB_OPTIONS = {
 	quality: 90
@@ -205,6 +206,10 @@ class notStoreAWS {
 		return this.uploadStream(stream, key).then(() => metadata);
 	}
 
+	getACL(){
+		return this.options.ACL || OPT_DEFAULT_ACL;
+	}
+
 	/**
 	*	Загружает ReadableStream
 	*	@param		{ReadableStream}	stream	поток
@@ -216,6 +221,7 @@ class notStoreAWS {
 			try{
 				this.s3.putObject(
 					{
+						ACL: this.getACL(),
 						Body:   stream,
 						Bucket: this.options.bucket,
 						Key:    key,

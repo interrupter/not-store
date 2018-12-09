@@ -378,7 +378,7 @@ class notStoreAWS {
 	}
 
 	getURI(filename) {
-		return path.join(this.options.host, filename);
+		return this.options.host + filename;
 	}
 }
 

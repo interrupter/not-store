@@ -132,7 +132,7 @@ class notStoreImage {
 				let image = sharp(fullName),
 					thumbFullName = this.getFullName(name, thumb, this.options.extension || OPT_DEFAULT_THUMB_EXTENSION);
 				log.info('creating thumb', thumbFullName);
-				image.resize(profile.width || profile.max, profile.height || profile.max).max().toFile(thumbFullName);
+				image.resize(profile.width || profile.max, profile.height || profile.max,{fit: 'outside'}).toFile(thumbFullName);
 			} catch (e) {
 				log.error(e);
 			}

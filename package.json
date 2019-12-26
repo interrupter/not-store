@@ -1,6 +1,6 @@
 {
 	"name": "not-store",
-	"version": "0.1.11",
+	"version": "0.1.12",
 	"description": "file storage interface",
 	"main": "index.js",
 	"repository": "https://github.com/interrupter/not-store",
@@ -22,7 +22,7 @@
 	"dependencies": {
 		"async": "*",
 		"uuid": "*",
-		"aws-sdk": "^2.372.0",
+		"aws-sdk": "^2.590.0",
 		"is-stream": "*",
 		"mkdirp": "*",
 		"not-log": "*",
@@ -32,12 +32,12 @@
 	},
 	"devDependencies": {
 		"chai": "*",
-		"chai-as-promised": "^5.3.0",
+		"chai-as-promised": "^7.1.1",
 		"eslint": "*",
 		"istanbul": "*",
 		"mocha": "*",
-		"mockgoose": "^6.0.6",
+		"mockgoose": "^8.0.4",
 		"request": "*",
-		"retire": "^1.2.10"
+		"retire": "^2.0.3"
 	}
 }

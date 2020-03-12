@@ -24,7 +24,7 @@
 		"uuid": "*",
 		"aws-sdk": "^2.590.0",
 		"is-stream": "*",
-		"mkdirp": "*",
+		"mkdirp": "1.0.0",
 		"not-log": "*",
 		"sharp": "*",
 		"streamifier": "*",

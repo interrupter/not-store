@@ -1,43 +1,47 @@
 {
-	"name": "not-store",
-	"version": "0.1.12",
-	"description": "file storage interface",
-	"main": "index.js",
-	"repository": "https://github.com/interrupter/not-store",
-	"scripts": {
-		"test": "./node_modules/.bin/mocha --reporter spec",
-		"lint": "./node_modules/.bin/eslint ./src/**/**",
-		"pretest": "./node_modules/.bin/eslint ./src/**/**",
-		"docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
-		"cover": "istanbul cover _mocha $(find ./test -name \"*.js\""
-	},
-	"keywords": [
-		"not",
-		"store",
-		"file",
-		"unified"
-	],
-	"author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
-	"license": "ISC",
-	"dependencies": {
-		"async": "*",
-		"uuid": "*",
-		"aws-sdk": "^2.590.0",
-		"is-stream": "*",
-		"mkdirp": "*",
-		"not-log": "*",
-		"sharp": "*",
-		"streamifier": "*",
-		"valid-url": "*"
-	},
-	"devDependencies": {
-		"chai": "*",
-		"chai-as-promised": "^7.1.1",
-		"eslint": "*",
-		"istanbul": "*",
-		"mocha": "*",
-		"mockgoose": "^8.0.4",
-		"request": "*",
-		"retire": "^2.0.3"
-	}
+  "name": "not-store",
+  "version": "0.1.12",
+  "description": "file storage interface",
+  "main": "index.js",
+  "repository": "https://github.com/interrupter/not-store",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "lint": "./node_modules/.bin/eslint ./src/**/**",
+    "pretest": "./node_modules/.bin/eslint ./src/**/**",
+    "docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
+    "cover": "istanbul cover _mocha $(find ./test -name \"*.js\"",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
+  },
+  "keywords": [
+    "not",
+    "store",
+    "file",
+    "unified"
+  ],
+  "author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
+  "license": "ISC",
+  "dependencies": {
+    "async": "*",
+    "uuid": "*",
+    "aws-sdk": "^2.590.0",
+    "is-stream": "*",
+    "mkdirp": "*",
+    "not-log": "*",
+    "sharp": "*",
+    "streamifier": "*",
+    "valid-url": "*",
+    "snyk": "^1.316.1"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "*",
+    "istanbul": "*",
+    "mocha": "*",
+    "mockgoose": "^8.0.4",
+    "request": "*",
+    "retire": "^2.0.3"
+  },
+  "snyk": true
 }

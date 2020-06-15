@@ -1,0 +1,48 @@
+	<!doctype html>
+<html class="no-js" lang="">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Store UI testing</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="/assets/store/notStore.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+	<script type="module" src="/fetch.xhr.js"></script>
+</head>
+<body>
+	<script>
+	function showFileSelectPopup(){
+		console.log('show select file popup');
+		if(!STORE['root_complex']){
+			STORE['root_complex'] = new notStore.notStore({
+				complexEl: document.body,				
+				bucket: 'root',
+				test:{
+					role: 'root',
+					session: `root_session`,
+				},
+				selectMany: true,
+				complex: {
+					popup: true,
+					show: false
+				}
+			});
+		}else{
+			STORE['root_complex'].show().then(console.log).catch(console.error);
+		}
+	}
+	</script>
+	<button type="button" id="popupTrigger" onclick="showFileSelectPopup()">Select</button>
+	<div id="results"></div>
+	<br/>
+	<script src="/assets/store/notStore.js"></script>
+	<script>
+		let roles = ['root', 'user', 'guest'];
+		let STORE = {};
+	</script>
+</body>
+
+</html>

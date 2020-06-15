@@ -1,0 +1,85 @@
+{
+  "port": 7357,
+  "proxy": {
+    "port": 7357
+  },
+  "host": "preparator.local",
+  "cors": ["*"],
+  "template": {
+    "engine": "pug",
+    "views": "views",
+    "partialsDir": "partials",
+    "partials": {}
+  },
+  "session": {
+    "secret": "34097592384-fm195u023947623097udf928hn3j476-g2ni09u",
+    "cookie": {
+      "maxAge": 2628000000
+    },
+    "key": "SessionID"
+  },
+  "path": {
+    "static": "../browser",
+    "app": "/client",
+    "front": "../front/build"
+  },
+  "defaultUserRole": "user",
+  "modules": {
+    "locale": {
+      "priority": ["ru", "en", "de", "es", "fr"]
+    },
+    "user": {
+      "root": {
+        "username": "root",
+        "email": "root@test.user.not",
+        "password": "letMeIn",
+        "role": "root"
+      },
+      "secret": "qwerty",
+      "tokenTTL": 3600
+    },
+    "store":{
+      "common":{
+        "s3":{
+          "id": "",
+    			"key": "",
+    			"bucket": "test.image.original",
+    			"path": "/test.not/"
+        },
+        "subPath": false,
+        "tmp": "../tmp",
+    		"sharp":{
+    			"sizes": {"micro": 100, "small": 480, "middle":1080, "big": 2160},
+          "resize": {"fit": "outside"}
+    		}
+      },
+      "buckets":{
+        "client":{
+          "driver": "notStoreYandex",
+          "options":{}
+        },
+        "root":{
+          "driver": "notStoreYandex",
+          "options":{}
+        }
+      }
+    },
+    "ws": {
+      "port": 7358,
+      "secure": true
+    },
+    "error": {
+      "options": {
+        "secure": false
+      },
+      "key": "error@reporter.local",
+      "url": "http://reporter.local/api/error"
+    },
+    "error-collect": {},
+    "options": {}
+  },
+  "middleware": {
+
+  },
+  "importModulesFromNPM": ["not-error-collect", "not-error"]
+}

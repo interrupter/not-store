@@ -1,0 +1,93 @@
+	<!doctype html>
+<html class="no-js" lang="">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Store UI testing</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="/assets/store/notStore.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+	<script type="module" src="/fetch.xhr.js"></script>
+	<style>
+	.storage-area{
+		width: 30vw;
+		height: 20vh;
+		display: block;
+		margin: 2vw;
+		float: left;
+	}
+
+	.wide{
+		width: 90vw;
+	}
+
+
+	</style>
+</head>
+<body>
+	<script>
+	function showFileSelectPopup(){
+		console.log('show select file popup');
+		if(!STORE['user_popup']){
+			STORE['user_popup'] = new notStore.notStore({
+				storageEl: document.body,
+				test: {
+					session: `user_session`,
+				},
+				selectMany: false,
+				storage:{
+					popup: true
+				}
+			});
+		}
+		STORE['user_popup'].show()
+			.then((images)=>{
+				console.log(images);
+				images.forEach((image)=>{
+					let img = document.createElement('img');
+					img.id = image.uuid;
+					img.src = image.path.small.cloud.Location;
+					document.getElementById('results').appendChild(img);
+				})
+			})
+			.catch(console.error);
+	}
+	</script>
+	<button type="button" id="popupTrigger" onclick="showFileSelectPopup()">Select</button>
+	<div id="results"></div>
+	<br/>
+	<script src="/assets/store/notStore.js"></script>
+	<script>
+		let roles = ['root', 'user', 'guest'];
+		let STORE = {};
+		function startTestForRole(role){
+			let el = document.createElement('div');
+			el.classList.add('storage-area');
+			if(role == 'root'){
+				el.classList.add('wide');
+			}
+			el.id = 'role-'+role;
+			document.body.appendChild(el);
+			let opts = {
+				storageEl: el,
+				test: {
+					session: `${role}_session`,
+					role
+				},
+				selectMany: role === 'root'
+			};
+			if(role === 'root'){
+				opts.bucket = 'root';								
+			}
+			STORE[role] = new notStore.notStore(opts);
+		}
+		document.addEventListener('DOMContentLoaded', () => {
+			roles.forEach(startTestForRole);
+		});
+	</script>
+</body>
+
+</html>

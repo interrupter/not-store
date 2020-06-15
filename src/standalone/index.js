@@ -66,6 +66,9 @@ class notStore {
 		this.storage.selected.subscribe((selected) => {
 			this.selected = selected;
 		});
+		this.storage.uploads.subscribe((selected) => {
+			this.uploads = selected;
+		});
 	}
 
 	renderComplex(){
@@ -75,7 +78,8 @@ class notStore {
 				files: this.files,
 				id: this.options.id,
 				selectMany: this.options.selectMany,
-				show: this.options.complex && this.options.complex.show
+				show: this.options.complex && this.options.complex.show,
+				popup: this.options.complex && this.options.complex.popup
 			}
 		});
 		this.ui.complex.$on('remove', this.removeFiles.bind(this));
@@ -307,5 +311,6 @@ export {
 	StorageComponent,
 	UploadComponent,
 	ComplexComponent,
+	FileStores,
 	notStore
 };

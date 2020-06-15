@@ -1,5 +1,5 @@
 <script>
-		import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import UploaderComponent from './upload.svelte';
 	import StorageComponent from './storage.svelte';
 
@@ -28,6 +28,7 @@
 	export let selected = [];
 	export let selectMany;
 	export let show = true;
+	export let popup = true;
 
 	export let onReject;
 	export let onResolve;
@@ -106,7 +107,7 @@
 
 </script>
 
-{#if show}
+{#if popup && show}
 <div class="modal is-active">
 	<div class="modal-background"></div>
 	<div class="modal-card">
@@ -127,4 +128,10 @@
 		</footer>
 	</div>
 </div>
+{/if}
+
+
+{#if !popup && show}
+<UploaderComponent popup="{false}" bind:id="{id}" on:filesAdded={onChange} />
+<StorageComponent popup="{false}" on:remove={removeFile} bind:id="{id}" selectMany={false} />
 {/if}

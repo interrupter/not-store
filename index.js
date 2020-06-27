@@ -13,6 +13,7 @@ module.exports = {
   name: 'not-store',
 	paths: {
 		routes:				path.join(__dirname, '/src/routes'),
+    controllers:	path.join(__dirname, '/src/controllers'),
 		models:				path.join(__dirname, '/src/models'),
 	},
   initialize: ()=>{}

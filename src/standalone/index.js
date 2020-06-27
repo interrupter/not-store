@@ -34,7 +34,6 @@ class notStore {
 	}
 
 	init() {
-		this.reader = new FileReader();
 		this.generateID();
 		this.createStore();
 		if(this.options.complex && this.options.complex.popup){
@@ -49,7 +48,6 @@ class notStore {
 				this.renderUpload();
 			}
 		}
-
 	}
 
 	generateID() {

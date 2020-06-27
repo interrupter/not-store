@@ -95,7 +95,7 @@
 
 </script>
 
-{#if !popup}
+{#if !popup && show}
 <div class="container">
 	<div class="file-list">
 		{#each files as file, index}

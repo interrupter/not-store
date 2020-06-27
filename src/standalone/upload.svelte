@@ -36,7 +36,7 @@
 
 </script>
 
-{#if !popup}
+{#if !popup && show}
 <div class="file is-boxed dropzone">
 	<label class="file-label">
 		<form action="./">

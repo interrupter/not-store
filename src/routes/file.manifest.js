@@ -34,6 +34,17 @@ module.exports = {
 				admin: false
 			}]
 		},
+		listAndCount:{
+			method: 'get',
+			rules:[{
+				auth: true,
+				admin: true
+			},{
+				auth: true,
+				role: 'admin'
+			}],
+			postFix: '/:actionName'
+		},
 		delete: {
 			method: 'DELETE',
 			postFix: '/:record[fileID]',

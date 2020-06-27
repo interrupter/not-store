@@ -1,3 +1,18 @@
+const
+	UserActions = [],
+	AdminActions = [
+		'listAndCount'
+	],
+	MODEL_NAME = 'File',
+	MODEL_OPTIONS = {
+		MODEL_NAME,
+		MODEL_TITLE: 'Файл',
+		populate: {
+			listAndCount: [ 'userId' ]
+		}
+	},
+	modMeta = require('not-meta');
+
 const store = require('../../').notStore,
 	App = require('not-node').Application,
 	Auth = require('not-node').Auth,
@@ -57,15 +72,8 @@ exports.list = function(req, res) {
 	filter = query.filter.modifyRules(filter, {
 		session: req.session.id
 	});
-	console.log({
-		skip,
-		size,
-		sorter,
-		filter
-	});
 	File.listAndPopulate(skip, size, sorter, filter, [])
 		.then((items) => {
-			console.log('files', items);
 			res.status(200).json(items);
 		})
 		.catch((err) => {
@@ -268,3 +276,7 @@ exports.delete = function(req, res) {
 		});
 	}
 };
+
+
+modMeta.extend(modMeta.Route, module.exports, AdminActions, MODEL_OPTIONS, '_');
+modMeta.extend(modMeta.Route, module.exports, UserActions, MODEL_OPTIONS);

@@ -118,7 +118,7 @@ class ncStore extends notFramework.notController {
 				this.ui.details = new UIDetails({
 					target: this.els.main,
 					props:{
-						user: notFramework.notCommon.stripProxy(res.result)
+						item: notFramework.notCommon.stripProxy(res.result)
 					}
 				});
 			}else{
@@ -151,7 +151,7 @@ class ncStore extends notFramework.notController {
 			if(res.status === 'ok'){
 				this.setBreadcrumbs([
 					{
-						title: 	`Редактирование данных ${res.result.storeID}#${res.result.name}`,
+						title: 	`Редактирование данных ${res.result.name}`,
 						url: 		`/store/${params[0]}/update`
 					}
 				]);
@@ -160,7 +160,7 @@ class ncStore extends notFramework.notController {
 					target: this.els.main,
 					props:{
 						mode: 			'update',
-						user: 			notFramework.notCommon.stripProxy(res.result)
+						item: 			notFramework.notCommon.stripProxy(res.result)
 					}
 				});
 				this.ui.update.$on('update', (ev) => {this.onUpdateFormSubmit(ev.detail);});

@@ -115,10 +115,13 @@ class ncStore extends notFramework.notController {
 		}
 		this.make.store({_id: params[0]}).$get().then((res)=>{
 			if(res.status === 'ok'){
+				let item = notFramework.notCommon.stripProxy(res.result);
+				item.options = JSON.stringify(item.options, null, 4);
+				item.options = item.options.replace(/([^>])\n/g, '$1<br/>');
 				this.ui.details = new UIDetails({
 					target: this.els.main,
 					props:{
-						item: notFramework.notCommon.stripProxy(res.result)
+						item
 					}
 				});
 			}else{

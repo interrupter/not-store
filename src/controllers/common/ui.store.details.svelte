@@ -24,6 +24,6 @@
   </div>
   <div class="columns">
     <div class="column">Настройки</div>
-    <div class="column">{JSON.stringify(item.options, null, 4)}</div>
+    <div class="column"><pre>{item.options}</pre></div>
   </div>
 </div>

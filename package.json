@@ -1,6 +1,6 @@
 {
 		"name": "not-store",
-		"version": "1.0.8",
+		"version": "1.0.9",
 		"description": "file storage interface",
 		"main": "index.js",
 		"repository": "https://github.com/interrupter/not-store",
@@ -52,7 +52,7 @@
 				"not-error-collect": "0.0.9",
 				"not-filter": "^0.2.2",
 				"not-log": "0.0.14",
-				"not-meta": "0.0.14",
+				"not-meta": "0.0.15",
 				"not-node": "^3.3.49",
 				"not-path": "^1.0.0",
 				"not-ws": "0.0.14",

@@ -1,7 +1,22 @@
+import validator from 'validator';
+
+function isJSON(item) {
+  item = typeof item !== "string" ? JSON.stringify(item) : item;
+  try {
+    item = JSON.parse(item);
+  } catch (e) {
+    return false;
+  }
+  if (typeof item === "object" && item !== null) {
+    return true;
+  }
+  return false;
+}
+
 export default class Common {
   static CLASS_OK = 'is-success';
   static CLASS_ERR = 'is-danger';
-  isError(e) {
+  static isError(e) {
     return e instanceof Error;
   }
   static DRIVERS = [{
@@ -14,18 +29,7 @@ export default class Common {
     id: 'notStoreImage',
     title: 'Локальное хранение - изображения'
   }]
-  isJson(item) {
-    item = typeof item !== "string" ? JSON.stringify(item) : item;
-    try {
-      item = JSON.parse(item);
-    } catch (e) {
-      return false;
-    }
-    if (typeof item === "object" && item !== null) {
-      return true;
-    }
-    return false;
-  }
+
   static FIELDS = {
 		name:{
 			label: 'Название',
@@ -56,7 +60,7 @@ export default class Common {
         }
         break;
       case 'options':
-        if (!this.isJson(value)) {
+        if (!isJSON(value)) {
           errors.push('Настройки должны быть валидным JSON');
         }
         break;

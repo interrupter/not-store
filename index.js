@@ -16,5 +16,7 @@ module.exports = {
     controllers:	path.join(__dirname, '/src/controllers'),
 		models:				path.join(__dirname, '/src/models'),
 	},
-  initialize: ()=>{}
+  initialize: ()=>{
+    
+  }
 };

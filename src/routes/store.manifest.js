@@ -7,11 +7,20 @@ module.exports = {
 			method: 'PUT',
 			isArray: false,
 			data: ['record'],
-			postFix: '/:bucket?',
 			rules: [{
 				auth: true,
 				admin: true
 			}]
+		},
+		get: {
+			method: 'get',
+			data: ['record'],
+			isArray: false,
+			rules:[{
+				auth: true,
+				admin: true
+			}],
+			postFix: '/:record[_id]/:actionName'
 		},
 		update: {
 			method: 'post',
@@ -33,7 +42,7 @@ module.exports = {
 		},
 		delete: {
 			method: 'DELETE',
-			postFix: '/:record[fileID]',
+			postFix: '/:record[_id]',
 			isArray: false,
 			rules: [{
 				auth: true,

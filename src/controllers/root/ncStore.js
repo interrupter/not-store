@@ -310,8 +310,21 @@ class ncStore extends notFramework.notController {
 	createDefault(){
 		return {
 			name: 	'',
-			driver: '',
-			options: '',
+			driver: 'notStoreYandex',
+			options: `{"s3":{
+				"id": "",
+				"key": "",
+				"bucket": "",
+				"path": "/sub.dir.in.bucket/"
+			},
+			"subPath": false,
+			"tmp": "../tmp",
+			"sharp":{
+				"sizes": {"micro": 100, "small": 480, "middle":1080, "big": 2160},
+				"resize": {"fit": "outside"}
+			}
+		}`,
+			active: true
 		};
 	}
 

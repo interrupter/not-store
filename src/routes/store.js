@@ -3,6 +3,7 @@ const
 	AdminActions = [
 		'create',
 		'update',
+		'get',
 		'listAndCount',
 		'delete'
 	],
@@ -10,6 +11,9 @@ const
 	MODEL_OPTIONS = {
 		MODEL_NAME,
 		MODEL_TITLE: 'Хранилище',
+		RESPONSE: {
+			full: ['get', 'update', 'delete']
+		}
 	},
 	modMeta = require('not-meta');
 
@@ -22,9 +26,11 @@ const
 	};
 
 exports.before = (req) => {
-	this.body.session = req.session.id;
-	this.body.userId = req.user._id;
-	this.body.userIp = exports.getIP(req);
+	if(req.body){
+			req.body.session = req.session.id;
+			req.body.userId = req.user._id;
+			req.body.userIp = exports.getIP(req);
+		}
 };
 
 modMeta.extend(modMeta.Route, module.exports, AdminActions, MODEL_OPTIONS, '_');

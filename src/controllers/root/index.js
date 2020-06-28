@@ -1,5 +1,5 @@
 import ncStore from './ncStore.js';
-
+import ncFile from './ncFile.js';
 let manifest = {
 	router: {
 		manifest: [

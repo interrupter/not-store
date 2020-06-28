@@ -27,16 +27,16 @@ module.exports = {
           for(let storeOpts of results.list){
             notApp.logger.log(`Adding ${storeOpts.name} via ${storeOpts.driver}`);
             try{
-              let store = new module.exports[storeOpts.driver](storeOpts);
-            	notStore.notStore.addInterface(storeOpts.name, store);
+              let options = JSON.parse(storeOpts.options);
+              let store = new module.exports[storeOpts.driver](options);
+            	notStore.addInterface(storeOpts.name, store);
             }catch(e){
               notApp.logger.error(`notStore storage initialization failed; ${storeOpts.name} via ${storeOpts.driver}`);
               notApp.report(new notError('notStore storage initialization failed', { store: storeOpts }, e));
             }
           }
-        }else{
-          notApp.logger.log(`Stores init end`);
         }
+        notApp.logger.log(`Stores init end`);
       })
       .catch((e)=>{
         notApp.logger.error(`notStore initialization failed`);

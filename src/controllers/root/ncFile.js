@@ -9,18 +9,18 @@ import {
 } from 'not-bulma';
 
 import Common from '../common/index.js';
-import UIEdit from '../common/ui.store.edit.svelte';
-import UIDetails from '../common/ui.store.details.svelte';
+import UIEdit from '../common/ui.file.edit.svelte';
+import UIDetails from '../common/ui.file.details.svelte';
 
-const BREADCRUMBS = [{ title: 'Хранилища', url: '/store' }];
+const BREADCRUMBS = [{ title: 'Файлы', url: '/file' }];
 
-class ncStore extends notFramework.notController {
+class ncFile extends notFramework.notController {
 	constructor(app, params) {
 		notFramework.notCommon.log('init site app ', params, 'list');
 		super(app);
 		this.ui = {};
 		this.els = {};
-		this.setModuleName('store');
+		this.setModuleName('file');
 		this.buildFrame();
 		Breadcrumbs.setHead(BREADCRUMBS).render({
 			root: app.getOptions('router:root'),
@@ -81,7 +81,7 @@ class ncStore extends notFramework.notController {
 		this.setBreadcrumbs([
 			{
 				title: 'Добавление нового',
-				url: '/store/create'
+				url: '/file/create'
 			}
 		]);
 
@@ -103,8 +103,8 @@ class ncStore extends notFramework.notController {
 	runDetails(params) {
 		this.setBreadcrumbs([
 			{
-				title: 'Просмотр хранилища',
-				url: `/store/${params[0]}`
+				title: 'Просмотр пользователя',
+				url: `/file/${params[0]}`
 			}
 		]);
 
@@ -113,7 +113,7 @@ class ncStore extends notFramework.notController {
 		} else {
 			this.$destroyUI();
 		}
-		this.make.store({_id: params[0]}).$get().then((res)=>{
+		this.make.file({_id: params[0]}).$get().then((res)=>{
 			if(res.status === 'ok'){
 				this.ui.details = new UIDetails({
 					target: this.els.main,
@@ -138,7 +138,7 @@ class ncStore extends notFramework.notController {
 		this.setBreadcrumbs([
 			{
 				title: 'Редактирование данных',
-				url: `/store/${params[0]}/update`
+				url: `/file/${params[0]}/update`
 			}
 		]);
 
@@ -147,12 +147,12 @@ class ncStore extends notFramework.notController {
 		} else {
 			this.$destroyUI();
 		}
-		this.make.store({_id: params[0]}).$get().then((res)=>{
+		this.make.file({_id: params[0]}).$get().then((res)=>{
 			if(res.status === 'ok'){
 				this.setBreadcrumbs([
 					{
-						title: 	`Редактирование данных ${res.result.storeID}#${res.result.name}`,
-						url: 		`/store/${params[0]}/update`
+						title: `Редактирование данных ${res.result.fileID}#${res.result.name}`,
+						url: `/file/${params[0]}/update`
 					}
 				]);
 
@@ -182,12 +182,12 @@ class ncStore extends notFramework.notController {
 		this.setBreadcrumbs([
 			{
 				title: 'Удаление',
-				url: `/store/${params[0]}/delete`
+				url: `/file/${params[0]}/delete`
 			}
 		]);
 
 		if (confirm('Удалить файл?')) {
-			this.make.store({_id: params[0]}).$delete()
+			this.make.file({_id: params[0]}).$delete()
 				.then(()=>{
 					this.goList();
 				})
@@ -204,7 +204,7 @@ class ncStore extends notFramework.notController {
 		this.setBreadcrumbs([
 			{
 				title: 'Список',
-				url: `/store`
+				url: `/file`
 			}
 		]);
 
@@ -219,17 +219,17 @@ class ncStore extends notFramework.notController {
 				targetEl: this.els.main,
 				interface: {
 					combined: true,
-					factory: this.make.store
+					factory: this.make.file
 				},
 				endless: false,
 				preload: {},
-				sorter: { storeID: -1 },
+				sorter: { fileID: -1 },
 				actions: [{
 					title: 'Создать',
 					action: this.goCreate.bind(this)
 				}],
 				fields: [{
-					path: ':storeID',
+					path: ':fileID',
 					title: 'ID',
 					searchable: true,
 					sortable: true
@@ -239,20 +239,11 @@ class ncStore extends notFramework.notController {
 					searchable: true,
 					sortable: true
 				}, {
-					path: ':driver',
-					title: 'Тип',
+					path: ':bucket',
+					title: 'Бакет',
 					searchable: true,
 					sortable: true
-				},{
-          path: ':active',
-          title: 'Активность',
-          sortable: true,
-          searchable: true,
-          type: 'boolean',
-          preprocessor: (value) => {
-            return [{ value }];
-          }
-        }, {
+				}, {
 					path: ':_id',
 					title: 'Действия',
 					type: 'button',
@@ -260,11 +251,6 @@ class ncStore extends notFramework.notController {
 						return [{
 							action: this.goDetails.bind(this, value),
 							title: 'Подробнее',
-							size: 'small'
-						},
-						{
-							action: this.goUpdate.bind(this, value),
-							title: 'Изменить',
 							size: 'small'
 						},
 						{
@@ -309,15 +295,13 @@ class ncStore extends notFramework.notController {
 
 	createDefault(){
 		return {
-			name: 	'',
-			driver: '',
-			options: '',
+
 		};
 	}
 
 	onCreateFormSubmit(user){
 		this.ui.create.setLoading();
-		this.make.store(user).$create()
+		this.make.file(user).$create()
 			.then((res)=>{
 				this.log(res);
 				this.showResult(this.ui.create, res);
@@ -332,7 +316,7 @@ class ncStore extends notFramework.notController {
 
 	onUpdateFormSubmit(user){
 		this.ui.update.setLoading();
-		this.make.store(user).$update()
+		this.make.file(user).$update()
 			.then((res)=>{
 				this.showResult(this.ui.update, res);
 				if(!Common.isError(res) && !res.error){
@@ -370,4 +354,4 @@ class ncStore extends notFramework.notController {
 
 }
 
-export default ncStore;
+export default ncFile;

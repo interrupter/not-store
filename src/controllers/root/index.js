@@ -6,17 +6,22 @@ let manifest = {
 			{
 				paths: ['store\/([^\/]+)\/([^\/]+)', 'store\/([^\/]+)', 'store'],
 				controller: ncStore
+			},{
+				paths: ['file\/([^\/]+)\/([^\/]+)', 'file\/([^\/]+)', 'file'],
+				controller: ncFile
 			}
 		]
 	},
 	menu:[{
-		title: 	'Файлы',
-		url: 		'/store',
+		title: 	'Ресурсы',
     items: [{
-  		title: 	'Загрузить',
-  		url: 		'/store/create'
+  		title: 	'Файлы',
+  		url: 		'/file'
+  	},{
+  		title: 	'Хранилища',
+  		url: 		'/store'
   	}]
 	}],
 };
 
-export {ncStore, manifest};
+export {ncFile, ncStore, manifest};

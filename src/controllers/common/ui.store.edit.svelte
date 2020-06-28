@@ -219,11 +219,15 @@
 	export function resetLoading(){
 		loading = false;
 	}
-	$: idHelper = validationErrors.id?validationErrors.id.join(', '):fields.id.placeholder;
-	$: idClasses = validationErrors.id?CLASS_ERR:CLASS_OK;
 
-	$: valueHelper = validationErrors.value?validationErrors.value.join(', '):fields.value.placeholder;
-	$: valueClasses = validationErrors.value?CLASS_ERR:CLASS_OK;
+	$: nameHelper = validationErrors.name?validationErrors.name.join(', '):fields.name.placeholder;
+	$: nameClasses = validationErrors.name?CLASS_ERR:CLASS_OK;
+
+	$: valueHelper = validationErrors.options?validationErrors.options.join(', '):fields.options.placeholder;
+	$: valueClasses = validationErrors.options?CLASS_ERR:CLASS_OK;
+
+	$: driverHelper = validationErrors.driver?validationErrors.driver.join(', '):fields.driver.placeholder;
+	$: driverClasses = validationErrors.driver?CLASS_ERR:CLASS_OK;
 
 	$: activeHelper = validationErrors.active?validationErrors.active.join(', '):active.placeholder;
 	$: activeClasses = validationErrors.active?CLASS_ERR:CLASS_OK;

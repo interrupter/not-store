@@ -223,8 +223,8 @@
 	$: nameHelper = validationErrors.name?validationErrors.name.join(', '):fields.name.placeholder;
 	$: nameClasses = validationErrors.name?CLASS_ERR:CLASS_OK;
 
-	$: valueHelper = validationErrors.options?validationErrors.options.join(', '):fields.options.placeholder;
-	$: valueClasses = validationErrors.options?CLASS_ERR:CLASS_OK;
+	$: optionsHelper = validationErrors.options?validationErrors.options.join(', '):fields.options.placeholder;
+	$: optionsClasses = validationErrors.options?CLASS_ERR:CLASS_OK;
 
 	$: driverHelper = validationErrors.driver?validationErrors.driver.join(', '):fields.driver.placeholder;
 	$: driverClasses = validationErrors.driver?CLASS_ERR:CLASS_OK;
@@ -301,7 +301,7 @@
 			required={fields.options.required}
 			bind:value={fields.options.value}
 			name="value"
-			placeholder="{fields.value.placeholder}" rows="10"
+			placeholder="{fields.options.placeholder}" rows="10"
 			aria-controls="input-field-helper-options" aria-describedby="input-field-helper-options"
 			></textarea>
 			{#if fields.options.validated === true }

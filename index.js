@@ -1,4 +1,5 @@
 const path = require('path');
+const notError = require('not-error').notError;
 
 const notStore = require('./src/common/store');
 const notStoreImage = require('./src/common/storeImage');
@@ -36,6 +37,10 @@ module.exports = {
         }else{
           notApp.logger.log(`Stores init end`);
         }
+      })
+      .catch((e)=>{
+        notApp.logger.error(`notStore initialization failed`);
+        notApp.report(new notError('notStore initialization failed', {}, e));
       });
   }
 };

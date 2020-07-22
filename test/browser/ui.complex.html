@@ -16,9 +16,9 @@
 	<script>
 	function showFileSelectPopup(){
 		console.log('show select file popup');
-		if(!STORE['root_complex']){
-			STORE['root_complex'] = new notStore.notStore({
-				complexEl: document.body,				
+		if(!STORE['user_complex']){
+			STORE['user_complex'] = new notStore.notStore({
+				complexEl: document.body,
 				bucket: 'root',
 				test:{
 					role: 'root',
@@ -27,11 +27,11 @@
 				selectMany: true,
 				complex: {
 					popup: true,
-					show: false
+					show: true
 				}
 			});
 		}else{
-			STORE['root_complex'].show().then(console.log).catch(console.error);
+			STORE['user_complex'].show().then(console.log).catch(console.error);
 		}
 	}
 	</script>

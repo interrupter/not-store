@@ -72,6 +72,9 @@
 			el.id = 'role-'+role;
 			document.body.appendChild(el);
 			let opts = {
+				storage:{
+					show: true
+				},
 				storageEl: el,
 				test: {
 					session: `${role}_session`,
@@ -80,7 +83,7 @@
 				selectMany: role === 'root'
 			};
 			if(role === 'root'){
-				opts.bucket = 'root';								
+				opts.bucket = 'root';
 			}
 			STORE[role] = new notStore.notStore(opts);
 		}

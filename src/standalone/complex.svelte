@@ -14,6 +14,7 @@
 
 	onMount(() => {
 		FileStores.get(id).files.subscribe(value => {
+			console.log(popup, show);
 			files = value;
 		});
 		FileStores.get(id).selected.subscribe(value => {
@@ -117,8 +118,8 @@
 		</header>
 		<section class="modal-card-body">
 			<div class="container">
-				<UploaderComponent popup="{false}" bind:id="{id}" on:filesAdded={onChange} />
-				<StorageComponent popup="{false}" on:remove={removeFile} bind:id="{id}" bind:selectMany={selectMany} />
+				<UploaderComponent popup="{false}" show="{true}" bind:id="{id}" on:filesAdded={onChange} />
+				<StorageComponent popup="{false}" show="{true}" on:remove={removeFile} bind:id="{id}" bind:selectMany={selectMany} />
 			</div>
 		</section>
 		<footer class="modal-card-foot">

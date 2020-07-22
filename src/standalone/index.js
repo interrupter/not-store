@@ -131,6 +131,20 @@ class notStore {
 		});
 	}
 
+	getInfo(_id, action = 'get'){
+		let reqOpts = {
+			bucket: this.options.bucket,
+			session: this.options.session,
+			_id
+		};
+		let req = this.getInterface()
+			.setFilter(reqOpts)
+			['$' + action]({});
+		return req.catch((err) => {
+			console.error(err, 'Информация о файле не доступна!');
+		});
+	}
+
 	useGlobalInterface() {
 		return this.options.useGlobalInterface && this.nrFile;
 	}
@@ -215,7 +229,6 @@ class notStore {
 	}
 
 	async onUploads(data) {
-		console.log('new files to upload', data);
 		let files = data.detail;
 		for (let file of files) {
 			let preview = await this.preloadFilePreview(file);
@@ -268,7 +281,6 @@ class notStore {
 
 	removeUpload(ev) {
 		let ids = ev.detail.selected;
-		console.log('remove uploads', ids);
 	}
 
 	uploadFile(upload) {

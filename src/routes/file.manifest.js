@@ -19,6 +19,22 @@ module.exports = {
 				admin: false
 			}]
 		},
+		get: {
+			method: 'GET',
+			isArray: false,
+			postFix: '/:record[_id]',
+			data: ['filter','record'],
+			rules: [{
+				auth: true,
+				admin: true
+			}, {
+				auth: true,
+				admin: false
+			}, {
+				auth: false,
+				admin: false
+			}]
+		},
 		list: {
 			method: 'GET',
 			isArray: true,
@@ -34,6 +50,7 @@ module.exports = {
 				admin: false
 			}]
 		},
+
 		listAndCount:{
 			method: 'get',
 			rules:[{

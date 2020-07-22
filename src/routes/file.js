@@ -1,7 +1,8 @@
 const
 	UserActions = [],
 	AdminActions = [
-		'listAndCount'
+		'listAndCount',
+		'get'
 	],
 	MODEL_NAME = 'File',
 	MODEL_OPTIONS = {
@@ -26,7 +27,7 @@ const store = require('../../').notStore,
 const METADATA_FORBIDDEN_FIELDS = ['exif', 'xmp', 'icc', 'iptc'];
 
 exports.before = (req) => {
-	console.log(req.session);
+
 };
 
 exports._list = function(req, res) {

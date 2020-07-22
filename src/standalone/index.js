@@ -134,12 +134,11 @@ class notStore {
 	getInfo(_id, action = 'get'){
 		let reqOpts = {
 			bucket: this.options.bucket,
-			session: this.options.session,
-			_id
+			session: this.options.session
 		};
 		let req = this.getInterface()
 			.setFilter(reqOpts)
-			['$' + action]({});
+			['$' + action]({ _id });
 		return req.catch((err) => {
 			console.error(err, 'Информация о файле не доступна!');
 		});

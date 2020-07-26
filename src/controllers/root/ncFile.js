@@ -187,7 +187,7 @@ class ncFile extends notFramework.notController {
 		]);
 
 		if (confirm('Удалить файл?')) {
-			this.make.file({_id: params[0]}).$delete()
+			this.make.file({fileID: params[0]}).$delete({fileID: params[0]})
 				.then(()=>{
 					this.goList();
 				})
@@ -247,14 +247,14 @@ class ncFile extends notFramework.notController {
 					path: ':_id',
 					title: 'Действия',
 					type: 'button',
-					preprocessor: (value) => {
+					preprocessor: (value, item) => {
 						return [{
 							action: this.goDetails.bind(this, value),
 							title: 'Подробнее',
 							size: 'small'
 						},
 						{
-							action: this.goDelete.bind(this, value),
+							action: this.goDelete.bind(this, item.fileID),
 							type: 'danger',
 							title: 'Удалить',
 							size: 'small',

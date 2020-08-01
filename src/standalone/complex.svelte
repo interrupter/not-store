@@ -133,6 +133,6 @@
 
 
 {#if !popup && show}
-<UploaderComponent popup="{false}" id="{id}" on:filesAdded={onChange} />
-<StorageComponent popup="{false}" on:remove={removeFile} id="{id}" selectMany={false} />
+<UploaderComponent popup="{false}" show={true} id="{id}" on:filesAdded={onChange} />
+<StorageComponent popup="{false}" show={true} on:remove={removeFile} id="{id}" selectMany={false} />
 {/if}

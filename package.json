@@ -1,6 +1,6 @@
 {
 		"name": "not-store",
-		"version": "1.0.21",
+		"version": "1.0.23",
 		"description": "file storage interface",
 		"main": "index.js",
 		"repository": "https://github.com/interrupter/not-store",
@@ -60,7 +60,7 @@
 				"rollup-plugin-filesize": "^9.0.1",
 				"sharp": "^0.25.3",
 				"streamifier": "^0.1.1",
-				"svelte-dnd-action": "^0.2.4",
+				"svelte-dnd-action": "^0.2.8",
 				"valid-url": "^1.0.9"
 		},
 		"devDependencies": {

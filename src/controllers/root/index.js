@@ -12,16 +12,22 @@ let manifest = {
 			}
 		]
 	},
-	menu:[{
-		title: 	'Ресурсы',
-    items: [{
-  		title: 	'Файлы',
-  		url: 		'/file'
-  	},{
-  		title: 	'Хранилища',
-  		url: 		'/store'
-  	}]
-	}],
+	menu:{
+		side: {
+			items: [{
+				section: 'system',
+				title: 	'Ресурсы',
+		    items: [{
+		  		title: 	'Файлы',
+		  		url: 		'/file'
+		  	},{
+		  		title: 	'Хранилища',
+		  		url: 		'/store'
+		  	}]
+			}]
+		}
+	},
+
 };
 
 export {ncFile, ncStore, manifest};

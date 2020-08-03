@@ -198,6 +198,86 @@ var notStore = (function (exports) {
             block.o(local);
         }
     }
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
 
     function bind(component, name, callback) {
         const index = component.$$.props[name];
@@ -687,7 +767,7 @@ var notStore = (function (exports) {
     	};
     }
 
-    // (74:1) {#if data.path}
+    // (77:1) {#if data.path}
     function create_if_block(ctx) {
     	let figure;
     	let t0;
@@ -711,10 +791,12 @@ var notStore = (function (exports) {
     			div1 = element("div");
     			div0 = element("div");
     			t2 = text(t2_value);
+    			attr(img, "draggable", "true");
     			if (img.src !== (img_src_value = /*data*/ ctx[3].path.small.cloud.Location)) attr(img, "src", img_src_value);
     			attr(img, "alt", img_alt_value = /*data*/ ctx[3].name);
     			attr(img, "class", "svelte-1n0ppue");
     			attr(div0, "class", "text svelte-1n0ppue");
+    			attr(div1, "draggable", "true");
     			attr(div1, "class", "middle svelte-1n0ppue");
     			attr(figure, "class", "image is-4by3 svelte-1n0ppue");
     		},
@@ -759,7 +841,7 @@ var notStore = (function (exports) {
     	};
     }
 
-    // (76:2) {#if !hideDeleteButton}
+    // (79:2) {#if !hideDeleteButton}
     function create_if_block_1(ctx) {
     	let button;
     	let mounted;
@@ -982,11 +1064,11 @@ var notStore = (function (exports) {
     	const child_ctx = ctx.slice();
     	child_ctx[17] = list[i];
     	child_ctx[20] = list;
-    	child_ctx[19] = i;
+    	child_ctx[21] = i;
     	return child_ctx;
     }
 
-    // (98:0) {#if !popup && show}
+    // (99:0) {#if !popup && show}
     function create_if_block_1$1(ctx) {
     	let div1;
     	let div0;
@@ -1077,13 +1159,13 @@ var notStore = (function (exports) {
     	};
     }
 
-    // (101:2) {#each files as file, index}
+    // (102:2) {#each files as file, index}
     function create_each_block_1(ctx) {
     	let updating_data;
     	let current;
 
     	function notfileitem_data_binding(value) {
-    		/*notfileitem_data_binding*/ ctx[14].call(null, value, /*file*/ ctx[17], /*each_value_1*/ ctx[20], /*index*/ ctx[19]);
+    		/*notfileitem_data_binding*/ ctx[14].call(null, value, /*file*/ ctx[17], /*each_value_1*/ ctx[20], /*index*/ ctx[21]);
     	}
 
     	let notfileitem_props = {
@@ -1136,7 +1218,7 @@ var notStore = (function (exports) {
     	};
     }
 
-    // (108:0) {#if popup && show}
+    // (109:0) {#if popup && show}
     function create_if_block$1(ctx) {
     	let div4;
     	let div0;
@@ -1150,6 +1232,8 @@ var notStore = (function (exports) {
     	let section;
     	let div2;
     	let div1;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
     	let t4;
     	let footer;
     	let button1;
@@ -1161,15 +1245,13 @@ var notStore = (function (exports) {
     	let mounted;
     	let dispose;
     	let each_value = /*files*/ ctx[0];
-    	let each_blocks = [];
+    	const get_key = ctx => /*file*/ ctx[17].id;
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
     	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
 
     	return {
     		c() {
@@ -1256,29 +1338,9 @@ var notStore = (function (exports) {
     		},
     		p(ctx, dirty) {
     			if (dirty & /*id, selectMany, files, removeFile*/ 525) {
-    				each_value = /*files*/ ctx[0];
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div1, null);
-    					}
-    				}
-
+    				const each_value = /*files*/ ctx[0];
     				group_outros();
-
-    				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
-
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, outro_and_destroy_block, create_each_block, null, get_each_context);
     				check_outros();
     			}
     		},
@@ -1292,8 +1354,6 @@ var notStore = (function (exports) {
     			current = true;
     		},
     		o(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				transition_out(each_blocks[i]);
     			}
@@ -1302,20 +1362,25 @@ var notStore = (function (exports) {
     		},
     		d(detaching) {
     			if (detaching) detach(div4);
-    			destroy_each(each_blocks, detaching);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+
     			mounted = false;
     			run_all(dispose);
     		}
     	};
     }
 
-    // (119:5) {#each files as file, index}
-    function create_each_block(ctx) {
+    // (120:5) {#each files as file(file.id)}
+    function create_each_block(key_1, ctx) {
+    	let first;
     	let updating_data;
     	let current;
 
     	function notfileitem_data_binding_1(value) {
-    		/*notfileitem_data_binding_1*/ ctx[15].call(null, value, /*file*/ ctx[17], /*each_value*/ ctx[18], /*index*/ ctx[19]);
+    		/*notfileitem_data_binding_1*/ ctx[15].call(null, value, /*file*/ ctx[17], /*each_value*/ ctx[18], /*file_index*/ ctx[19]);
     	}
 
     	let notfileitem_props = {
@@ -1332,10 +1397,15 @@ var notStore = (function (exports) {
     	notfileitem.$on("remove", /*removeFile*/ ctx[9]);
 
     	return {
+    		key: key_1,
+    		first: null,
     		c() {
+    			first = empty();
     			create_component(notfileitem.$$.fragment);
+    			this.first = first;
     		},
     		m(target, anchor) {
+    			insert(target, first, anchor);
     			mount_component(notfileitem, target, anchor);
     			current = true;
     		},
@@ -1363,6 +1433,7 @@ var notStore = (function (exports) {
     			current = false;
     		},
     		d(detaching) {
+    			if (detaching) detach(first);
     			destroy_component(notfileitem, detaching);
     		}
     	};
@@ -1469,6 +1540,10 @@ var notStore = (function (exports) {
 
     	onMount(() => {
     		get(id).files.subscribe(value => {
+    			files.forEach((file, id) => {
+    				file.id = id;
+    			});
+
     			$$invalidate(0, files = value);
     		});
 
@@ -1546,8 +1621,8 @@ var notStore = (function (exports) {
     		$$invalidate(0, files);
     	}
 
-    	function notfileitem_data_binding_1(value, file, each_value, index) {
-    		each_value[index] = value;
+    	function notfileitem_data_binding_1(value, file, each_value, file_index) {
+    		each_value[file_index] = value;
     		$$invalidate(0, files);
     	}
 
@@ -2629,7 +2704,11 @@ var notStore = (function (exports) {
     	let current;
 
     	const uploadercomponent = new Upload({
-    			props: { popup: false, id: /*id*/ ctx[0] }
+    			props: {
+    				popup: false,
+    				show: true,
+    				id: /*id*/ ctx[0]
+    			}
     		});
 
     	uploadercomponent.$on("filesAdded", /*onChange*/ ctx[7]);
@@ -2637,6 +2716,7 @@ var notStore = (function (exports) {
     	const storagecomponent = new Storage({
     			props: {
     				popup: false,
+    				show: true,
     				id: /*id*/ ctx[0],
     				selectMany: false
     			}
@@ -2966,6 +3046,22 @@ var notStore = (function (exports) {
     				role: 'admin'
     			}],
     			postFix: '/:actionName'
+    		},
+    		get: {
+    			method: 'GET',
+    			isArray: false,
+    			postFix: '/:record[_id]',
+    			data: ['filter','record'],
+    			rules: [{
+    				auth: true,
+    				admin: true
+    			}, {
+    				auth: true,
+    				admin: false
+    			}, {
+    				auth: false,
+    				admin: false
+    			}]
     		},
     		delete: {
     			method: 'DELETE',
@@ -3703,6 +3799,19 @@ var notStore = (function (exports) {
     		});
     	}
 
+    	getInfo(_id, action = 'get'){
+    		let reqOpts = {
+    			bucket: this.options.bucket,
+    			session: this.options.session
+    		};
+    		let req = this.getInterface()
+    			.setFilter(reqOpts)
+    			['$' + action]({ _id });
+    		return req.catch((err) => {
+    			console.error(err, 'Информация о файле не доступна!');
+    		});
+    	}
+
     	useGlobalInterface() {
     		return this.options.useGlobalInterface && this.nrFile;
     	}
@@ -3787,7 +3896,6 @@ var notStore = (function (exports) {
     	}
 
     	async onUploads(data) {
-    		console.log('new files to upload', data);
     		let files = data.detail;
     		for (let file of files) {
     			let preview = await this.preloadFilePreview(file);
@@ -3840,7 +3948,6 @@ var notStore = (function (exports) {
 
     	removeUpload(ev) {
     		let ids = ev.detail.selected;
-    		console.log('remove uploads', ids);
     	}
 
     	uploadFile(upload) {

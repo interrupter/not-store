@@ -21,6 +21,7 @@
 
 	onMount(() => {
 		FileStores.get(id).files.subscribe(value => {
+			files.forEach((file, id)=>{file.id = id;});
 			files = value;
 		});
 		FileStores.get(id).selected.subscribe(value => {
@@ -99,7 +100,7 @@
 <div class="container">
 	<div class="file-list">
 		{#each files as file, index}
-		<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile}/>
+		<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
 		{/each}
 	</div>
 </div>
@@ -116,7 +117,7 @@
 		<section class="modal-card-body">
 			<div class="container">
 				<div class="file-list">
-					{#each files as file, index}
+					{#each files as file(file.id)}
 					<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile}/>
 					{/each}
 				</div>

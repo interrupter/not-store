@@ -1,4 +1,5 @@
 <script>
+
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -65,6 +66,8 @@
 	}
 
 	$: ifSelected = selected ? 'selected' : '';
+
+
 </script>
 
 <div class="tile file is-3 is-child {ifSelected}" on:click="{onClick}" data-uuid="{data.uuid}">
@@ -76,8 +79,8 @@
 		{#if !hideDeleteButton}
 		<button class="delete" on:click="{remove}"></button>
 		{/if}
-		<img src="{data.path.small.cloud.Location}"  alt={data.name}/>
-		<div class="middle">
+		<img draggable="true" src="{data.path.small.cloud.Location}"  alt={data.name}/>
+		<div draggable="true" class="middle">
 			<div class="text">{data.name}</div>
 		</div>
 	</figure>

@@ -224,6 +224,10 @@ class ncFile extends notFramework.notController {
 				endless: false,
 				preload: {},
 				sorter: { fileID: -1 },
+				pager: {
+					size: 50,
+					page: 0
+				},
 				actions: [{
 					title: 'Создать',
 					action: this.goCreate.bind(this)

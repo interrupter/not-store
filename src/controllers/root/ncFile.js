@@ -118,7 +118,7 @@ class ncFile extends notFramework.notController {
 				this.ui.details = new UIDetails({
 					target: this.els.main,
 					props:{
-						user: notFramework.notCommon.stripProxy(res.result)
+						item: notFramework.notCommon.stripProxy(res).result
 					}
 				});
 			}else{
@@ -160,7 +160,7 @@ class ncFile extends notFramework.notController {
 					target: this.els.main,
 					props:{
 						mode: 			'update',
-						user: 			notFramework.notCommon.stripProxy(res.result)
+						item: 			notFramework.notCommon.stripProxy(res).result
 					}
 				});
 				this.ui.update.$on('update', (ev) => {this.onUpdateFormSubmit(ev.detail);});

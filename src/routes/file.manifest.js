@@ -22,7 +22,7 @@ module.exports = {
 		list: {
 			method: 'GET',
 			isArray: true,
-			data: ['pager', 'sorter', 'filter'],
+			data: ['pager', 'sorter', 'filter', 'search'],
 			rules: [{
 				auth: true,
 				admin: true
@@ -36,6 +36,7 @@ module.exports = {
 		},
 		listAndCount:{
 			method: 'get',
+			data: ['pager', 'sorter', 'filter', 'search'],
 			rules:[{
 				auth: true,
 				admin: true

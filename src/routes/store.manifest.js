@@ -34,6 +34,7 @@ module.exports = {
 		listAndCount:{
 			method: 'get',
 			isArray: false,
+			data: ['pager', 'sorter', 'filter', 'search'],
 			rules:[{
 				auth: true,
 				admin: true

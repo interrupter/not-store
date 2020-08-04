@@ -10,7 +10,10 @@ const
 		MODEL_TITLE: 'Файл',
 		populate: {
 			listAndCount: [ 'userId' ]
-		}
+		},
+		RESPONSE:{
+			full: ['get','getRaw','create']
+		},
 	},
 	modMeta = require('not-meta');
 

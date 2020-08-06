@@ -7,8 +7,6 @@ const LABELS = {
 	single: 'Ключ',
 };
 
-import Validators from '../common/validators.js';
-
 class ncFile extends ncCRUD {
 	constructor(app, params) {
 		super(app);

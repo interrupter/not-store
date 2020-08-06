@@ -7,14 +7,13 @@
 	const CLASS_ERR = Common.CLASS_ERR;
 	const CLASS_OK = Common.CLASS_OK;
 
-	let overlay;
-	let stage = 'filling';
+	
 	let errorMessage = false;
 	let formErrors = false;
 	let success = false;
 
 	let validationErrors = {
-    active:        	false,
+		active:        	false,
 		value:       	false,
 		id: 					false
 	};
@@ -252,12 +251,8 @@
 	<div class="field edit-form-field edit-form-name">
 		<label class="label">{fields.name.label}</label>
 		<div class="control has-icons-right">
-			<input class="input {nameClasses}" type="text" name="name"
-				invalid="{validationErrors.name}" required={fields.name.required}
-				placeholder="{fields.name.placeholder}"
-				bind:value={fields.name.value} on:change={onChange}
-				on:input={onInput} autocomplete="name"
-				aria-controls="input-field-helper-name" aria-describedby="input-field-helper-name" />
+			<input class="input {nameClasses}" type="text" name="name" invalid="{validationErrors.name}" required={fields.name.required} placeholder="{fields.name.placeholder}" bind:value={fields.name.value} on:change={onChange} on:input={onInput}
+				autocomplete="name" aria-controls="input-field-helper-name" aria-describedby="input-field-helper-name" />
 			{#if fields.name.validated === true }
 			<span class="icon is-small is-right">
 				{#if fields.name.valid}
@@ -296,21 +291,15 @@
 	<div class="edit-form-field edit-form-options field">
 		<label class="label">{fields.options.label}</label>
 		<div class="control has-icons-right">
-			<textarea invalid="{validationErrors.options}" on:change={onChange} on:input={onInput}
-			class="textarea {optionsClasses}"
-			required={fields.options.required}
-			bind:value={fields.options.value}
-			name="value"
-			placeholder="{fields.options.placeholder}" rows="10"
-			aria-controls="input-field-helper-options" aria-describedby="input-field-helper-options"
-			></textarea>
+			<textarea invalid="{validationErrors.options}" on:change={onChange} on:input={onInput} class="textarea {optionsClasses}" required={fields.options.required} bind:value={fields.options.value} name="value" placeholder="{fields.options.placeholder}"
+				rows="10" aria-controls="input-field-helper-options" aria-describedby="input-field-helper-options"></textarea>
 			{#if fields.options.validated === true }
 			<span class="icon is-small is-right">
-					{#if fields.options.valid}
-					<i class="fas fa-check"></i>
-					{:else}
-					<i class="fas fa-exclamation-triangle"></i>
-					{/if}
+				{#if fields.options.valid}
+				<i class="fas fa-check"></i>
+				{:else}
+				<i class="fas fa-exclamation-triangle"></i>
+				{/if}
 			</span>
 			{/if}
 		</div>
@@ -325,16 +314,8 @@
 
 	{#if fields.active.enabled}
 	<div class="edit-form-field edit-form-active field">
-			<input
-				id="user-login-form-active-field"
-				class="switch is-rounded is-success "
-				bind:checked={fields.active.value}
-				required={fields.active.required}
-				placeholder="{fields.active.placeholder}"
-				invalid="{validationErrors.active}" on:change={onChange} on:input={onInput}
-				name="active" type="checkbox"
-				aria-controls="input-field-helper-active" aria-describedby="input-field-helper-active"
-				/>
+		<input id="user-login-form-active-field" class="switch is-rounded is-success " bind:checked={fields.active.value} required={fields.active.required} placeholder="{fields.active.placeholder}" invalid="{validationErrors.active}" on:change={onChange}
+			on:input={onInput} name="active" type="checkbox" aria-controls="input-field-helper-active" aria-describedby="input-field-helper-active" />
 		<label class="label" for="user-login-form-active-field">{fields.active.label}</label>
 		<p class="help {activeClasses}" id="input-field-helper-active">
 			{#if !(fields.active.validated && fields.active.valid) }

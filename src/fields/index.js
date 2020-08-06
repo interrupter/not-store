@@ -1,3 +1,5 @@
+const Schema = require('mongoose').Schema;
+
 exports.FIELDS = {
 	filename: {
 		ui:{

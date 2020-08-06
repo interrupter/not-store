@@ -8,8 +8,6 @@ const DEFAULT_OPTS = {
 		height: 100
 	}
 };
-//css
-import 'bulma';
 //выбор из уже загруженных
 import StorageComponent from './storage.svelte';
 //загрузка с локального диска
@@ -37,8 +35,8 @@ class notStore {
 		this.generateID();
 		this.createStore();
 		if(this.options.complex && this.options.complex.popup){
-				this.renderComplex();
-				this.loadFilesData().catch(console.error);
+			this.renderComplex();
+			this.loadFilesData().catch(console.error);
 		}else{
 			if (this.options.storageEl) {
 				this.renderStorage();
@@ -137,8 +135,7 @@ class notStore {
 			session: this.options.session
 		};
 		let req = this.getInterface()
-			.setFilter(reqOpts)
-			['$' + action]({ _id });
+			.setFilter(reqOpts)['$' + action]({ _id });
 		return req.catch((err) => {
 			console.error(err, 'Информация о файле не доступна!');
 		});
@@ -278,8 +275,8 @@ class notStore {
 		});
 	}
 
-	removeUpload(ev) {
-		let ids = ev.detail.selected;
+	removeUpload() {
+		//let ids = ev.detail.selected;
 	}
 
 	uploadFile(upload) {

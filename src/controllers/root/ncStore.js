@@ -1,4 +1,4 @@
-/* global notFramework */
+/* global notFramework, document, confirm */
 
 const ERROR_DEFAULT = 'Что пошло не так.';
 

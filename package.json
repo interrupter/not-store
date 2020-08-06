@@ -1,6 +1,6 @@
 {
 		"name": "not-store",
-		"version": "1.0.28",
+		"version": "1.0.29",
 		"description": "file storage interface",
 		"main": "index.js",
 		"repository": "https://github.com/interrupter/not-store",
@@ -17,7 +17,7 @@
 				"debug:server": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY node --inspect=8357 ./test/server/index.js",
 				"test:server:off": "wget -qO- http://localhost:7357/terminate",
 				"test": "npm run test:server & npm run test:node && npm run test:run",
-				"lint": "/usr/local/bin/eslint --ext svelte3 ./src/**/**",
+				"lint": "/usr/local/bin/eslint --ext svelte3 ./src/**/**/**/**",
 				"pretest": "./node_modules/.bin/eslint ./src/**/**",
 				"docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
 				"cover": "npm run test:server & sleep 1m && npm run cover:node && npm run cover:run && npm run cover:report",

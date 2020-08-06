@@ -1,9 +1,10 @@
-/* global notFramework */
 import Validators from '../common/validators.js';
-import {ncCRUD} from 'not-bulma';
+import {
+	ncCRUD
+} from 'not-bulma';
 
 const LABELS = {
-	plural:  LABELS.plural,
+	plural: LABELS.plural,
 	single: 'Ключ',
 };
 
@@ -16,38 +17,38 @@ class ncFile extends ncCRUD {
 		this.setOptions('params', params);
 		this.setOptions('preload', {});
 		this.setOptions('list', {
-				fields: [{
-					path: ':fileID',
-					title: 'ID',
-					searchable: true,
-					sortable: true
-				},{
-					path: ':name',
-					title: 'Имя',
-					searchable: true,
-					sortable: true
-				},{
-					path: ':extension',
-					title: 'Формат',
-					searchable: true,
-					sortable: true
-				}, {
-					path: ':bucket',
-					title: 'Бакет',
-					searchable: true,
-					sortable: true
-				}, {
-					path: ':path.micro.cloud.Location',
-					title: 'Превью',
-					searchable: true,
-					sortable: true,
-					type: 'image',
-				}, {
-					path: ':_id',
-					title: 'Действия',
-					type: 'button',
-					preprocessor: (value) => {
-						return [{
+			fields: [{
+				path: ':fileID',
+				title: 'ID',
+				searchable: true,
+				sortable: true
+			}, {
+				path: ':name',
+				title: 'Имя',
+				searchable: true,
+				sortable: true
+			}, {
+				path: ':extension',
+				title: 'Формат',
+				searchable: true,
+				sortable: true
+			}, {
+				path: ':bucket',
+				title: 'Бакет',
+				searchable: true,
+				sortable: true
+			}, {
+				path: ':path.micro.cloud.Location',
+				title: 'Превью',
+				searchable: true,
+				sortable: true,
+				type: 'image',
+			}, {
+				path: ':_id',
+				title: 'Действия',
+				type: 'button',
+				preprocessor: (value) => {
+					return [{
 							action: this.goDetails.bind(this, value),
 							title: 'Подробнее',
 							size: 'small'
@@ -64,15 +65,15 @@ class ncFile extends ncCRUD {
 							size: 'small',
 							style: 'outlined'
 						}
-						];
-					},
-				}]
-			});
-			this.start();
-			return this;
+					];
+				},
+			}]
+		});
+		this.start();
+		return this;
 	}
 
-	createDefault(){
+	createDefault() {
 		return {
 
 		};

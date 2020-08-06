@@ -19,7 +19,7 @@ import * as FileStores from './file.stores.js';
 
 import {
 	default as StandartInterface
-} from '../routes/file.manifest.js';
+} from './file.manifest.js';
 
 
 import netInterface from './interface.js';

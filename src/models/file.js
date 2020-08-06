@@ -1,76 +1,36 @@
-const Schema = require('mongoose').Schema,
-	store = require('../../').notStore;
+const store = require('../../').notStore;
+const initFields = require('not-node').Fields.initFields;
+const MODEL_NAME = 'File';
 
-exports.thisModelName = 'File';
+const FIELDS = [
+	'uuid',
+	['name', {}, 'filename'],
+	'extension',
+	'bucket',
+	'metadata',
+	'path',
+	['userIp', {}, 'ip'],
+	'userId',
+	'session',
+	'size',
+	'width',
+	'height'
+];
+
+exports.thisModelName = MODEL_NAME;
+
 exports.enrich = {
 	versioning: true,
 	increment: true,
 	validators: true
 };
 
+exports.thisSchema = initFields(FIELDS, 'model');
+
 exports.schemaOptions = {
 	schemaOptions: {
 		timestamps: true
 	}
-};
-
-exports.thisSchema = {
-	uuid: {
-		type: String,
-		searchable: true,
-		required: true
-	},
-	name: {
-		type: String,
-		searchable: true,
-		required: true
-	},
-	extension: {
-		type: String,
-		searchable: true,
-		required: true
-	},
-	bucket: {
-		type: String,
-		searchable: true,
-		required: true
-	},
-	metadata: {
-		type: Schema.Types.Mixed,
-		required: false
-	},
-	path: {
-		type: Schema.Types.Mixed,
-		required: false
-	},
-	userIp: {
-		type: String,
-		searchable: true,
-		required: true
-	},
-	userId: {
-		type: Schema.Types.ObjectId,
-		ref: 'User',
-		required: false
-	},
-	session: {
-		type: String,
-		searchable: true,
-		required: true
-	},
-	size: {
-		type: Number,
-		default: 0,
-		required: true
-	},
-	width: {
-		type: Number,
-		required: false
-	},
-	height: {
-		type: Number,
-		required: false
-	},
 };
 
 exports.thisStatics = {

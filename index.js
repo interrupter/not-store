@@ -16,6 +16,7 @@ module.exports = {
 		routes:				path.join(__dirname, '/src/routes'),
     controllers:	path.join(__dirname, '/src/controllers'),
 		models:				path.join(__dirname, '/src/models'),
+    fields:       path.join(__dirname, '/src/fields'),
 	},
   initialize: (notApp)=>{
     let Store = notApp.getModel('Store');

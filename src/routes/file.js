@@ -29,9 +29,7 @@ const store = require('../../').notStore,
 
 const METADATA_FORBIDDEN_FIELDS = ['exif', 'xmp', 'icc', 'iptc'];
 
-exports.before = (req) => {
-
-};
+exports.before = () => {};
 
 exports._list = function(req, res) {
 	let File = App.getModel('File'),

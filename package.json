@@ -1,6 +1,6 @@
 {
 		"name": "not-store",
-		"version": "1.0.26",
+		"version": "1.0.27",
 		"description": "file storage interface",
 		"main": "index.js",
 		"repository": "https://github.com/interrupter/not-store",
@@ -53,7 +53,7 @@
 				"not-filter": "^0.2.2",
 				"not-log": "0.0.14",
 				"not-meta": "0.0.15",
-				"not-node": "^3.3.49",
+				"not-node": "^3.3.59",
 				"not-path": "^1.0.0",
 				"not-ws": "0.0.14",
 				"rollup-plugin-babel": "^4.4.0",

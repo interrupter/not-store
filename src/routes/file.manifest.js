@@ -1,7 +1,17 @@
+const modelSchema = require('../models/file.js').thisSchema;
+const initFromSchema = require('not-node').Fields.fromSchema;
+
+const FIELDS = initFromSchema(modelSchema, [
+	'_id',
+	['name', {}, 'filename'],
+	['fileID', {}, 'ID'],
+	['userIp', {}, 'ip'],
+]);
+
 module.exports = {
 	model: 'file',
 	url: '/api/:modelName',
-	fields: {},
+	fields: FIELDS,
 	actions: {
 		create: {
 			method: 'PUT',
@@ -23,6 +33,21 @@ module.exports = {
 			method: 'GET',
 			isArray: true,
 			data: ['pager', 'sorter', 'filter', 'search'],
+			fields:[
+				'_id',
+				'fileID',
+				'name',
+				'extension',
+				'bucket',
+				'metadata',
+				'path',
+				'userIp',
+				'userId',
+				'session',
+				'width',
+				'height',
+				'size',
+			],
 			rules: [{
 				auth: true,
 				admin: true
@@ -37,6 +62,21 @@ module.exports = {
 		listAndCount:{
 			method: 'get',
 			data: ['pager', 'sorter', 'filter', 'search'],
+			fields:[
+				'_id',
+				'fileID',
+				'name',
+				'extension',
+				'bucket',
+				'metadata',
+				'path',
+				'userIp',
+				'userId',
+				'session',
+				'width',
+				'height',
+				'size',
+			],
 			rules:[{
 				auth: true,
 				admin: true
@@ -51,6 +91,21 @@ module.exports = {
 			isArray: false,
 			postFix: '/:record[_id]',
 			data: ['filter','record'],
+			fields:[
+				'_id',
+				'fileID',
+				'name',
+				'extension',
+				'bucket',
+				'metadata',
+				'path',
+				'userIp',
+				'userId',
+				'session',
+				'width',
+				'height',
+				'size',
+			],
 			rules: [{
 				auth: true,
 				admin: true

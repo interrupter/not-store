@@ -1,7 +1,9 @@
-/* global notFramework, document, confirm */
+/* global document, confirm */
+
 
 const ERROR_DEFAULT = 'Что пошло не так.';
 
+import { notController, notCommon } from 'not-framework';
 import {
 	Breadcrumbs,
 	Table as notTable,
@@ -14,9 +16,9 @@ import UIDetails from '../common/ui.store.details.svelte';
 
 const BREADCRUMBS = [{ title: 'Хранилища', url: '/store' }];
 
-class ncStore extends notFramework.notController {
+class ncStore extends notController {
 	constructor(app, params) {
-		notFramework.notCommon.log('init site app ', params, 'list');
+		notCommon.log('init site app ', params, 'list');
 		super(app);
 		this.ui = {};
 		this.els = {};
@@ -68,7 +70,7 @@ class ncStore extends notFramework.notController {
 			} else if (params[1] === 'update') {
 				return this.runUpdate(params);
 			} else {
-				let routeRunnerName = 'run' + notFramework.notCommon.capitalizeFirstLetter(params[1]);
+				let routeRunnerName = 'run' + notCommon.capitalizeFirstLetter(params[1]);
 				if (this[routeRunnerName] && typeof this[routeRunnerName] === 'function') {
 					return this[routeRunnerName](params);
 				}
@@ -115,7 +117,7 @@ class ncStore extends notFramework.notController {
 		}
 		this.make.store({_id: params[0]}).$get().then((res)=>{
 			if(res.status === 'ok'){
-				let item = notFramework.notCommon.stripProxy(res.result);
+				let item = notCommon.stripProxy(res.result);
 				item.options = JSON.stringify(item.options, null, 4);
 				item.options = item.options.replace(/([^>])\n/g, '$1<br/>');
 				this.ui.details = new UIDetails({
@@ -163,7 +165,7 @@ class ncStore extends notFramework.notController {
 					target: this.els.main,
 					props:{
 						mode: 			'update',
-						item: 			notFramework.notCommon.stripProxy(res.result)
+						item: 			notCommon.stripProxy(res.result)
 					}
 				});
 				this.ui.update.$on('update', (ev) => {this.onUpdateFormSubmit(ev.detail);});
@@ -363,7 +365,7 @@ class ncStore extends notFramework.notController {
 	showResult(ui, res) {
 		ui.resetLoading();
 		if(Common.isError(res)){
-			notFramework.notCommon.report(res);
+			notCommon.report(res);
 		}else{
 			if(res.errors && Object.keys(res.errors).length > 0){
 				if (!Array.isArray(res.error)){

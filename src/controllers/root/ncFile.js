@@ -1,10 +1,11 @@
 import Validators from '../common/validators.js';
+
 import {
 	ncCRUD
 } from 'not-bulma';
 
 const LABELS = {
-	plural: LABELS.plural,
+	plural: 'Ключи',
 	single: 'Ключ',
 };
 

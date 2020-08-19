@@ -3,11 +3,12 @@
 
 const ERROR_DEFAULT = 'Что пошло не так.';
 
-import { notController, notCommon } from 'not-framework';
 import {
 	Breadcrumbs,
 	Table as notTable,
-	UIError
+	UIError,
+	notController,
+	notCommon
 } from 'not-bulma';
 
 import Common from '../common/index.js';

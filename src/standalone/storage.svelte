@@ -1,11 +1,23 @@
 <script>
+	let dragMaster = null;
+	let inlineList = null;
+	let modalList = null;
 
-	import { onMount } from 'svelte';
-	import { createEventDispatcher } from 'svelte';
+	import {
+		onMount,
+		afterUpdate
+	} from 'svelte';
+	import {
+		createEventDispatcher
+	} from 'svelte';
 	const dispatch = createEventDispatcher();
 
-	import { Confirmation } from './confirm.js';
-
+	import {
+		Confirmation
+	} from './confirm.js';
+	import * as Sensors from  '../assets/draggable/src/Draggable/Sensors/index.js';
+	import Droppable from '../assets/draggable/src/Droppable/Droppable.js';
+	import Draggable from '../assets/draggable/src/Draggable/Draggable.js';
 	import * as FileStores from './file.stores.js';
 	import NotFileItem from './file.svelte';
 
@@ -19,9 +31,58 @@
 	export let onReject;
 	export let onResolve;
 
+	function getListContainer() {
+		if (modalList) {
+			return modalList.querySelectorAll('.container .file-list');
+		} else if (inlineList) {
+			return inlineList.querySelectorAll('.container .file-list');
+		} else {
+			return false;
+		}
+	}
+
+	function updateDragNDrop() {
+		let containers = getListContainer();
+		if (containers) {
+			if (dragMaster) {
+				console.log('destroy');
+				dragMaster.destroy();
+				dragMaster = null;
+			}
+			dragMaster = new Droppable(containers, {
+				draggable: '.file',
+				dropzone: '#dropzone-file',
+				handle: '.file figure img',
+				sensors: [Sensors.DragSensor],
+			});
+			dragMaster.on('drag:start', (e) => {
+				console.log('drag:start', e);
+				//e.cancel();
+			});
+
+			dragMaster.on('drag:move', (e) => {
+				console.log('drag:move', e);
+			});
+
+			dragMaster.on('drag:stop', (e) => {
+				console.log('drag:stop', e);
+			});
+
+			dragMaster.on('drag:stopped', (e) => {
+				console.log('drag:stopped', e);
+			});
+
+			dragMaster.on('droppable:dropped', () => console.log('droppable:dropped'));
+			dragMaster.on('droppable:returned', () => console.log('droppable:returned'));
+		}
+	}
+
 	onMount(() => {
+		updateDragNDrop();
 		FileStores.get(id).files.subscribe(value => {
-			files.forEach((file, id)=>{file.id = id;});
+			files.forEach((file, id) => {
+				file.id = id;
+			});
 			files = value;
 		});
 		FileStores.get(id).selected.subscribe(value => {
@@ -29,75 +90,84 @@
 		});
 	});
 
+	afterUpdate(() => {
+		updateDragNDrop();
+	})
+
 	export function updateFiles(newFiles) {
-		FileStores.get(id).update((oldFiles)=>{
+		FileStores.get(id).update((oldFiles) => {
 			oldFiles.splice(0, oldFiles.length, ...newFiles);
 			return oldFiles;
 		});
 	}
 
-	function closePopup(){
+	function closePopup() {
 		show = false;
 	}
 
-	function rejectPopup(){
+	function rejectPopup() {
 		closePopup();
-		if(onReject){
+		if (onReject) {
 			onReject();
 			onReject = null;
-		}else{
+		} else {
 			dispatch('reject');
 		}
 	}
 
-	function resolvePopup(){
+	function resolvePopup() {
 		closePopup();
-		if(selected.length){
-			let images = files.filter((file)=>{
-				return selected.indexOf(file.uuid)>-1;
+		if (selected.length) {
+			let images = files.filter((file) => {
+				return selected.indexOf(file.uuid) > -1;
 			});
-			if(onResolve){
+			if (onResolve) {
 				onResolve(images);
 				onResolve = null;
-			}else{
-				dispatch('resolve', {selected: images});
+			} else {
+				dispatch('resolve', {
+					selected: images
+				});
 			}
-		}else{
-			if(onResolve){
+		} else {
+			if (onResolve) {
 				onResolve([]);
 				onResolve = null;
-			}else{
-				dispatch('resolve', {selected: []});
+			} else {
+				dispatch('resolve', {
+					selected: []
+				});
 			}
 		}
 	}
 
-	function removeSelected(){
+	function removeSelected() {
 		Confirmation.ask({
-			title: 		`Удаление файлов (${selected.length}) `,
-			text: 		'Файлы будут удалены без возможнеости восстановления!',
-			approval: 'Удалить файлы?'
-		})
-			.then(()=>{
-				console.log('remove approved');
-				dispatch('remove', {selected});
+				title: `Удаление файлов (${selected.length}) `,
+				text: 'Файлы будут удалены без возможнеости восстановления!',
+				approval: 'Удалить файлы?'
 			})
-			.catch(()=>{
+			.then(() => {
+				console.log('remove approved');
+				dispatch('remove', {
+					selected
+				});
+			})
+			.catch(() => {
 				console.log('remove disapprove');
 			});
 	}
 
-	function removeFile(ev){
+	function removeFile(ev) {
 		console.log('removeFile', ev);
 		dispatch('remove', {
 			selected: [ev.detail.uuid]
 		});
 	}
-
 </script>
 
 {#if !popup && show}
-<div class="container">
+<div class="container" bind:this={inlineList}>
 	<div class="file-list">
 		{#each files as file, index}
 		<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
@@ -107,7 +177,7 @@
 {/if}
 
 {#if popup && show}
-<div class="modal is-active">
+<div class="modal is-active" bind:this={modalList}>
 	<div class="modal-background"></div>
 	<div class="modal-card">
 		<header class="modal-card-head">
@@ -118,7 +188,7 @@
 			<div class="container">
 				<div class="file-list">
 					{#each files as file(file.id)}
-					<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile}/>
+					<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
 					{/each}
 				</div>
 			</div>

@@ -35,7 +35,7 @@ export default {
         }]
       ]
     }),
-    /*(process.env.ENV !== 'test' && process.env.ENV !== 'debug' &&
+    //(process.env.ENV !== 'test' && process.env.ENV !== 'debug' &&
       babel({
         presets: [
           [
@@ -53,6 +53,8 @@ export default {
         babelrc: false,
         runtimeHelpers: true,
         plugins: [
+          "@babel/plugin-syntax-class-properties",
+          "@babel/plugin-proposal-class-properties",
           "@babel/transform-arrow-functions",
           [
             "@babel/transform-runtime",{
@@ -61,7 +63,9 @@ export default {
           ]
         ],
         exclude: ['tmpl/**', 'build/**', 'node_modules/**', 'css/**', 'js/**', 'test/**', 'bower_components/**', 'assets/*', 'dist/**']
-      })),*/
+      })
+    //)
+    ,
     /*(process.env.ENV === 'test' && istanbul({
       extensions: ['.js', '.svelte'],
       compact: false,

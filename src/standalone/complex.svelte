@@ -1,8 +1,8 @@
 <script>
+
 	import { onMount } from 'svelte';
 	import UploaderComponent from './upload.svelte';
 	import StorageComponent from './storage.svelte';
-
 	import {
 		createEventDispatcher
 	} from 'svelte';

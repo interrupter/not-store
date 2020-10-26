@@ -26,11 +26,6 @@
 	export let show = false;
 	export let elementSize = 3;
 
-	export let dragNDrop = false;
-	export let dragNDropContainerClass = 'drag-n-drop';
-	export let dropzoneClass = 'dropzone';
-	export let droppableClass = 'droppable';
-
 	export let onReject;
 	export let onResolve;
 
@@ -129,10 +124,10 @@
 </script>
 
 {#if !popup && show}
-<div class="container {dragNDrop?dragNDropContainerClass:''}" bind:this={inlineList}>
+<div class="container" bind:this={inlineList}>
 	<div class="file-list">
 		{#each files as file, index}
-		<NotFileItem bind:data={file} {dragNDrop} {dragNDropContainerClass} {dropzoneClass} {droppableClass} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
+		<NotFileItem bind:data={file} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
 		{/each}
 	</div>
 </div>

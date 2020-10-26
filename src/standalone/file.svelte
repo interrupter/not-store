@@ -1,6 +1,4 @@
 <script>
-	import {Droppable} from '../assets/draggable';
-
 	import { createEventDispatcher,onMount } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -9,10 +7,6 @@
 
 	export let progress = 0;
 	export let selected = false;
-	export let dragNDrop = false;
-	export let dragNDropContainerClass = 'drag-n-drop';
-	export let dropzoneClass = 'dropzone';
-	export let droppableClass = 'droppable';
 	export let notUploaded = false;
 	export let selectMany = false;
 	export let hideDeleteButton = false;
@@ -26,35 +20,6 @@
 		preview: false
 	};
 
-	let lastDrop = false;
-
-	function reinitDroppable() {
-    const droppable = new Droppable(document.querySelectorAll(`.${dragNDropContainerClass}`), {
-      draggable: `.file[data-uuid="${data.uuid}"]>.${droppableClass}`,
-      dropzone: `.${dropzoneClass}`
-    });
-    droppable.on('droppable:start', (e) => {
-      lastDrop = false;
-    });
-    droppable.on('droppable:dropped', (e) => {
-      let elId = e.data.dragEvent.data.originalSource.dataset.uuid;
-      let zoneId = e.data.dropzone.dataset.id;
-      lastDrop = {
-        elId,
-        zoneId
-      };
-      e.cancel();
-    });
-    droppable.on('droppable:returned', (e) => {
-      lastDrop = false;
-    });
-    droppable.on('droppable:stop', (e) => {
-      if (lastDrop) {
-        dispatch('dropped', lastDrop);
-      }
-    });
-  }
-
 	onMount(() => {
 		FileStores.get(bucketId).selected.subscribe((value) => {
 			if (value.indexOf(data.uuid) > -1) {
@@ -63,9 +28,6 @@
 				selected = false;
 			}
 		});
-		if (dragNDrop){
-			reinitDroppable();
-		}
 	});
 
 	function onClick() {
@@ -101,27 +63,24 @@
 	}
 
 	$: ifSelected = selected ? 'selected' : '';
-	$: ifDragNDrop = dragNDrop ? ' draggable-dropzone--occupied ' : '';
 
 </script>
 
-<div class="tile file is-{elementSize} is-child {ifSelected} {ifDragNDrop}" on:click="{onClick}" data-uuid="{data.uuid}">
-	<div class="{droppableClass}" data-uuid="{data.uuid}">
-		{#if notUploaded}
-		<progress class="progress is-link" value="{progress}" max="100">{progress}%</progress>
+<div class="tile file is-{elementSize} is-child {ifSelected}" on:click="{onClick}" data-uuid="{data.uuid}">
+	{#if notUploaded}
+	<progress class="progress is-link" value="{progress}" max="100">{progress}%</progress>
+	{/if}
+	{#if data.path}
+	<figure class="image is-4by3">
+		{#if !hideDeleteButton}
+		<button class="delete" on:click="{remove}"></button>
 		{/if}
-		{#if data.path}
-		<figure class="image is-4by3">
-			{#if !hideDeleteButton}
-			<button class="delete" on:click="{remove}"></button>
-			{/if}
-			<img draggable="true" src="{data.path.small.cloud.Location}"  alt={data.name}/>
-			<div draggable="true" class="middle">
-				<div class="text">{data.name}</div>
-			</div>
-		</figure>
-		{/if}
-	</div>
+		<img draggable="true" src="{data.path.small.cloud.Location}"  alt={data.name}/>
+		<div draggable="true" class="middle">
+			<div class="text">{data.name}</div>
+		</div>
+	</figure>
+	{/if}
 </div>
 
 <style>

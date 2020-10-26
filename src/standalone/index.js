@@ -34,21 +34,23 @@ class notStore {
 	init() {
 		this.generateID();
 		this.createStore();
-		if(this.options.preload){
-			this.loadFilesData().catch(console.error);
-			return;
-		}
 		if(this.options.complex && this.options.complex.popup){
 			this.renderComplex();
 			this.loadFilesData().catch(console.error);
+			return;
 		}else{
 			if (this.options.storageEl) {
 				this.renderStorage();
 				this.loadFilesData().catch(console.error);
+				return;
 			}
 			if (this.options.uploadEl) {
 				this.renderUpload();
+				return;
 			}
+		}
+		if(this.options.preload){
+			this.loadFilesData().catch(console.error);
 		}
 	}
 

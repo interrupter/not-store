@@ -15,9 +15,6 @@
 	import {
 		Confirmation
 	} from './confirm.js';
-	import * as Sensors from  '../assets/draggable/src/Draggable/Sensors/index.js';
-	import Droppable from '../assets/draggable/src/Droppable/Droppable.js';
-	import Draggable from '../assets/draggable/src/Draggable/Draggable.js';
 	import * as FileStores from './file.stores.js';
 	import NotFileItem from './file.svelte';
 
@@ -27,6 +24,12 @@
 	export let selectMany;
 	export let popup = false;
 	export let show = false;
+	export let elementSize = 3;
+
+	export let dragNDrop = false;
+	export let dragNDropContainerClass = 'drag-n-drop';
+	export let dropzoneClass = 'dropzone';
+	export let droppableClass = 'droppable';
 
 	export let onReject;
 	export let onResolve;
@@ -41,44 +44,7 @@
 		}
 	}
 
-	function updateDragNDrop() {
-		let containers = getListContainer();
-		if (containers) {
-			if (dragMaster) {
-				console.log('destroy');
-				dragMaster.destroy();
-				dragMaster = null;
-			}
-			dragMaster = new Droppable(containers, {
-				draggable: '.file',
-				dropzone: '#dropzone-file',
-				handle: '.file figure img',
-				sensors: [Sensors.DragSensor],
-			});
-			dragMaster.on('drag:start', (e) => {
-				console.log('drag:start', e);
-				//e.cancel();
-			});
-
-			dragMaster.on('drag:move', (e) => {
-				console.log('drag:move', e);
-			});
-
-			dragMaster.on('drag:stop', (e) => {
-				console.log('drag:stop', e);
-			});
-
-			dragMaster.on('drag:stopped', (e) => {
-				console.log('drag:stopped', e);
-			});
-
-			dragMaster.on('droppable:dropped', () => console.log('droppable:dropped'));
-			dragMaster.on('droppable:returned', () => console.log('droppable:returned'));
-		}
-	}
-
 	onMount(() => {
-		updateDragNDrop();
 		FileStores.get(id).files.subscribe(value => {
 			files.forEach((file, id) => {
 				file.id = id;
@@ -89,10 +55,6 @@
 			selected = value;
 		});
 	});
-
-	afterUpdate(() => {
-		updateDragNDrop();
-	})
 
 	export function updateFiles(newFiles) {
 		FileStores.get(id).update((oldFiles) => {
@@ -167,10 +129,10 @@
 </script>
 
 {#if !popup && show}
-<div class="container" bind:this={inlineList}>
+<div class="container {dragNDrop?dragNDropContainerClass:''}" bind:this={inlineList}>
 	<div class="file-list">
 		{#each files as file, index}
-		<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
+		<NotFileItem bind:data={file} {dragNDrop} {dragNDropContainerClass} {dropzoneClass} {droppableClass} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
 		{/each}
 	</div>
 </div>

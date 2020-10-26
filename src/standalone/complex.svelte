@@ -30,6 +30,11 @@
 	export let selectMany;
 	export let show = true;
 	export let popup = true;
+	export let dragNDrop = false;
+	export let dragNDropContainerClass = 'drag-n-drop';
+	export let dropzoneClass = 'dropzone';
+	export let droppableClass = 'droppable';
+	export let elementSize = 3;
 
 	export let onReject;
 	export let onResolve;
@@ -134,5 +139,5 @@
 
 {#if !popup && show}
 <UploaderComponent popup="{false}" show={true} id="{id}" on:filesAdded={onChange} />
-<StorageComponent popup="{false}" show={true} on:remove={removeFile} id="{id}" selectMany={false} />
+<StorageComponent popup="{false}" {dragNDrop} {dragNDropContainerClass} {dropzoneClass} {droppableClass} {elementSize} show={true} on:remove={removeFile} id="{id}" selectMany={false} />
 {/if}

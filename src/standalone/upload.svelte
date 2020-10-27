@@ -69,7 +69,7 @@
 </script>
 
 {#if show }
-<div class="box has-background-light is-size-4 dropzone" bind:this={dropzone}>
+<div class="box has-background-light is-size-4-desktop is-size-5-mobile dropzone" bind:this={dropzone}>
 	<label for="file">
 		<form action="./">
 			<input class="file-input" type="file" name="file" accept="image/*" multiple="true" on:change={onChange}>
@@ -126,5 +126,16 @@
 	.dropzone label{
 		width: 100%;
 		height: 100%;
+	}
+
+	@media screen and (max-width: 700px) {
+		.dropzone {
+			width: 100%;
+			height: 100px;
+		}
+
+		.dropzone form {
+			padding:0.5em;
+		}
 	}
 </style>

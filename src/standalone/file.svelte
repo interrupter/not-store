@@ -67,7 +67,7 @@
 
 </script>
 
-<div class="tile file is-{elementSize} is-child {ifSelected}" on:click="{onClick}" data-uuid="{data.uuid}">
+<div class="column file-tile is-one-quarter-desktop is-half-mobile {ifSelected}" on:click="{onClick}" data-uuid="{data.uuid}">
 	{#if notUploaded}
 	<progress class="progress is-link" value="{progress}" max="100">{progress}%</progress>
 	{/if}
@@ -85,13 +85,7 @@
 </div>
 
 <style>
-	.file {
-		float: left;
-		margin: 1em;
-		padding: 0.5em;
-	}
-
-	.file.selected {
+	.file-tile.selected {
 		background-color: hsl(204, 71%, 53%);
 	}
 

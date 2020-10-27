@@ -31,9 +31,9 @@
 
 	function getListContainer() {
 		if (modalList) {
-			return modalList.querySelectorAll('.container .file-list');
+			return modalList.querySelectorAll('.file-list');
 		} else if (inlineList) {
-			return inlineList.querySelectorAll('.container .file-list');
+			return inlineList.querySelectorAll('.file-list');
 		} else {
 			return false;
 		}
@@ -124,12 +124,12 @@
 </script>
 
 {#if !popup && show}
-<div class="container" bind:this={inlineList}>
-	<div class="file-list">
-		{#each files as file, index}
-		<NotFileItem bind:data={file} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} on:selected />
-		{/each}
-	</div>
+<div class="file-list-wrapper"  bind:this={inlineList}>
+	<div class="file-list columns is-mobile is-multiline">
+	{#each files as file, index}
+	<NotFileItem bind:data={file} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} on:selected />
+	{/each}
+</div>
 </div>
 {/if}
 
@@ -142,12 +142,10 @@
 			<button class="delete" aria-label="close" on:click="{closePopup}"></button>
 		</header>
 		<section class="modal-card-body">
-			<div class="container">
-				<div class="file-list">
-					{#each files as file(file.id)}
-					<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} on:selected />
-					{/each}
-				</div>
+			<div class="file-list columns is-multiline">
+				{#each files as file(file.id)}
+				<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} on:selected />
+				{/each}
 			</div>
 		</section>
 		<footer class="modal-card-foot">
@@ -160,10 +158,8 @@
 {/if}
 
 <style>
-	.container {
-		display: block;
-		width: 100%;
-		height: 100%;
+	.file-list-wrapper{
+		height: 25vh;
 		overflow-y: scroll;
 		overflow-x: hidden;
 	}

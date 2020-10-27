@@ -111,7 +111,7 @@
 {#if popup && show}
 <div class="modal is-active">
 	<div class="modal-background"  on:click="{rejectPopup}"></div>
-	<div class="modal-card box">
+	<div class="modal-card box is-rounded">
 		{#if !short }
 		<header class="modal-card-head">
 			<p class="modal-card-title">Добавьте файлы для загрузки</p>

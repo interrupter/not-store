@@ -40,6 +40,7 @@
 				} else {
 					value.splice(0, value.length, data.uuid);
 				}
+				dispatch('selected');
 			}
 			return value;
 		});

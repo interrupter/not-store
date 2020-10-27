@@ -13,6 +13,7 @@
 	export let uploads = [];
 	export let popup = false;
 	export let show = false;
+	export let short = false;
 
 	onMount(() => {
 		FileStores.get(id).uploads.subscribe(value => {
@@ -47,7 +48,7 @@
 		</form>
 	</label>
 </div>
-<div class="previews">
+<div class="previews {short?'short':''}">
 	{#if uploads.length === 0}
 	<h2 class="subtitle">Нету загружаемых файлов</h2>
 	{/if}
@@ -93,6 +94,10 @@
 		height: 30vh;
 		text-align: center;
 		padding: 1em;
+	}
+
+	.previews.short{
+		height: 10vh;
 	}
 
 	.file-cta{

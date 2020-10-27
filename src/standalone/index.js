@@ -80,6 +80,7 @@ class notStore {
 				files: this.files,
 				id: this.options.id,
 				selectMany: this.options.selectMany,
+				selectOnClick: this.options.selectOnClick,
 				show: this.options.complex && this.options.complex.show,
 				popup: this.options.complex && this.options.complex.popup
 			}

@@ -4367,6 +4367,15 @@ var notStore = (function (exports) {
 	        }
 	    };
 	}
+	// TODO figure out if we still want to support
+	// shorthand events, or if we want to implement
+	// a real bubbling mechanism
+	function bubble(component, event) {
+	    const callbacks = component.$$.callbacks[event.type];
+	    if (callbacks) {
+	        callbacks.slice().forEach(fn => fn(event));
+	    }
+	}
 
 	const dirty_components = [];
 	const binding_callbacks = [];
@@ -5052,7 +5061,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (73:1) {#if data.path}
+	// (74:1) {#if data.path}
 	function create_if_block(ctx) {
 		let figure;
 		let t0;
@@ -5126,7 +5135,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (75:2) {#if !hideDeleteButton}
+	// (76:2) {#if !hideDeleteButton}
 	function create_if_block_1(ctx) {
 		let button;
 		let mounted;
@@ -5267,6 +5276,8 @@ var notStore = (function (exports) {
 					} else {
 						value.splice(0, value.length, data.uuid);
 					}
+
+					dispatch("selected");
 				}
 
 				return value;
@@ -5343,17 +5354,17 @@ var notStore = (function (exports) {
 
 	function get_each_context(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[23] = list[i];
-		child_ctx[24] = list;
-		child_ctx[25] = i;
+		child_ctx[25] = list[i];
+		child_ctx[26] = list;
+		child_ctx[27] = i;
 		return child_ctx;
 	}
 
 	function get_each_context_1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[23] = list[i];
-		child_ctx[26] = list;
-		child_ctx[27] = i;
+		child_ctx[25] = list[i];
+		child_ctx[28] = list;
+		child_ctx[29] = i;
 		return child_ctx;
 	}
 
@@ -5393,7 +5404,7 @@ var notStore = (function (exports) {
 					each_blocks[i].m(div0, null);
 				}
 
-				/*div1_binding*/ ctx[18](div1);
+				/*div1_binding*/ ctx[19](div1);
 				current = true;
 			},
 			p(ctx, dirty) {
@@ -5445,7 +5456,7 @@ var notStore = (function (exports) {
 			d(detaching) {
 				if (detaching) detach(div1);
 				destroy_each(each_blocks, detaching);
-				/*div1_binding*/ ctx[18](null);
+				/*div1_binding*/ ctx[19](null);
 			}
 		};
 	}
@@ -5457,7 +5468,7 @@ var notStore = (function (exports) {
 		let current;
 
 		function notfileitem_data_binding(value) {
-			/*notfileitem_data_binding*/ ctx[17].call(null, value, /*file*/ ctx[23], /*each_value_1*/ ctx[26], /*index*/ ctx[27]);
+			/*notfileitem_data_binding*/ ctx[17].call(null, value, /*file*/ ctx[25], /*each_value_1*/ ctx[28], /*index*/ ctx[29]);
 		}
 
 		let notfileitem_props = {
@@ -5466,13 +5477,14 @@ var notStore = (function (exports) {
 			selectMany: /*selectMany*/ ctx[3]
 		};
 
-		if (/*file*/ ctx[23] !== void 0) {
-			notfileitem_props.data = /*file*/ ctx[23];
+		if (/*file*/ ctx[25] !== void 0) {
+			notfileitem_props.data = /*file*/ ctx[25];
 		}
 
 		notfileitem = new File({ props: notfileitem_props });
 		binding_callbacks.push(() => bind$1(notfileitem, "data", notfileitem_data_binding));
 		notfileitem.$on("remove", /*removeFile*/ ctx[12]);
+		notfileitem.$on("selected", /*selected_handler*/ ctx[18]);
 
 		return {
 			c() {
@@ -5491,7 +5503,7 @@ var notStore = (function (exports) {
 
 				if (!updating_data && dirty & /*files*/ 1) {
 					updating_data = true;
-					notfileitem_changes.data = /*file*/ ctx[23];
+					notfileitem_changes.data = /*file*/ ctx[25];
 					add_flush_callback(() => updating_data = false);
 				}
 
@@ -5539,7 +5551,7 @@ var notStore = (function (exports) {
 		let mounted;
 		let dispose;
 		let each_value = /*files*/ ctx[0];
-		const get_key = ctx => /*file*/ ctx[23].id;
+		const get_key = ctx => /*file*/ ctx[25].id;
 
 		for (let i = 0; i < each_value.length; i += 1) {
 			let child_ctx = get_each_context(ctx, each_value, i);
@@ -5617,7 +5629,7 @@ var notStore = (function (exports) {
 				append(footer, button2);
 				append(footer, t8);
 				append(footer, button3);
-				/*div4_binding*/ ctx[20](div4);
+				/*div4_binding*/ ctx[22](div4);
 				current = true;
 
 				if (!mounted) {
@@ -5662,7 +5674,7 @@ var notStore = (function (exports) {
 					each_blocks[i].d();
 				}
 
-				/*div4_binding*/ ctx[20](null);
+				/*div4_binding*/ ctx[22](null);
 				mounted = false;
 				run_all(dispose);
 			}
@@ -5677,7 +5689,7 @@ var notStore = (function (exports) {
 		let current;
 
 		function notfileitem_data_binding_1(value) {
-			/*notfileitem_data_binding_1*/ ctx[19].call(null, value, /*file*/ ctx[23], /*each_value*/ ctx[24], /*file_index*/ ctx[25]);
+			/*notfileitem_data_binding_1*/ ctx[20].call(null, value, /*file*/ ctx[25], /*each_value*/ ctx[26], /*file_index*/ ctx[27]);
 		}
 
 		let notfileitem_props = {
@@ -5685,13 +5697,14 @@ var notStore = (function (exports) {
 			selectMany: /*selectMany*/ ctx[3]
 		};
 
-		if (/*file*/ ctx[23] !== void 0) {
-			notfileitem_props.data = /*file*/ ctx[23];
+		if (/*file*/ ctx[25] !== void 0) {
+			notfileitem_props.data = /*file*/ ctx[25];
 		}
 
 		notfileitem = new File({ props: notfileitem_props });
 		binding_callbacks.push(() => bind$1(notfileitem, "data", notfileitem_data_binding_1));
 		notfileitem.$on("remove", /*removeFile*/ ctx[12]);
+		notfileitem.$on("selected", /*selected_handler_1*/ ctx[21]);
 
 		return {
 			key: key_1,
@@ -5714,7 +5727,7 @@ var notStore = (function (exports) {
 
 				if (!updating_data && dirty & /*files*/ 1) {
 					updating_data = true;
-					notfileitem_changes.data = /*file*/ ctx[23];
+					notfileitem_changes.data = /*file*/ ctx[25];
 					add_flush_callback(() => updating_data = false);
 				}
 
@@ -5921,6 +5934,10 @@ var notStore = (function (exports) {
 			$$invalidate(0, files);
 		}
 
+		function selected_handler(event) {
+			bubble($$self, event);
+		}
+
 		function div1_binding($$value) {
 			binding_callbacks[$$value ? "unshift" : "push"](() => {
 				inlineList = $$value;
@@ -5931,6 +5948,10 @@ var notStore = (function (exports) {
 		function notfileitem_data_binding_1(value, file, each_value, file_index) {
 			each_value[file_index] = value;
 			$$invalidate(0, files);
+		}
+
+		function selected_handler_1(event) {
+			bubble($$self, event);
 		}
 
 		function div4_binding($$value) {
@@ -5971,8 +5992,10 @@ var notStore = (function (exports) {
 			onResolve,
 			updateFiles,
 			notfileitem_data_binding,
+			selected_handler,
 			div1_binding,
 			notfileitem_data_binding_1,
+			selected_handler_1,
 			div4_binding
 		];
 	}
@@ -6143,17 +6166,17 @@ var notStore = (function (exports) {
 
 	function get_each_context$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[8] = list[i];
+		child_ctx[9] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_1$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[8] = list[i];
+		child_ctx[9] = list[i];
 		return child_ctx;
 	}
 
-	// (39:0) {#if !popup && show}
+	// (40:0) {#if !popup && show}
 	function create_if_block_3(ctx) {
 		let div0;
 		let label;
@@ -6164,6 +6187,7 @@ var notStore = (function (exports) {
 		let t2;
 		let div1;
 		let t3;
+		let div1_class_value;
 		let current;
 		let mounted;
 		let dispose;
@@ -6178,7 +6202,7 @@ var notStore = (function (exports) {
 				input = element("input");
 				t0 = space();
 				span1 = element("span");
-				span1.innerHTML = `<span class="file-label svelte-9du03">Выберите изображения для загрузки</span>`;
+				span1.innerHTML = `<span class="file-label svelte-cpvw0r">Выберите изображения для загрузки</span>`;
 				t2 = space();
 				div1 = element("div");
 				if (if_block0) if_block0.c();
@@ -6189,11 +6213,11 @@ var notStore = (function (exports) {
 				attr(input, "name", "file");
 				attr(input, "accept", "image/*");
 				input.multiple = "true";
-				attr(span1, "class", "file-cta svelte-9du03");
+				attr(span1, "class", "file-cta svelte-cpvw0r");
 				attr(form, "action", "./");
-				attr(label, "class", "file-label svelte-9du03");
-				attr(div0, "class", "file is-boxed dropzone svelte-9du03");
-				attr(div1, "class", "previews svelte-9du03");
+				attr(label, "class", "file-label svelte-cpvw0r");
+				attr(div0, "class", "file is-boxed dropzone svelte-cpvw0r");
+				attr(div1, "class", div1_class_value = "previews " + (/*short*/ ctx[4] ? "short" : "") + " svelte-cpvw0r");
 			},
 			m(target, anchor) {
 				insert(target, div0, anchor);
@@ -6210,7 +6234,7 @@ var notStore = (function (exports) {
 				current = true;
 
 				if (!mounted) {
-					dispose = listen(input, "change", /*onChange*/ ctx[6]);
+					dispose = listen(input, "change", /*onChange*/ ctx[7]);
 					mounted = true;
 				}
 			},
@@ -6248,6 +6272,10 @@ var notStore = (function (exports) {
 
 					check_outros();
 				}
+
+				if (!current || dirty & /*short*/ 16 && div1_class_value !== (div1_class_value = "previews " + (/*short*/ ctx[4] ? "short" : "") + " svelte-cpvw0r")) {
+					attr(div1, "class", div1_class_value);
+				}
 			},
 			i(local) {
 				if (current) return;
@@ -6270,7 +6298,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (51:1) {#if uploads.length === 0}
+	// (52:1) {#if uploads.length === 0}
 	function create_if_block_5(ctx) {
 		let h2;
 
@@ -6289,7 +6317,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (54:1) {#if uploads.length > 0}
+	// (55:1) {#if uploads.length > 0}
 	function create_if_block_4(ctx) {
 		let each_1_anchor;
 		let current;
@@ -6373,7 +6401,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (55:1) {#each uploads as upload}
+	// (56:1) {#each uploads as upload}
 	function create_each_block_1$1(ctx) {
 		let notfileupload;
 		let current;
@@ -6381,7 +6409,7 @@ var notStore = (function (exports) {
 		notfileupload = new File_upload({
 				props: {
 					bucketId: /*id*/ ctx[2],
-					data: /*upload*/ ctx[8]
+					data: /*upload*/ ctx[9]
 				}
 			});
 
@@ -6396,7 +6424,7 @@ var notStore = (function (exports) {
 			p(ctx, dirty) {
 				const notfileupload_changes = {};
 				if (dirty & /*id*/ 4) notfileupload_changes.bucketId = /*id*/ ctx[2];
-				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[8];
+				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[9];
 				notfileupload.$set(notfileupload_changes);
 			},
 			i(local) {
@@ -6414,7 +6442,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (62:0) {#if popup && show}
+	// (63:0) {#if popup && show}
 	function create_if_block$3(ctx) {
 		let div3;
 		let div0;
@@ -6492,8 +6520,8 @@ var notStore = (function (exports) {
 
 				if (!mounted) {
 					dispose = [
-						listen(button0, "click", /*closePopup*/ ctx[4]),
-						listen(button1, "click", /*resolvePopup*/ ctx[5])
+						listen(button0, "click", /*closePopup*/ ctx[5]),
+						listen(button1, "click", /*resolvePopup*/ ctx[6])
 					];
 
 					mounted = true;
@@ -6553,7 +6581,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (72:4) {#if uploads.length === 0}
+	// (73:4) {#if uploads.length === 0}
 	function create_if_block_2$1(ctx) {
 		let h2;
 
@@ -6572,7 +6600,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (75:4) {#if uploads.length > 0}
+	// (76:4) {#if uploads.length > 0}
 	function create_if_block_1$3(ctx) {
 		let div;
 		let current;
@@ -6659,7 +6687,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (77:5) {#each uploads as upload}
+	// (78:5) {#each uploads as upload}
 	function create_each_block$1(ctx) {
 		let notfileupload;
 		let current;
@@ -6667,7 +6695,7 @@ var notStore = (function (exports) {
 		notfileupload = new File_upload({
 				props: {
 					bucketId: /*id*/ ctx[2],
-					data: /*upload*/ ctx[8]
+					data: /*upload*/ ctx[9]
 				}
 			});
 
@@ -6682,7 +6710,7 @@ var notStore = (function (exports) {
 			p(ctx, dirty) {
 				const notfileupload_changes = {};
 				if (dirty & /*id*/ 4) notfileupload_changes.bucketId = /*id*/ ctx[2];
-				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[8];
+				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[9];
 				notfileupload.$set(notfileupload_changes);
 			},
 			i(local) {
@@ -6794,6 +6822,7 @@ var notStore = (function (exports) {
 		let { uploads = [] } = $$props;
 		let { popup = false } = $$props;
 		let { show = false } = $$props;
+		let { short = false } = $$props;
 
 		onMount(() => {
 			get$1(id).uploads.subscribe(value => {
@@ -6820,15 +6849,23 @@ var notStore = (function (exports) {
 			if ("uploads" in $$props) $$invalidate(0, uploads = $$props.uploads);
 			if ("popup" in $$props) $$invalidate(3, popup = $$props.popup);
 			if ("show" in $$props) $$invalidate(1, show = $$props.show);
+			if ("short" in $$props) $$invalidate(4, short = $$props.short);
 		};
 
-		return [uploads, show, id, popup, closePopup, resolvePopup, onChange];
+		return [uploads, show, id, popup, short, closePopup, resolvePopup, onChange];
 	}
 
 	class Upload extends SvelteComponent {
 		constructor(options) {
 			super();
-			init(this, options, instance$4, create_fragment$4, safe_not_equal, { id: 2, uploads: 0, popup: 3, show: 1 });
+
+			init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+				id: 2,
+				uploads: 0,
+				popup: 3,
+				show: 1,
+				short: 4
+			});
 		}
 	}
 
@@ -6864,10 +6901,10 @@ var notStore = (function (exports) {
 		let dispose;
 
 		function uploadercomponent_id_binding(value) {
-			/*uploadercomponent_id_binding*/ ctx[15].call(null, value);
+			/*uploadercomponent_id_binding*/ ctx[17].call(null, value);
 		}
 
-		let uploadercomponent_props = { popup: false, show: true };
+		let uploadercomponent_props = { popup: false, show: true, short: true };
 
 		if (/*id*/ ctx[0] !== void 0) {
 			uploadercomponent_props.id = /*id*/ ctx[0];
@@ -6875,14 +6912,14 @@ var notStore = (function (exports) {
 
 		uploadercomponent = new Upload({ props: uploadercomponent_props });
 		binding_callbacks.push(() => bind$1(uploadercomponent, "id", uploadercomponent_id_binding));
-		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[8]);
+		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[9]);
 
 		function storagecomponent_id_binding(value) {
-			/*storagecomponent_id_binding*/ ctx[16].call(null, value);
+			/*storagecomponent_id_binding*/ ctx[18].call(null, value);
 		}
 
 		function storagecomponent_selectMany_binding(value) {
-			/*storagecomponent_selectMany_binding*/ ctx[17].call(null, value);
+			/*storagecomponent_selectMany_binding*/ ctx[19].call(null, value);
 		}
 
 		let storagecomponent_props = { popup: false, show: true };
@@ -6898,7 +6935,8 @@ var notStore = (function (exports) {
 		storagecomponent = new Storage({ props: storagecomponent_props });
 		binding_callbacks.push(() => bind$1(storagecomponent, "id", storagecomponent_id_binding));
 		binding_callbacks.push(() => bind$1(storagecomponent, "selectMany", storagecomponent_selectMany_binding));
-		storagecomponent.$on("remove", /*removeFile*/ ctx[10]);
+		storagecomponent.$on("remove", /*removeFile*/ ctx[11]);
+		storagecomponent.$on("selected", /*onSelected*/ ctx[8]);
 
 		return {
 			c() {
@@ -6969,7 +7007,7 @@ var notStore = (function (exports) {
 					dispose = [
 						listen(button0, "click", /*closePopup*/ ctx[5]),
 						listen(button1, "click", /*resolvePopup*/ ctx[6]),
-						listen(button2, "click", /*removeSelected*/ ctx[9]),
+						listen(button2, "click", /*removeSelected*/ ctx[10]),
 						listen(button3, "click", /*rejectPopup*/ ctx[7])
 					];
 
@@ -7023,7 +7061,7 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (136:0) {#if !popup && show}
+	// (133:0) {#if !popup && show}
 	function create_if_block$4(ctx) {
 		let uploadercomponent;
 		let t;
@@ -7038,7 +7076,7 @@ var notStore = (function (exports) {
 				}
 			});
 
-		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[8]);
+		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[9]);
 
 		storagecomponent = new Storage({
 				props: {
@@ -7050,7 +7088,7 @@ var notStore = (function (exports) {
 				}
 			});
 
-		storagecomponent.$on("remove", /*removeFile*/ ctx[10]);
+		storagecomponent.$on("remove", /*removeFile*/ ctx[11]);
 
 		return {
 			c() {
@@ -7185,12 +7223,11 @@ var notStore = (function (exports) {
 
 		onMount(() => {
 			get$1(id).files.subscribe(value => {
-				console.log(popup, show);
-				$$invalidate(11, files = value);
+				$$invalidate(12, files = value);
 			});
 
 			get$1(id).selected.subscribe(value => {
-				$$invalidate(12, selected = value);
+				$$invalidate(13, selected = value);
 			});
 		});
 
@@ -7198,6 +7235,7 @@ var notStore = (function (exports) {
 		let { files = [] } = $$props;
 		let { selected = [] } = $$props;
 		let { selectMany } = $$props;
+		let { selectOnClick } = $$props;
 		let { show = true } = $$props;
 		let { popup = true } = $$props;
 		let { elementSize = 3 } = $$props;
@@ -7218,14 +7256,14 @@ var notStore = (function (exports) {
 
 				if (onResolve) {
 					onResolve(images);
-					$$invalidate(14, onResolve = null);
+					$$invalidate(15, onResolve = null);
 				} else {
 					dispatch("resolve", { selected: images });
 				}
 			} else {
 				if (onResolve) {
 					onResolve([]);
-					$$invalidate(14, onResolve = null);
+					$$invalidate(15, onResolve = null);
 				} else {
 					dispatch("resolve", { selected: [] });
 				}
@@ -7237,14 +7275,19 @@ var notStore = (function (exports) {
 
 			if (onReject) {
 				onReject();
-				$$invalidate(13, onReject = null);
+				$$invalidate(14, onReject = null);
 			} else {
 				dispatch("reject");
 			}
 		}
 
+		function onSelected() {
+			if (selectOnClick) {
+				resolvePopup();
+			}
+		}
+
 		function onChange(ev) {
-			console.log("on input change", ev);
 			dispatch("filesAdded", ev.detail);
 		}
 
@@ -7254,15 +7297,13 @@ var notStore = (function (exports) {
 				text: "Файлы будут удалены без возможнеости восстановления!",
 				approval: "Удалить файлы?"
 			}).then(() => {
-				console.log("remove approved");
 				dispatch("remove", { selected });
 			}).catch(() => {
-				console.log("remove disapprove");
+				console.eror("remove disapproved");
 			});
 		}
 
 		function removeFile(ev) {
-			console.log("removeFile", ev);
 			dispatch("remove", { selected: ev.detail.selected });
 		}
 
@@ -7283,14 +7324,15 @@ var notStore = (function (exports) {
 
 		$$self.$$set = $$props => {
 			if ("id" in $$props) $$invalidate(0, id = $$props.id);
-			if ("files" in $$props) $$invalidate(11, files = $$props.files);
-			if ("selected" in $$props) $$invalidate(12, selected = $$props.selected);
+			if ("files" in $$props) $$invalidate(12, files = $$props.files);
+			if ("selected" in $$props) $$invalidate(13, selected = $$props.selected);
 			if ("selectMany" in $$props) $$invalidate(1, selectMany = $$props.selectMany);
+			if ("selectOnClick" in $$props) $$invalidate(16, selectOnClick = $$props.selectOnClick);
 			if ("show" in $$props) $$invalidate(2, show = $$props.show);
 			if ("popup" in $$props) $$invalidate(3, popup = $$props.popup);
 			if ("elementSize" in $$props) $$invalidate(4, elementSize = $$props.elementSize);
-			if ("onReject" in $$props) $$invalidate(13, onReject = $$props.onReject);
-			if ("onResolve" in $$props) $$invalidate(14, onResolve = $$props.onResolve);
+			if ("onReject" in $$props) $$invalidate(14, onReject = $$props.onReject);
+			if ("onResolve" in $$props) $$invalidate(15, onResolve = $$props.onResolve);
 		};
 
 		return [
@@ -7302,6 +7344,7 @@ var notStore = (function (exports) {
 			closePopup,
 			resolvePopup,
 			rejectPopup,
+			onSelected,
 			onChange,
 			removeSelected,
 			removeFile,
@@ -7309,6 +7352,7 @@ var notStore = (function (exports) {
 			selected,
 			onReject,
 			onResolve,
+			selectOnClick,
 			uploadercomponent_id_binding,
 			storagecomponent_id_binding,
 			storagecomponent_selectMany_binding
@@ -7321,14 +7365,15 @@ var notStore = (function (exports) {
 
 			init(this, options, instance$5, create_fragment$5, safe_not_equal, {
 				id: 0,
-				files: 11,
-				selected: 12,
+				files: 12,
+				selected: 13,
 				selectMany: 1,
+				selectOnClick: 16,
 				show: 2,
 				popup: 3,
 				elementSize: 4,
-				onReject: 13,
-				onResolve: 14
+				onReject: 14,
+				onResolve: 15
 			});
 		}
 	}
@@ -8657,23 +8702,25 @@ var notStore = (function (exports) {
 	      this.generateID();
 	      this.createStore();
 
-	      if (this.options.preload) {
-	        this.loadFilesData().catch(console.error);
-	        return;
-	      }
-
 	      if (this.options.complex && this.options.complex.popup) {
 	        this.renderComplex();
 	        this.loadFilesData().catch(console.error);
+	        return;
 	      } else {
 	        if (this.options.storageEl) {
 	          this.renderStorage();
 	          this.loadFilesData().catch(console.error);
+	          return;
 	        }
 
 	        if (this.options.uploadEl) {
 	          this.renderUpload();
+	          return;
 	        }
+	      }
+
+	      if (this.options.preload) {
+	        this.loadFilesData().catch(console.error);
 	      }
 	    }
 	  }, {
@@ -8708,6 +8755,7 @@ var notStore = (function (exports) {
 	          files: this.files,
 	          id: this.options.id,
 	          selectMany: this.options.selectMany,
+	          selectOnClick: this.options.selectOnClick,
 	          show: this.options.complex && this.options.complex.show,
 	          popup: this.options.complex && this.options.complex.popup
 	        }

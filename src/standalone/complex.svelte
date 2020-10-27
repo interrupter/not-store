@@ -14,7 +14,6 @@
 
 	onMount(() => {
 		FileStores.get(id).files.subscribe(value => {
-			console.log(popup, show);
 			files = value;
 		});
 		FileStores.get(id).selected.subscribe(value => {
@@ -23,11 +22,10 @@
 	});
 
 	export let id;
-
 	export let files = [];
-
 	export let selected = [];
 	export let selectMany;
+	export let selectOnClick;
 	export let show = true;
 	export let popup = true;
 	export let elementSize = 3;
@@ -65,7 +63,6 @@
 		}
 	}
 
-
 	function rejectPopup() {
 		closePopup();
 		if (onReject) {
@@ -76,12 +73,15 @@
 		}
 	}
 
-
-	function onChange(ev) {
-		console.log('on input change', ev);
-		dispatch('filesAdded', ev.detail);
+	function onSelected(){
+		if (selectOnClick){
+			resolvePopup();
+		}
 	}
 
+	function onChange(ev) {
+		dispatch('filesAdded', ev.detail);
+	}
 
 	function removeSelected() {
 		Confirmation.ask({
@@ -90,18 +90,16 @@
 				approval: 'Удалить файлы?'
 			})
 			.then(() => {
-				console.log('remove approved');
 				dispatch('remove', {
 					selected
 				});
 			})
 			.catch(() => {
-				console.log('remove disapprove');
+				console.eror('remove disapproved');
 			});
 	}
 
 	function removeFile(ev){
-		console.log('removeFile', ev);
 		dispatch('remove', {
 			selected: ev.detail.selected
 		});
@@ -119,8 +117,8 @@
 		</header>
 		<section class="modal-card-body">
 			<div class="container">
-				<UploaderComponent popup="{false}" show="{true}" bind:id="{id}" on:filesAdded={onChange} />
-				<StorageComponent popup="{false}" show="{true}" on:remove={removeFile} bind:id="{id}" bind:selectMany={selectMany} />
+				<UploaderComponent popup="{false}" show="{true}" short={true} bind:id="{id}" on:filesAdded={onChange} />
+				<StorageComponent popup="{false}" show="{true}" on:remove={removeFile} bind:id="{id}" bind:selectMany={selectMany} on:selected={onSelected} />
 			</div>
 		</section>
 		<footer class="modal-card-foot">
@@ -131,7 +129,6 @@
 	</div>
 </div>
 {/if}
-
 
 {#if !popup && show}
 <UploaderComponent popup="{false}" show={true} id="{id}" on:filesAdded={onChange} />

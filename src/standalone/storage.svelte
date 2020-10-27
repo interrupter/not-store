@@ -127,7 +127,7 @@
 <div class="container" bind:this={inlineList}>
 	<div class="file-list">
 		{#each files as file, index}
-		<NotFileItem bind:data={file} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
+		<NotFileItem bind:data={file} {elementSize} bucketId={id} selectMany={selectMany} on:remove={removeFile} on:selected />
 		{/each}
 	</div>
 </div>
@@ -145,7 +145,7 @@
 			<div class="container">
 				<div class="file-list">
 					{#each files as file(file.id)}
-					<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} />
+					<NotFileItem bind:data={file} bucketId={id} selectMany={selectMany} on:remove={removeFile} on:selected />
 					{/each}
 				</div>
 			</div>

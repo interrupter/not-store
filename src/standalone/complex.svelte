@@ -26,6 +26,7 @@
 	export let selected = [];
 	export let selectMany;
 	export let selectOnClick;
+	export let short = false;
 	export let show = true;
 	export let popup = true;
 	export let elementSize = 3;
@@ -109,23 +110,27 @@
 
 {#if popup && show}
 <div class="modal is-active">
-	<div class="modal-background"></div>
-	<div class="modal-card">
+	<div class="modal-background"  on:click="{rejectPopup}"></div>
+	<div class="modal-card box">
+		{#if !short }
 		<header class="modal-card-head">
 			<p class="modal-card-title">Добавьте файлы для загрузки</p>
 			<button class="delete" aria-label="close" on:click="{closePopup}"></button>
 		</header>
+		{/if}
 		<section class="modal-card-body">
 			<div class="container">
 				<UploaderComponent popup="{false}" show="{true}" short={true} bind:id="{id}" on:filesAdded={onChange} />
 				<StorageComponent popup="{false}" show="{true}" on:remove={removeFile} bind:id="{id}" bind:selectMany={selectMany} on:selected={onSelected} />
 			</div>
 		</section>
+		{#if !short }
 		<footer class="modal-card-foot">
 			<button class="button is-success" on:click="{resolvePopup}">Выбрать</button>
 			<button class="button is-danger" on:click="{removeSelected}">Удалить</button>
 			<button class="button" on:click="{rejectPopup}">Закрыть</button>
 		</footer>
+		{/if}
 	</div>
 </div>
 {/if}

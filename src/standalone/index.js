@@ -21,7 +21,6 @@ import {
 	default as StandartInterface
 } from './file.manifest.js';
 
-
 import netInterface from './interface.js';
 
 class notStore {
@@ -82,7 +81,8 @@ class notStore {
 				selectMany: this.options.selectMany,
 				selectOnClick: this.options.selectOnClick,
 				show: this.options.complex && this.options.complex.show,
-				popup: this.options.complex && this.options.complex.popup
+				popup: this.options.complex && this.options.complex.popup,
+				short: this.options.complex && this.options.complex.short,
 			}
 		});
 		this.ui.complex.$on('remove', this.removeFiles.bind(this));
@@ -98,6 +98,7 @@ class notStore {
 				selectMany: this.options.selectMany,
 				popup:  this.options.storage && this.options.storage.popup,
 				show: this.options.storage && this.options.storage.show,
+				selectOnClick: this.options.selectOnClick,
 			}
 		});
 		this.ui.storage.$on('remove', this.removeFiles.bind(this));
@@ -110,6 +111,7 @@ class notStore {
 				id: this.options.id,
 				popup: this.options.upload && this.options.upload.popup,
 				show: this.options.upload && this.options.upload.show,
+				short: this.options.upload && this.options.upload.short
 			}
 		});
 		this.ui.upload.$on('filesAdded', this.onUploads.bind(this));

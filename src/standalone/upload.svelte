@@ -9,6 +9,9 @@
 	import {
 		onMount
 	} from 'svelte';
+
+	let dropzone;
+
 	export let id;
 	export let uploads = [];
 	export let popup = false;
@@ -19,7 +22,35 @@
 		FileStores.get(id).uploads.subscribe(value => {
 			uploads = value;
 		});
+		if(dropzone){
+			initDropzone();
+		}
 	});
+
+	function initDropzone(){
+		dropzone.addEventListener("dragenter", function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			dropzone.classList.add('has-background-white');
+		});
+		dropzone.addEventListener("dragleave", function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			dropzone.classList.remove('has-background-white');
+		});
+
+		// DROP TO UPLOAD FILE
+		dropzone.addEventListener("dragover", function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		dropzone.addEventListener("drop", function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			dropzone.classList.remove('has-background-white');
+			dispatch('filesAdded', e.dataTransfer.files);
+		});
+	}
 
 	function closePopup(){
 		show = false;
@@ -37,21 +68,21 @@
 
 </script>
 
-{#if !popup && show}
-<div class="file is-boxed dropzone">
-	<label class="file-label">
+{#if show }
+<div class="box has-background-light is-size-4 dropzone" bind:this={dropzone}>
+	<label for="file">
 		<form action="./">
 			<input class="file-input" type="file" name="file" accept="image/*" multiple="true" on:change={onChange}>
-			<span class="file-cta">
-				<span class="file-label">Выберите изображения для загрузки</span>
-			</span>
+			Выберите изображения для загрузки
 		</form>
 	</label>
 </div>
-<div class="previews {short?'short':''}">
-	{#if uploads.length === 0}
+{#if uploads.length === 0}
+<div class="previews has-text-centered">
 	<h2 class="subtitle">Нету загружаемых файлов</h2>
-	{/if}
+</div>
+{:else}
+<div class="previews {short?'short':'long'}">
 	{#if uploads.length > 0}
 	{#each uploads as upload}
 	<NotFileUpload bucketId={id} data={upload} />
@@ -59,57 +90,41 @@
 	{/if}
 </div>
 {/if}
-
-{#if popup && show}
-<div class="modal is-active">
-	<div class="modal-background"></div>
-	<div class="modal-card">
-		<header class="modal-card-head">
-			<p class="modal-card-title">Добавьте файлы для загрузки</p>
-			<button class="delete" aria-label="close" on:click="{closePopup}"></button>
-		</header>
-		<section class="modal-card-body">
-			<div class="container">
-				{#if uploads.length === 0}
-				<h2 class="subtitle">Нету загружаемых файлов</h2>
-				{/if}
-				{#if uploads.length > 0}
-				<div class="file-list">
-					{#each uploads as upload}
-					<NotFileUpload bucketId={id} data={upload} />
-					{/each}
-				</div>
-				{/if}
-			</div>
-		</section>
-		<footer class="modal-card-foot">
-			<button class="button is-success" on:click="{resolvePopup}">Завершить</button>
-		</footer>
-	</div>
-</div>
 {/if}
 <style>
 	.previews {
 		width: 100%;
-		height: 30vh;
 		text-align: center;
 		padding: 1em;
 	}
 
-	.previews.short{
+	.previews.long {
+		height: 30vh;
+	}
+
+	.previews.short {
 		height: 10vh;
 	}
 
-	.file-cta{
+	.dropzone {
+		width: 100%;
+		height: 200px;
+		align-items: stretch;
+		display: flex;
+		justify-content: center;
+		position: relative;
+	}
+
+	.dropzone form {
+		width: 100%;
+		justify-content: center;
 		width: 100%;
 		text-align: center;
+		padding: 2em;
 	}
 
-	.file-label{
+	.dropzone label{
 		width: 100%;
-	}
-
-	.dropzone{
-		width: 100%;
+		height: 100%;
 	}
 </style>

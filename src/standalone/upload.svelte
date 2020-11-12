@@ -79,7 +79,7 @@
 </div>
 {#if uploads.length === 0}
 <div class="previews has-text-centered">
-	<h2 class="subtitle">Нету загружаемых файлов</h2>
+	<h2 class="subtitle">Нет загружаемых файлов</h2>
 </div>
 {:else}
 <div class="previews {short?'short':'long'}">

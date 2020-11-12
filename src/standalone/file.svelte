@@ -76,7 +76,7 @@
 		{#if !hideDeleteButton}
 		<button class="delete" on:click="{remove}"></button>
 		{/if}
-		<img draggable="true" src="{data.path.small.cloud.Location}"  alt={data.name}/>
+		<img draggable="true" src="{data.path.small.cloud.Location}"  alt={data.name} crossorigin="anonymous"/>
 		<div draggable="true" class="middle">
 			<div class="text">{data.name}</div>
 		</div>

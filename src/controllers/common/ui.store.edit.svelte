@@ -7,7 +7,7 @@
 	const CLASS_ERR = Common.CLASS_ERR;
 	const CLASS_OK = Common.CLASS_OK;
 
-	
+
 	let errorMessage = false;
 	let formErrors = false;
 	let success = false;
@@ -117,7 +117,7 @@
 
 	export function setFieldInvalid(fieldName, errors){
 		validationErrors[fieldName] = errors;
-		validationErrors = validationErrors
+		validationErrors = validationErrors;
 		formErrors = true;
 	}
 
@@ -209,7 +209,7 @@
 	export let rejectForm = ()=>{
 		loading = true;
 		dispatch('rejectForm');
-	}
+	};
 
 	export function setLoading(){
 		loading = true;
@@ -249,7 +249,7 @@
 <div class="container">
 	{#if fields.name.enabled}
 	<div class="field edit-form-field edit-form-name">
-		<label class="label">{fields.name.label}</label>
+		<label class="label" for="name">{fields.name.label}</label>
 		<div class="control has-icons-right">
 			<input class="input {nameClasses}" type="text" name="name" invalid="{validationErrors.name}" required={fields.name.required} placeholder="{fields.name.placeholder}" bind:value={fields.name.value} on:change={onChange} on:input={onInput}
 				autocomplete="name" aria-controls="input-field-helper-name" aria-describedby="input-field-helper-name" />
@@ -271,10 +271,10 @@
 
 	{#if fields.driver.enabled}
 	<div class="field edit-form-field edit-form-driver">
-		<label class="label">{fields.driver.label}</label>
+		<label class="label" for="driver">{fields.driver.label}</label>
 		<div class="control">
 			<div class="select {driverClasses}">
-				<select bind:value={fields.driver.value} on:blur={onChange} on:input={onInput}>
+				<select bind:value={fields.driver.value} name="driver" on:blur={onChange} on:input={onInput}>
 					{#each Common.DRIVERS as variant}
 					<option value="{variant.id}">{variant.title}</option>
 					{/each}
@@ -289,7 +289,7 @@
 
 	{#if fields.options.enabled}
 	<div class="edit-form-field edit-form-options field">
-		<label class="label">{fields.options.label}</label>
+		<label class="label" for="value">{fields.options.label}</label>
 		<div class="control has-icons-right">
 			<textarea invalid="{validationErrors.options}" on:change={onChange} on:input={onInput} class="textarea {optionsClasses}" required={fields.options.required} bind:value={fields.options.value} name="value" placeholder="{fields.options.placeholder}"
 				rows="10" aria-controls="input-field-helper-options" aria-describedby="input-field-helper-options"></textarea>

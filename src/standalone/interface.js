@@ -1,4 +1,3 @@
-/* global fetch, FormData */
 
 import notPath from 'not-path';
 const OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY = ['_id', 'id', 'ID'],

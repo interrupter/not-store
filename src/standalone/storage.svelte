@@ -1,11 +1,10 @@
 <script>
-	let dragMaster = null;
+	//let dragMaster = null;
 	let inlineList = null;
 	let modalList = null;
 
 	import {
-		onMount,
-		afterUpdate
+		onMount
 	} from 'svelte';
 	import {
 		createEventDispatcher
@@ -29,6 +28,7 @@
 	export let onReject;
 	export let onResolve;
 
+/*
 	function getListContainer() {
 		if (modalList) {
 			return modalList.querySelectorAll('.file-list');
@@ -38,6 +38,7 @@
 			return false;
 		}
 	}
+*/
 
 	onMount(() => {
 		FileStores.get(id).files.subscribe(value => {
@@ -100,10 +101,10 @@
 
 	function removeSelected() {
 		Confirmation.ask({
-				title: `Удаление файлов (${selected.length}) `,
-				text: 'Файлы будут удалены без возможнеости восстановления!',
-				approval: 'Удалить файлы?'
-			})
+			title: `Удаление файлов (${selected.length}) `,
+			text: 'Файлы будут удалены без возможнеости восстановления!',
+			approval: 'Удалить файлы?'
+		})
 			.then(() => {
 				console.log('remove approved');
 				dispatch('remove', {

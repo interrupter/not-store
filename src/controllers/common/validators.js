@@ -1,15 +1,29 @@
 export default {
-	fields:{
-		_id(){return [];},
-    fileID(){return [];},
-		name(){return [];},
-		size(){return [];},
-		width(){return [];},
-    height(){return [];},
-		extension(){return [];},
+	fields: {
+		_id() {
+			return [];
+		},
+		fileID() {
+			return [];
+		},
+		name() {
+			return [];
+		},
+		size() {
+			return [];
+		},
+		width() {
+			return [];
+		},
+		height() {
+			return [];
+		},
+		extension() {
+			return [];
+		},
 	},
-	form:{
-		edit(){
+	form: {
+		edit() {
 			return {
 				clean: true
 			};

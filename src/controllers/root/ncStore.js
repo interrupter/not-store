@@ -1,6 +1,3 @@
-/* global document, confirm */
-
-
 const ERROR_DEFAULT = 'Что пошло не так.';
 
 import {
@@ -15,7 +12,10 @@ import Common from '../common/index.js';
 import UIEdit from '../common/ui.store.edit.svelte';
 import UIDetails from '../common/ui.store.details.svelte';
 
-const BREADCRUMBS = [{ title: 'Хранилища', url: '/store' }];
+const BREADCRUMBS = [{
+	title: 'Хранилища',
+	url: '/store'
+}];
 
 class ncStore extends notController {
 	constructor(app, params) {
@@ -34,7 +34,7 @@ class ncStore extends notController {
 		return this;
 	}
 
-	setBreadcrumbs(tail){
+	setBreadcrumbs(tail) {
 		Breadcrumbs.setTail(tail).update();
 	}
 
@@ -81,12 +81,10 @@ class ncStore extends notController {
 	}
 
 	runCreate() {
-		this.setBreadcrumbs([
-			{
-				title: 'Добавление нового',
-				url: '/store/create'
-			}
-		]);
+		this.setBreadcrumbs([{
+			title: 'Добавление нового',
+			url: '/store/create'
+		}]);
 
 		if (this.ui.create) {
 			return;
@@ -95,124 +93,129 @@ class ncStore extends notController {
 		}
 		this.ui.create = new UIEdit({
 			target: this.els.main,
-			props:{
+			props: {
 				item: this.createDefault()
 			}
 		});
-		this.ui.create.$on('create', (ev) => {this.onCreateFormSubmit(ev.detail);});
+		this.ui.create.$on('create', (ev) => {
+			this.onCreateFormSubmit(ev.detail);
+		});
 		this.ui.create.$on('rejectForm', this.goList.bind(this));
 	}
 
 	runDetails(params) {
-		this.setBreadcrumbs([
-			{
-				title: 'Просмотр хранилища',
-				url: `/store/${params[0]}`
-			}
-		]);
+		this.setBreadcrumbs([{
+			title: 'Просмотр хранилища',
+			url: `/store/${params[0]}`
+		}]);
 
 		if (this.ui.details) {
 			return;
 		} else {
 			this.$destroyUI();
 		}
-		this.make.store({_id: params[0]}).$get().then((res)=>{
-			if(res.status === 'ok'){
-				let item = notCommon.stripProxy(res.result);
-				item.options = JSON.stringify(item.options, null, 4);
-				item.options = item.options.replace(/([^>])\n/g, '$1<br/>');
-				this.ui.details = new UIDetails({
-					target: this.els.main,
-					props:{
-						item
-					}
-				});
-			}else{
-				this.ui.error = new UIError({
-					target: this.els.main,
-					props:{
-						title: 		'Произошла ошибка',
-						message: 	res.error?res.error:ERROR_DEFAULT
-					}
-				});
-			}
+		this.make.store({
+			_id: params[0]
 		})
+			.$get()
+			.then((res) => {
+				if (res.status === 'ok') {
+					let item = notCommon.stripProxy(res.result);
+					item.options = JSON.stringify(item.options, null, 4);
+					item.options = item.options.replace(/([^>])\n/g, '$1<br/>');
+					this.ui.details = new UIDetails({
+						target: this.els.main,
+						props: {
+							item
+						}
+					});
+				} else {
+					this.ui.error = new UIError({
+						target: this.els.main,
+						props: {
+							title: 'Произошла ошибка',
+							message: res.error ? res.error : ERROR_DEFAULT
+						}
+					});
+				}
+			})
 			.catch(this.error.bind(this));
 	}
 
 	runUpdate(params) {
-		this.setBreadcrumbs([
-			{
-				title: 'Редактирование данных',
-				url: `/store/${params[0]}/update`
-			}
-		]);
+		this.setBreadcrumbs([{
+			title: 'Редактирование данных',
+			url: `/store/${params[0]}/update`
+		}]);
 
 		if (this.ui.update) {
 			return;
 		} else {
 			this.$destroyUI();
 		}
-		this.make.store({_id: params[0]}).$get().then((res)=>{
-			if(res.status === 'ok'){
-				this.setBreadcrumbs([
-					{
-						title: 	`Редактирование данных ${res.result.name}`,
-						url: 		`/store/${params[0]}/update`
-					}
-				]);
-
-				this.ui.update = new UIEdit({
-					target: this.els.main,
-					props:{
-						mode: 			'update',
-						item: 			notCommon.stripProxy(res.result)
-					}
-				});
-				this.ui.update.$on('update', (ev) => {this.onUpdateFormSubmit(ev.detail);});
-				this.ui.update.$on('rejectForm', this.goList.bind(this));
-			}else{
-				this.ui.error = new UIError({
-					target: this.els.main,
-					props:{
-						title: 		'Произошла ошибка',
-						message: 	res.error?res.error:ERROR_DEFAULT
-					}
-				});
-			}
+		this.make.store({
+			_id: params[0]
 		})
+			.$get()
+			.then((res) => {
+				if (res.status === 'ok') {
+					this.setBreadcrumbs([{
+						title: `Редактирование данных ${res.result.name}`,
+						url: `/store/${params[0]}/update`
+					}]);
+
+					this.ui.update = new UIEdit({
+						target: this.els.main,
+						props: {
+							mode: 'update',
+							item: notCommon.stripProxy(res.result)
+						}
+					});
+					this.ui.update.$on('update', (ev) => {
+						this.onUpdateFormSubmit(ev.detail);
+					});
+					this.ui.update.$on('rejectForm', this.goList.bind(this));
+				} else {
+					this.ui.error = new UIError({
+						target: this.els.main,
+						props: {
+							title: 'Произошла ошибка',
+							message: res.error ? res.error : ERROR_DEFAULT
+						}
+					});
+				}
+			})
 			.catch(this.error.bind(this));
 	}
 
-	runDelete(params){
-		this.setBreadcrumbs([
-			{
-				title: 'Удаление',
-				url: `/store/${params[0]}/delete`
-			}
-		]);
+	runDelete(params) {
+		this.setBreadcrumbs([{
+			title: 'Удаление',
+			url: `/store/${params[0]}/delete`
+		}]);
 
 		if (confirm('Удалить файл?')) {
-			this.make.store({_id: params[0]}).$delete()
-				.then(()=>{
+			this.make.store({
+				_id: params[0]
+			})
+				.$delete()
+				.then(() => {
 					this.goList();
 				})
-				.catch((e)=>{
+				.catch((e) => {
 					this.error(e);
 					this.goList();
 				});
-		}else{
+		} else {
 			this.goList();
 		}
 	}
 
 	runList() {
-		this.setBreadcrumbs([
-			{
-				title: 'Список',
-				url: `/store`
-			}
-		]);
+		this.setBreadcrumbs([{
+			title: 'Список',
+			url: `/store`
+		}]);
 
 		if (this.ui.list) {
 			return;
@@ -229,7 +232,9 @@ class ncStore extends notController {
 				},
 				endless: false,
 				preload: {},
-				sorter: { storeID: -1 },
+				sorter: {
+					storeID: -1
+				},
 				actions: [{
 					title: 'Создать',
 					action: this.goCreate.bind(this)
@@ -239,7 +244,7 @@ class ncStore extends notController {
 					title: 'ID',
 					searchable: true,
 					sortable: true
-				},{
+				}, {
 					path: ':name',
 					title: 'Имя',
 					searchable: true,
@@ -249,16 +254,18 @@ class ncStore extends notController {
 					title: 'Тип',
 					searchable: true,
 					sortable: true
-				},{
-          path: ':active',
-          title: 'Активность',
-          sortable: true,
-          searchable: true,
-          type: 'boolean',
-          preprocessor: (value) => {
-            return [{ value }];
-          }
-        }, {
+				}, {
+					path: ':active',
+					title: 'Активность',
+					sortable: true,
+					searchable: true,
+					type: 'boolean',
+					preprocessor: (value) => {
+						return [{
+							value
+						}];
+					}
+				}, {
 					path: ':_id',
 					title: 'Действия',
 					type: 'button',
@@ -267,13 +274,11 @@ class ncStore extends notController {
 							action: this.goDetails.bind(this, value),
 							title: 'Подробнее',
 							size: 'small'
-						},
-						{
+						},{
 							action: this.goUpdate.bind(this, value),
 							title: 'Изменить',
 							size: 'small'
-						},
-						{
+						},{
 							action: this.goDelete.bind(this, value),
 							type: 'danger',
 							title: 'Удалить',
@@ -293,29 +298,29 @@ class ncStore extends notController {
 		}
 	}
 
-	goCreate(){
+	goCreate() {
 		this.app.getWorking('router').navigate('/' + [this.getModelURL(), 'create'].join('/'));
 	}
 
-	goDetails(value){
+	goDetails(value) {
 		this.app.getWorking('router').navigate('/' + [this.getModelURL(), value].join('/'));
 	}
 
-	goUpdate(value){
+	goUpdate(value) {
 		this.app.getWorking('router').navigate('/' + [this.getModelURL(), value, 'update'].join('/'));
 	}
 
-	goDelete(value){
+	goDelete(value) {
 		this.app.getWorking('router').navigate('/' + [this.getModelURL(), value, 'delete'].join('/'));
 	}
 
-	goList(){
+	goList() {
 		this.app.getWorking('router').navigate('/' + this.getModelURL());
 	}
 
-	createDefault(){
+	createDefault() {
 		return {
-			name: 	'',
+			name: '',
 			driver: 'notStoreYandex',
 			options: `{"s3":{
 				"id": "",
@@ -334,53 +339,53 @@ class ncStore extends notController {
 		};
 	}
 
-	onCreateFormSubmit(user){
+	onCreateFormSubmit(user) {
 		this.ui.create.setLoading();
 		this.make.store(user).$create()
-			.then((res)=>{
+			.then((res) => {
 				this.log(res);
 				this.showResult(this.ui.create, res);
-				if(!Common.isError(res) && !res.error){
+				if (!Common.isError(res) && !res.error) {
 					setTimeout(() => this.goList(this.app), 3000);
 				}
 			})
-			.catch((e)=>{
+			.catch((e) => {
 				this.showResult(this.ui.create, e);
 			});
 	}
 
-	onUpdateFormSubmit(user){
+	onUpdateFormSubmit(user) {
 		this.ui.update.setLoading();
 		this.make.store(user).$update()
-			.then((res)=>{
+			.then((res) => {
 				this.showResult(this.ui.update, res);
-				if(!Common.isError(res) && !res.error){
+				if (!Common.isError(res) && !res.error) {
 					setTimeout(() => this.goList(this.app), 3000);
 				}
 			})
-			.catch((e)=>{
+			.catch((e) => {
 				this.showResult(this.ui.update, e);
 			});
 	}
 
 	showResult(ui, res) {
 		ui.resetLoading();
-		if(Common.isError(res)){
+		if (Common.isError(res)) {
 			notCommon.report(res);
-		}else{
-			if(res.errors && Object.keys(res.errors).length > 0){
-				if (!Array.isArray(res.error)){
+		} else {
+			if (res.errors && Object.keys(res.errors).length > 0) {
+				if (!Array.isArray(res.error)) {
 					res.error = [];
 				}
-				Object.keys(res.errors).forEach((fieldName)=>{
+				Object.keys(res.errors).forEach((fieldName) => {
 					ui.setFieldInvalid(fieldName, res.errors[fieldName]);
 					res.error.push(...res.errors[fieldName]);
 				});
 			}
-			if(res.error){
+			if (res.error) {
 				ui.setFormError(res.error);
 			}
-			if(!res.error ){
+			if (!res.error) {
 				ui.showSuccess();
 			}
 		}

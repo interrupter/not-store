@@ -14,7 +14,7 @@
 
 	export let id;
 	export let uploads = [];
-	export let popup = false;
+	//export let popup = false;
 	export let show = false;
 	export let short = false;
 
@@ -56,13 +56,12 @@
 		show = false;
 	}
 
-	function resolvePopup(){
+	export function resolvePopup(){
 		closePopup();
 		dispatch('resolve');
 	}
 
 	function onChange(ev) {
-		console.log('on input change', ev);
 		dispatch('filesAdded', ev.target.files);
 	}
 

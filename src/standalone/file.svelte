@@ -10,7 +10,7 @@
 	export let notUploaded = false;
 	export let selectMany = false;
 	export let hideDeleteButton = false;
-	export let elementSize = 3;
+	//export let elementSize = 3;
 
 	export let bucketId;
 

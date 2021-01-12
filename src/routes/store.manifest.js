@@ -50,5 +50,5 @@ module.exports = {
 				admin: true
 			}]
 		}
-  }
+	}
 };

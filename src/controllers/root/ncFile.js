@@ -50,23 +50,20 @@ class ncFile extends ncCRUD {
 				type: 'button',
 				preprocessor: (value) => {
 					return [{
-							action: this.goDetails.bind(this, value),
-							title: 'Подробнее',
-							size: 'small'
-						},
-						{
-							action: this.goUpdate.bind(this, value),
-							title: 'Изменить',
-							size: 'small'
-						},
-						{
-							action: this.goDelete.bind(this, value),
-							type: 'danger',
-							title: 'Удалить',
-							size: 'small',
-							style: 'outlined'
-						}
-					];
+						action: this.goDetails.bind(this, value),
+						title: 'Подробнее',
+						size: 'small'
+					},{
+						action: this.goUpdate.bind(this, value),
+						title: 'Изменить',
+						size: 'small'
+					},{
+						action: this.goDelete.bind(this, value),
+						type: 'danger',
+						title: 'Удалить',
+						size: 'small',
+						style: 'outlined'
+					}];
 				},
 			}]
 		});

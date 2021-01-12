@@ -1,4 +1,3 @@
-/* global document */
 
 import ConfirmationComponent from './confirm.svelte';
 

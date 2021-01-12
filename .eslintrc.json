@@ -1,23 +1,26 @@
 {
 	"parserOptions": {
 		"ecmaVersion": 2020,
-		"sourceType": "module"
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"experimentalObjectRestSpread": true
+		}
 	},
 	"env": {
+		"browser": true,
+		"commonjs": true,
 		"es6": true,
 		"node": true,
 		"mongo": true,
 		"mocha": true
 	},
 	"plugins": [
-    "svelte3"
-  ],
-	"overrides": [
-    {
-      "files": ["*.svelte"],
-      "processor": "svelte3/svelte3"
-    }
-  ],
+		"svelte3"
+	],
+	"overrides": [{
+		"files": ["*.svelte"],
+		"processor": "svelte3/svelte3"
+	}],
 	"extends": "eslint:recommended",
 	"rules": {
 		"indent": [

@@ -19,7 +19,7 @@ var notStore = (function (exports) {
 	  check(typeof self == 'object' && self) ||
 	  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
 	  // eslint-disable-next-line no-new-func
-	  Function('return this')();
+	  (function () { return this; })() || Function('return this')();
 
 	var fails = function (exec) {
 	  try {
@@ -29,7 +29,7 @@ var notStore = (function (exports) {
 	  }
 	};
 
-	// Thank's IE8 for his funny defineProperty
+	// Detect IE8's incomplete defineProperty implementation
 	var descriptors = !fails(function () {
 	  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
 	});
@@ -41,7 +41,7 @@ var notStore = (function (exports) {
 	var NASHORN_BUG = getOwnPropertyDescriptor && !nativePropertyIsEnumerable.call({ 1: 2 }, 1);
 
 	// `Object.prototype.propertyIsEnumerable` method implementation
-	// https://tc39.github.io/ecma262/#sec-object.prototype.propertyisenumerable
+	// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
 	var f = NASHORN_BUG ? function propertyIsEnumerable(V) {
 	  var descriptor = getOwnPropertyDescriptor(this, V);
 	  return !!descriptor && descriptor.enumerable;
@@ -78,7 +78,7 @@ var notStore = (function (exports) {
 	} : Object;
 
 	// `RequireObjectCoercible` abstract operation
-	// https://tc39.github.io/ecma262/#sec-requireobjectcoercible
+	// https://tc39.es/ecma262/#sec-requireobjectcoercible
 	var requireObjectCoercible = function (it) {
 	  if (it == undefined) throw TypeError("Can't call method on " + it);
 	  return it;
@@ -97,7 +97,7 @@ var notStore = (function (exports) {
 	};
 
 	// `ToPrimitive` abstract operation
-	// https://tc39.github.io/ecma262/#sec-toprimitive
+	// https://tc39.es/ecma262/#sec-toprimitive
 	// instead of the ES6 spec version, we didn't implement @@toPrimitive case
 	// and the second argument - flag - preferred type is a string
 	var toPrimitive = function (input, PREFERRED_STRING) {
@@ -133,7 +133,7 @@ var notStore = (function (exports) {
 	var nativeGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 
 	// `Object.getOwnPropertyDescriptor` method
-	// https://tc39.github.io/ecma262/#sec-object.getownpropertydescriptor
+	// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
 	var f$1 = descriptors ? nativeGetOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
 	  O = toIndexedObject(O);
 	  P = toPrimitive(P, true);
@@ -156,7 +156,7 @@ var notStore = (function (exports) {
 	var nativeDefineProperty = Object.defineProperty;
 
 	// `Object.defineProperty` method
-	// https://tc39.github.io/ecma262/#sec-object.defineproperty
+	// https://tc39.es/ecma262/#sec-object.defineproperty
 	var f$2 = descriptors ? nativeDefineProperty : function defineProperty(O, P, Attributes) {
 	  anObject(O);
 	  P = toPrimitive(P, true);
@@ -212,9 +212,9 @@ var notStore = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.6.5',
+	  version: '3.8.2',
 	  mode:  'global',
-	  copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
+	  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
 	});
 	});
 
@@ -250,11 +250,12 @@ var notStore = (function (exports) {
 	};
 
 	if (nativeWeakMap) {
-	  var store$1 = new WeakMap$1();
+	  var store$1 = sharedStore.state || (sharedStore.state = new WeakMap$1());
 	  var wmget = store$1.get;
 	  var wmhas = store$1.has;
 	  var wmset = store$1.set;
 	  set = function (it, metadata) {
+	    metadata.facade = it;
 	    wmset.call(store$1, it, metadata);
 	    return metadata;
 	  };
@@ -268,6 +269,7 @@ var notStore = (function (exports) {
 	  var STATE = sharedKey('state');
 	  hiddenKeys[STATE] = true;
 	  set = function (it, metadata) {
+	    metadata.facade = it;
 	    createNonEnumerableProperty(it, STATE, metadata);
 	    return metadata;
 	  };
@@ -296,9 +298,15 @@ var notStore = (function (exports) {
 	  var unsafe = options ? !!options.unsafe : false;
 	  var simple = options ? !!options.enumerable : false;
 	  var noTargetGet = options ? !!options.noTargetGet : false;
+	  var state;
 	  if (typeof value == 'function') {
-	    if (typeof key == 'string' && !has(value, 'name')) createNonEnumerableProperty(value, 'name', key);
-	    enforceInternalState(value).source = TEMPLATE.join(typeof key == 'string' ? key : '');
+	    if (typeof key == 'string' && !has(value, 'name')) {
+	      createNonEnumerableProperty(value, 'name', key);
+	    }
+	    state = enforceInternalState(value);
+	    if (!state.source) {
+	      state.source = TEMPLATE.join(typeof key == 'string' ? key : '');
+	    }
 	  }
 	  if (O === global_1) {
 	    if (simple) O[key] = value;
@@ -332,7 +340,7 @@ var notStore = (function (exports) {
 	var floor = Math.floor;
 
 	// `ToInteger` abstract operation
-	// https://tc39.github.io/ecma262/#sec-tointeger
+	// https://tc39.es/ecma262/#sec-tointeger
 	var toInteger = function (argument) {
 	  return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor : ceil)(argument);
 	};
@@ -340,7 +348,7 @@ var notStore = (function (exports) {
 	var min = Math.min;
 
 	// `ToLength` abstract operation
-	// https://tc39.github.io/ecma262/#sec-tolength
+	// https://tc39.es/ecma262/#sec-tolength
 	var toLength = function (argument) {
 	  return argument > 0 ? min(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
 	};
@@ -378,10 +386,10 @@ var notStore = (function (exports) {
 
 	var arrayIncludes = {
 	  // `Array.prototype.includes` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.includes
+	  // https://tc39.es/ecma262/#sec-array.prototype.includes
 	  includes: createMethod(true),
 	  // `Array.prototype.indexOf` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.indexof
+	  // https://tc39.es/ecma262/#sec-array.prototype.indexof
 	  indexOf: createMethod(false)
 	};
 
@@ -415,7 +423,7 @@ var notStore = (function (exports) {
 	var hiddenKeys$1 = enumBugKeys.concat('length', 'prototype');
 
 	// `Object.getOwnPropertyNames` method
-	// https://tc39.github.io/ecma262/#sec-object.getownpropertynames
+	// https://tc39.es/ecma262/#sec-object.getownpropertynames
 	var f$3 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 	  return objectKeysInternal(O, hiddenKeys$1);
 	};
@@ -534,25 +542,25 @@ var notStore = (function (exports) {
 	  && typeof Symbol.iterator == 'symbol';
 
 	// `IsArray` abstract operation
-	// https://tc39.github.io/ecma262/#sec-isarray
+	// https://tc39.es/ecma262/#sec-isarray
 	var isArray = Array.isArray || function isArray(arg) {
 	  return classofRaw(arg) == 'Array';
 	};
 
 	// `ToObject` abstract operation
-	// https://tc39.github.io/ecma262/#sec-toobject
+	// https://tc39.es/ecma262/#sec-toobject
 	var toObject = function (argument) {
 	  return Object(requireObjectCoercible(argument));
 	};
 
 	// `Object.keys` method
-	// https://tc39.github.io/ecma262/#sec-object.keys
+	// https://tc39.es/ecma262/#sec-object.keys
 	var objectKeys = Object.keys || function keys(O) {
 	  return objectKeysInternal(O, enumBugKeys);
 	};
 
 	// `Object.defineProperties` method
-	// https://tc39.github.io/ecma262/#sec-object.defineproperties
+	// https://tc39.es/ecma262/#sec-object.defineproperties
 	var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
 	  anObject(O);
 	  var keys = objectKeys(Properties);
@@ -623,7 +631,7 @@ var notStore = (function (exports) {
 	hiddenKeys[IE_PROTO] = true;
 
 	// `Object.create` method
-	// https://tc39.github.io/ecma262/#sec-object.create
+	// https://tc39.es/ecma262/#sec-object.create
 	var objectCreate = Object.create || function create(O, Properties) {
 	  var result;
 	  if (O !== null) {
@@ -732,7 +740,7 @@ var notStore = (function (exports) {
 	var SPECIES = wellKnownSymbol('species');
 
 	// `ArraySpeciesCreate` abstract operation
-	// https://tc39.github.io/ecma262/#sec-arrayspeciescreate
+	// https://tc39.es/ecma262/#sec-arrayspeciescreate
 	var arraySpeciesCreate = function (originalArray, length) {
 	  var C;
 	  if (isArray(originalArray)) {
@@ -748,13 +756,14 @@ var notStore = (function (exports) {
 
 	var push = [].push;
 
-	// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex }` methods implementation
+	// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterOut }` methods implementation
 	var createMethod$1 = function (TYPE) {
 	  var IS_MAP = TYPE == 1;
 	  var IS_FILTER = TYPE == 2;
 	  var IS_SOME = TYPE == 3;
 	  var IS_EVERY = TYPE == 4;
 	  var IS_FIND_INDEX = TYPE == 6;
+	  var IS_FILTER_OUT = TYPE == 7;
 	  var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
 	  return function ($this, callbackfn, that, specificCreate) {
 	    var O = toObject($this);
@@ -763,7 +772,7 @@ var notStore = (function (exports) {
 	    var length = toLength(self.length);
 	    var index = 0;
 	    var create = specificCreate || arraySpeciesCreate;
-	    var target = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined;
+	    var target = IS_MAP ? create($this, length) : IS_FILTER || IS_FILTER_OUT ? create($this, 0) : undefined;
 	    var value, result;
 	    for (;length > index; index++) if (NO_HOLES || index in self) {
 	      value = self[index];
@@ -775,7 +784,10 @@ var notStore = (function (exports) {
 	          case 5: return value;             // find
 	          case 6: return index;             // findIndex
 	          case 2: push.call(target, value); // filter
-	        } else if (IS_EVERY) return false;  // every
+	        } else switch (TYPE) {
+	          case 4: return false;             // every
+	          case 7: push.call(target, value); // filterOut
+	        }
 	      }
 	    }
 	    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : target;
@@ -784,26 +796,29 @@ var notStore = (function (exports) {
 
 	var arrayIteration = {
 	  // `Array.prototype.forEach` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+	  // https://tc39.es/ecma262/#sec-array.prototype.foreach
 	  forEach: createMethod$1(0),
 	  // `Array.prototype.map` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.map
+	  // https://tc39.es/ecma262/#sec-array.prototype.map
 	  map: createMethod$1(1),
 	  // `Array.prototype.filter` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.filter
+	  // https://tc39.es/ecma262/#sec-array.prototype.filter
 	  filter: createMethod$1(2),
 	  // `Array.prototype.some` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.some
+	  // https://tc39.es/ecma262/#sec-array.prototype.some
 	  some: createMethod$1(3),
 	  // `Array.prototype.every` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.every
+	  // https://tc39.es/ecma262/#sec-array.prototype.every
 	  every: createMethod$1(4),
 	  // `Array.prototype.find` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.find
+	  // https://tc39.es/ecma262/#sec-array.prototype.find
 	  find: createMethod$1(5),
 	  // `Array.prototype.findIndex` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.findIndex
-	  findIndex: createMethod$1(6)
+	  // https://tc39.es/ecma262/#sec-array.prototype.findIndex
+	  findIndex: createMethod$1(6),
+	  // `Array.prototype.filterOut` method
+	  // https://github.com/tc39/proposal-array-filtering
+	  filterOut: createMethod$1(7)
 	};
 
 	var $forEach = arrayIteration.forEach;
@@ -931,7 +946,7 @@ var notStore = (function (exports) {
 	};
 
 	// `Symbol` constructor
-	// https://tc39.github.io/ecma262/#sec-symbol-constructor
+	// https://tc39.es/ecma262/#sec-symbol-constructor
 	if (!nativeSymbol) {
 	  $Symbol = function Symbol() {
 	    if (this instanceof $Symbol) throw TypeError('Symbol is not a constructor');
@@ -988,7 +1003,7 @@ var notStore = (function (exports) {
 
 	_export({ target: SYMBOL, stat: true, forced: !nativeSymbol }, {
 	  // `Symbol.for` method
-	  // https://tc39.github.io/ecma262/#sec-symbol.for
+	  // https://tc39.es/ecma262/#sec-symbol.for
 	  'for': function (key) {
 	    var string = String(key);
 	    if (has(StringToSymbolRegistry, string)) return StringToSymbolRegistry[string];
@@ -998,7 +1013,7 @@ var notStore = (function (exports) {
 	    return symbol;
 	  },
 	  // `Symbol.keyFor` method
-	  // https://tc39.github.io/ecma262/#sec-symbol.keyfor
+	  // https://tc39.es/ecma262/#sec-symbol.keyfor
 	  keyFor: function keyFor(sym) {
 	    if (!isSymbol(sym)) throw TypeError(sym + ' is not a symbol');
 	    if (has(SymbolToStringRegistry, sym)) return SymbolToStringRegistry[sym];
@@ -1009,25 +1024,25 @@ var notStore = (function (exports) {
 
 	_export({ target: 'Object', stat: true, forced: !nativeSymbol, sham: !descriptors }, {
 	  // `Object.create` method
-	  // https://tc39.github.io/ecma262/#sec-object.create
+	  // https://tc39.es/ecma262/#sec-object.create
 	  create: $create,
 	  // `Object.defineProperty` method
-	  // https://tc39.github.io/ecma262/#sec-object.defineproperty
+	  // https://tc39.es/ecma262/#sec-object.defineproperty
 	  defineProperty: $defineProperty,
 	  // `Object.defineProperties` method
-	  // https://tc39.github.io/ecma262/#sec-object.defineproperties
+	  // https://tc39.es/ecma262/#sec-object.defineproperties
 	  defineProperties: $defineProperties,
 	  // `Object.getOwnPropertyDescriptor` method
-	  // https://tc39.github.io/ecma262/#sec-object.getownpropertydescriptors
+	  // https://tc39.es/ecma262/#sec-object.getownpropertydescriptors
 	  getOwnPropertyDescriptor: $getOwnPropertyDescriptor
 	});
 
 	_export({ target: 'Object', stat: true, forced: !nativeSymbol }, {
 	  // `Object.getOwnPropertyNames` method
-	  // https://tc39.github.io/ecma262/#sec-object.getownpropertynames
+	  // https://tc39.es/ecma262/#sec-object.getownpropertynames
 	  getOwnPropertyNames: $getOwnPropertyNames,
 	  // `Object.getOwnPropertySymbols` method
-	  // https://tc39.github.io/ecma262/#sec-object.getownpropertysymbols
+	  // https://tc39.es/ecma262/#sec-object.getownpropertysymbols
 	  getOwnPropertySymbols: $getOwnPropertySymbols
 	});
 
@@ -1040,7 +1055,7 @@ var notStore = (function (exports) {
 	});
 
 	// `JSON.stringify` method behavior with symbols
-	// https://tc39.github.io/ecma262/#sec-json.stringify
+	// https://tc39.es/ecma262/#sec-json.stringify
 	if ($stringify) {
 	  var FORCED_JSON_STRINGIFY = !nativeSymbol || fails(function () {
 	    var symbol = $Symbol();
@@ -1072,12 +1087,12 @@ var notStore = (function (exports) {
 	}
 
 	// `Symbol.prototype[@@toPrimitive]` method
-	// https://tc39.github.io/ecma262/#sec-symbol.prototype-@@toprimitive
+	// https://tc39.es/ecma262/#sec-symbol.prototype-@@toprimitive
 	if (!$Symbol[PROTOTYPE$1][TO_PRIMITIVE]) {
 	  createNonEnumerableProperty($Symbol[PROTOTYPE$1], TO_PRIMITIVE, $Symbol[PROTOTYPE$1].valueOf);
 	}
 	// `Symbol.prototype[@@toStringTag]` property
-	// https://tc39.github.io/ecma262/#sec-symbol.prototype-@@tostringtag
+	// https://tc39.es/ecma262/#sec-symbol.prototype-@@tostringtag
 	setToStringTag($Symbol, SYMBOL);
 
 	hiddenKeys[HIDDEN] = true;
@@ -1126,7 +1141,7 @@ var notStore = (function (exports) {
 	}
 
 	// `Symbol.iterator` well-known symbol
-	// https://tc39.github.io/ecma262/#sec-symbol.iterator
+	// https://tc39.es/ecma262/#sec-symbol.iterator
 	defineWellKnownSymbol('iterator');
 
 	var createProperty = function (object, key, value) {
@@ -1195,7 +1210,7 @@ var notStore = (function (exports) {
 	var FORCED = !IS_CONCAT_SPREADABLE_SUPPORT || !SPECIES_SUPPORT;
 
 	// `Array.prototype.concat` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.concat
+	// https://tc39.es/ecma262/#sec-array.prototype.concat
 	// with adding support of @@isConcatSpreadable and @@species
 	_export({ target: 'Array', proto: true, forced: FORCED }, {
 	  concat: function concat(arg) { // eslint-disable-line no-unused-vars
@@ -1259,16 +1274,23 @@ var notStore = (function (exports) {
 	var USES_TO_LENGTH = arrayMethodUsesToLength('forEach');
 
 	// `Array.prototype.forEach` method implementation
-	// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+	// https://tc39.es/ecma262/#sec-array.prototype.foreach
 	var arrayForEach = (!STRICT_METHOD || !USES_TO_LENGTH) ? function forEach(callbackfn /* , thisArg */) {
 	  return $forEach$1(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 	} : [].forEach;
 
 	// `Array.prototype.forEach` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+	// https://tc39.es/ecma262/#sec-array.prototype.foreach
 	_export({ target: 'Array', proto: true, forced: [].forEach != arrayForEach }, {
 	  forEach: arrayForEach
 	});
+
+	var iteratorClose = function (iterator) {
+	  var returnMethod = iterator['return'];
+	  if (returnMethod !== undefined) {
+	    return anObject(returnMethod.call(iterator)).value;
+	  }
+	};
 
 	// call something on iterator step with safe closing on error
 	var callWithSafeIterationClosing = function (iterator, fn, value, ENTRIES) {
@@ -1276,8 +1298,7 @@ var notStore = (function (exports) {
 	    return ENTRIES ? fn(anObject(value)[0], value[1]) : fn(value);
 	  // 7.4.6 IteratorClose(iterator, completion)
 	  } catch (error) {
-	    var returnMethod = iterator['return'];
-	    if (returnMethod !== undefined) anObject(returnMethod.call(iterator));
+	    iteratorClose(iterator);
 	    throw error;
 	  }
 	};
@@ -1331,7 +1352,7 @@ var notStore = (function (exports) {
 	};
 
 	// `Array.from` method implementation
-	// https://tc39.github.io/ecma262/#sec-array.from
+	// https://tc39.es/ecma262/#sec-array.from
 	var arrayFrom = function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
 	  var O = toObject(arrayLike);
 	  var C = typeof this == 'function' ? this : Array;
@@ -1405,7 +1426,7 @@ var notStore = (function (exports) {
 	});
 
 	// `Array.from` method
-	// https://tc39.github.io/ecma262/#sec-array.from
+	// https://tc39.es/ecma262/#sec-array.from
 	_export({ target: 'Array', stat: true, forced: INCORRECT_ITERATION }, {
 	  from: arrayFrom
 	});
@@ -1421,7 +1442,7 @@ var notStore = (function (exports) {
 	var USES_TO_LENGTH$1 = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
 
 	// `Array.prototype.indexOf` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.indexof
+	// https://tc39.es/ecma262/#sec-array.prototype.indexof
 	_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD$1 || !USES_TO_LENGTH$1 }, {
 	  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
 	    return NEGATIVE_ZERO
@@ -1435,7 +1456,7 @@ var notStore = (function (exports) {
 	var ArrayPrototype$1 = Array.prototype;
 
 	// Array.prototype[@@unscopables]
-	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
 	if (ArrayPrototype$1[UNSCOPABLES] == undefined) {
 	  objectDefineProperty.f(ArrayPrototype$1, UNSCOPABLES, {
 	    configurable: true,
@@ -1458,7 +1479,7 @@ var notStore = (function (exports) {
 	var ObjectPrototype$1 = Object.prototype;
 
 	// `Object.getPrototypeOf` method
-	// https://tc39.github.io/ecma262/#sec-object.getprototypeof
+	// https://tc39.es/ecma262/#sec-object.getprototypeof
 	var objectGetPrototypeOf = correctPrototypeGetter ? Object.getPrototypeOf : function (O) {
 	  O = toObject(O);
 	  if (has(O, IE_PROTO$1)) return O[IE_PROTO$1];
@@ -1473,7 +1494,7 @@ var notStore = (function (exports) {
 	var returnThis = function () { return this; };
 
 	// `%IteratorPrototype%` object
-	// https://tc39.github.io/ecma262/#sec-%iteratorprototype%-object
+	// https://tc39.es/ecma262/#sec-%iteratorprototype%-object
 	var IteratorPrototype, PrototypeOfArrayIteratorPrototype, arrayIterator;
 
 	if ([].keys) {
@@ -1521,7 +1542,7 @@ var notStore = (function (exports) {
 	};
 
 	// `Object.setPrototypeOf` method
-	// https://tc39.github.io/ecma262/#sec-object.setprototypeof
+	// https://tc39.es/ecma262/#sec-object.setprototypeof
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
 	/* eslint-disable no-proto */
 	var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? function () {
@@ -1624,15 +1645,15 @@ var notStore = (function (exports) {
 	var getInternalState$1 = internalState.getterFor(ARRAY_ITERATOR);
 
 	// `Array.prototype.entries` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.entries
+	// https://tc39.es/ecma262/#sec-array.prototype.entries
 	// `Array.prototype.keys` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.keys
+	// https://tc39.es/ecma262/#sec-array.prototype.keys
 	// `Array.prototype.values` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.values
+	// https://tc39.es/ecma262/#sec-array.prototype.values
 	// `Array.prototype[@@iterator]` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype-@@iterator
+	// https://tc39.es/ecma262/#sec-array.prototype-@@iterator
 	// `CreateArrayIterator` internal method
-	// https://tc39.github.io/ecma262/#sec-createarrayiterator
+	// https://tc39.es/ecma262/#sec-createarrayiterator
 	var es_array_iterator = defineIterator(Array, 'Array', function (iterated, kind) {
 	  setInternalState$1(this, {
 	    type: ARRAY_ITERATOR,
@@ -1641,7 +1662,7 @@ var notStore = (function (exports) {
 	    kind: kind                         // kind
 	  });
 	// `%ArrayIteratorPrototype%.next` method
-	// https://tc39.github.io/ecma262/#sec-%arrayiteratorprototype%.next
+	// https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
 	}, function () {
 	  var state = getInternalState$1(this);
 	  var target = state.target;
@@ -1657,11 +1678,11 @@ var notStore = (function (exports) {
 	}, 'values');
 
 	// argumentsList[@@iterator] is %ArrayProto_values%
-	// https://tc39.github.io/ecma262/#sec-createunmappedargumentsobject
-	// https://tc39.github.io/ecma262/#sec-createmappedargumentsobject
+	// https://tc39.es/ecma262/#sec-createunmappedargumentsobject
+	// https://tc39.es/ecma262/#sec-createmappedargumentsobject
 	iterators.Arguments = iterators.Array;
 
-	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
 	addToUnscopables('keys');
 	addToUnscopables('values');
 	addToUnscopables('entries');
@@ -1674,7 +1695,7 @@ var notStore = (function (exports) {
 	var max$1 = Math.max;
 
 	// `Array.prototype.slice` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.slice
+	// https://tc39.es/ecma262/#sec-array.prototype.slice
 	// fallback for not array-like ES3 strings and DOM objects
 	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH$2 }, {
 	  slice: function slice(start, end) {
@@ -1713,7 +1734,7 @@ var notStore = (function (exports) {
 	var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
 
 	// `Array.prototype.splice` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.splice
+	// https://tc39.es/ecma262/#sec-array.prototype.splice
 	// with adding support of @@species
 	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$1 || !USES_TO_LENGTH$3 }, {
 	  splice: function splice(start, deleteCount /* , ...items */) {
@@ -1772,7 +1793,7 @@ var notStore = (function (exports) {
 	var NAME = 'name';
 
 	// Function instances `.name` property
-	// https://tc39.github.io/ecma262/#sec-function-instances-name
+	// https://tc39.es/ecma262/#sec-function-instances-name
 	if (descriptors && !(NAME in FunctionPrototype)) {
 	  defineProperty$4(FunctionPrototype, NAME, {
 	    configurable: true,
@@ -1790,7 +1811,7 @@ var notStore = (function (exports) {
 	var defineProperty$5 = Object.defineProperty;
 
 	// `Object.assign` method
-	// https://tc39.github.io/ecma262/#sec-object.assign
+	// https://tc39.es/ecma262/#sec-object.assign
 	var objectAssign = !nativeAssign || fails(function () {
 	  // should have correct order of operations (Edge bug)
 	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$5({}, 'a', {
@@ -1831,19 +1852,19 @@ var notStore = (function (exports) {
 	} : nativeAssign;
 
 	// `Object.assign` method
-	// https://tc39.github.io/ecma262/#sec-object.assign
+	// https://tc39.es/ecma262/#sec-object.assign
 	_export({ target: 'Object', stat: true, forced: Object.assign !== objectAssign }, {
 	  assign: objectAssign
 	});
 
 	// `Object.prototype.toString` method implementation
-	// https://tc39.github.io/ecma262/#sec-object.prototype.tostring
+	// https://tc39.es/ecma262/#sec-object.prototype.tostring
 	var objectToString = toStringTagSupport ? {}.toString : function toString() {
 	  return '[object ' + classof(this) + ']';
 	};
 
 	// `Object.prototype.toString` method
-	// https://tc39.github.io/ecma262/#sec-object.prototype.tostring
+	// https://tc39.es/ecma262/#sec-object.prototype.tostring
 	if (!toStringTagSupport) {
 	  redefine(Object.prototype, 'toString', objectToString, { unsafe: true });
 	}
@@ -1875,15 +1896,30 @@ var notStore = (function (exports) {
 	  } return it;
 	};
 
-	var iterate_1 = createCommonjsModule(function (module) {
 	var Result = function (stopped, result) {
 	  this.stopped = stopped;
 	  this.result = result;
 	};
 
-	var iterate = module.exports = function (iterable, fn, that, AS_ENTRIES, IS_ITERATOR) {
-	  var boundFunction = functionBindContext(fn, that, AS_ENTRIES ? 2 : 1);
+	var iterate = function (iterable, unboundFunction, options) {
+	  var that = options && options.that;
+	  var AS_ENTRIES = !!(options && options.AS_ENTRIES);
+	  var IS_ITERATOR = !!(options && options.IS_ITERATOR);
+	  var INTERRUPTED = !!(options && options.INTERRUPTED);
+	  var fn = functionBindContext(unboundFunction, that, 1 + AS_ENTRIES + INTERRUPTED);
 	  var iterator, iterFn, index, length, result, next, step;
+
+	  var stop = function (condition) {
+	    if (iterator) iteratorClose(iterator);
+	    return new Result(true, condition);
+	  };
+
+	  var callFn = function (value) {
+	    if (AS_ENTRIES) {
+	      anObject(value);
+	      return INTERRUPTED ? fn(value[0], value[1], stop) : fn(value[0], value[1]);
+	    } return INTERRUPTED ? fn(value, stop) : fn(value);
+	  };
 
 	  if (IS_ITERATOR) {
 	    iterator = iterable;
@@ -1893,9 +1929,7 @@ var notStore = (function (exports) {
 	    // optimisation for array iterators
 	    if (isArrayIteratorMethod(iterFn)) {
 	      for (index = 0, length = toLength(iterable.length); length > index; index++) {
-	        result = AS_ENTRIES
-	          ? boundFunction(anObject(step = iterable[index])[0], step[1])
-	          : boundFunction(iterable[index]);
+	        result = callFn(iterable[index]);
 	        if (result && result instanceof Result) return result;
 	      } return new Result(false);
 	    }
@@ -1904,20 +1938,20 @@ var notStore = (function (exports) {
 
 	  next = iterator.next;
 	  while (!(step = next.call(iterator)).done) {
-	    result = callWithSafeIterationClosing(iterator, boundFunction, step.value, AS_ENTRIES);
+	    try {
+	      result = callFn(step.value);
+	    } catch (error) {
+	      iteratorClose(iterator);
+	      throw error;
+	    }
 	    if (typeof result == 'object' && result && result instanceof Result) return result;
 	  } return new Result(false);
 	};
 
-	iterate.stop = function (result) {
-	  return new Result(true, result);
-	};
-	});
-
 	var SPECIES$4 = wellKnownSymbol('species');
 
 	// `SpeciesConstructor` abstract operation
-	// https://tc39.github.io/ecma262/#sec-speciesconstructor
+	// https://tc39.es/ecma262/#sec-speciesconstructor
 	var speciesConstructor = function (O, defaultConstructor) {
 	  var C = anObject(O).constructor;
 	  var S;
@@ -1925,6 +1959,8 @@ var notStore = (function (exports) {
 	};
 
 	var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
+
+	var engineIsNode = classofRaw(global_1.process) == 'process';
 
 	var location = global_1.location;
 	var set$1 = global_1.setImmediate;
@@ -1978,7 +2014,7 @@ var notStore = (function (exports) {
 	    delete queue[id];
 	  };
 	  // Node.js 0.8-
-	  if (classofRaw(process$1) == 'process') {
+	  if (engineIsNode) {
 	    defer = function (id) {
 	      process$1.nextTick(runner(id));
 	    };
@@ -2000,8 +2036,8 @@ var notStore = (function (exports) {
 	    global_1.addEventListener &&
 	    typeof postMessage == 'function' &&
 	    !global_1.importScripts &&
-	    !fails(post) &&
-	    location.protocol !== 'file:'
+	    location && location.protocol !== 'file:' &&
+	    !fails(post)
 	  ) {
 	    defer = post;
 	    global_1.addEventListener('message', listener, false);
@@ -2026,15 +2062,18 @@ var notStore = (function (exports) {
 	  clear: clear
 	};
 
-	var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
+	var engineIsWebosWebkit = /web0s(?!.*chrome)/i.test(engineUserAgent);
 
+	var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
 	var macrotask = task.set;
 
 
+
+
 	var MutationObserver = global_1.MutationObserver || global_1.WebKitMutationObserver;
+	var document$2 = global_1.document;
 	var process$2 = global_1.process;
 	var Promise$1 = global_1.Promise;
-	var IS_NODE = classofRaw(process$2) == 'process';
 	// Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
 	var queueMicrotaskDescriptor = getOwnPropertyDescriptor$2(global_1, 'queueMicrotask');
 	var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
@@ -2045,7 +2084,7 @@ var notStore = (function (exports) {
 	if (!queueMicrotask) {
 	  flush = function () {
 	    var parent, fn;
-	    if (IS_NODE && (parent = process$2.domain)) parent.exit();
+	    if (engineIsNode && (parent = process$2.domain)) parent.exit();
 	    while (head) {
 	      fn = head.fn;
 	      head = head.next;
@@ -2060,15 +2099,11 @@ var notStore = (function (exports) {
 	    if (parent) parent.enter();
 	  };
 
-	  // Node.js
-	  if (IS_NODE) {
-	    notify = function () {
-	      process$2.nextTick(flush);
-	    };
 	  // browsers with MutationObserver, except iOS - https://github.com/zloirock/core-js/issues/339
-	  } else if (MutationObserver && !engineIsIos) {
+	  // also except WebOS Webkit https://github.com/zloirock/core-js/issues/898
+	  if (!engineIsIos && !engineIsNode && !engineIsWebosWebkit && MutationObserver && document$2) {
 	    toggle = true;
-	    node = document.createTextNode('');
+	    node = document$2.createTextNode('');
 	    new MutationObserver(flush).observe(node, { characterData: true });
 	    notify = function () {
 	      node.data = toggle = !toggle;
@@ -2080,6 +2115,11 @@ var notStore = (function (exports) {
 	    then = promise.then;
 	    notify = function () {
 	      then.call(promise, flush);
+	    };
+	  // Node.js without promises
+	  } else if (engineIsNode) {
+	    notify = function () {
+	      process$2.nextTick(flush);
 	    };
 	  // for other environments - macrotask based on:
 	  // - setImmediate
@@ -2159,6 +2199,7 @@ var notStore = (function (exports) {
 
 
 
+
 	var SPECIES$5 = wellKnownSymbol('species');
 	var PROMISE = 'Promise';
 	var getInternalState$2 = internalState.get;
@@ -2166,13 +2207,13 @@ var notStore = (function (exports) {
 	var getInternalPromiseState = internalState.getterFor(PROMISE);
 	var PromiseConstructor = nativePromiseConstructor;
 	var TypeError$1 = global_1.TypeError;
-	var document$2 = global_1.document;
+	var document$3 = global_1.document;
 	var process$3 = global_1.process;
 	var $fetch = getBuiltIn('fetch');
 	var newPromiseCapability$1 = newPromiseCapability.f;
 	var newGenericPromiseCapability = newPromiseCapability$1;
-	var IS_NODE$1 = classofRaw(process$3) == 'process';
-	var DISPATCH_EVENT = !!(document$2 && document$2.createEvent && global_1.dispatchEvent);
+	var DISPATCH_EVENT = !!(document$3 && document$3.createEvent && global_1.dispatchEvent);
+	var NATIVE_REJECTION_EVENT = typeof PromiseRejectionEvent == 'function';
 	var UNHANDLED_REJECTION = 'unhandledrejection';
 	var REJECTION_HANDLED = 'rejectionhandled';
 	var PENDING = 0;
@@ -2190,7 +2231,7 @@ var notStore = (function (exports) {
 	    // We can't detect it synchronously, so just check versions
 	    if (engineV8Version === 66) return true;
 	    // Unhandled rejections tracking support, NodeJS Promise without it fails @@species test
-	    if (!IS_NODE$1 && typeof PromiseRejectionEvent != 'function') return true;
+	    if (!engineIsNode && !NATIVE_REJECTION_EVENT) return true;
 	  }
 	  // We can't use @@species feature detection in V8 since it causes
 	  // deoptimization and performance degradation
@@ -2216,7 +2257,7 @@ var notStore = (function (exports) {
 	  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
 	};
 
-	var notify$1 = function (promise, state, isReject) {
+	var notify$1 = function (state, isReject) {
 	  if (state.notified) return;
 	  state.notified = true;
 	  var chain = state.reactions;
@@ -2235,7 +2276,7 @@ var notStore = (function (exports) {
 	      try {
 	        if (handler) {
 	          if (!ok) {
-	            if (state.rejection === UNHANDLED) onHandleUnhandled(promise, state);
+	            if (state.rejection === UNHANDLED) onHandleUnhandled(state);
 	            state.rejection = HANDLED;
 	          }
 	          if (handler === true) result = value;
@@ -2260,36 +2301,37 @@ var notStore = (function (exports) {
 	    }
 	    state.reactions = [];
 	    state.notified = false;
-	    if (isReject && !state.rejection) onUnhandled(promise, state);
+	    if (isReject && !state.rejection) onUnhandled(state);
 	  });
 	};
 
 	var dispatchEvent = function (name, promise, reason) {
 	  var event, handler;
 	  if (DISPATCH_EVENT) {
-	    event = document$2.createEvent('Event');
+	    event = document$3.createEvent('Event');
 	    event.promise = promise;
 	    event.reason = reason;
 	    event.initEvent(name, false, true);
 	    global_1.dispatchEvent(event);
 	  } else event = { promise: promise, reason: reason };
-	  if (handler = global_1['on' + name]) handler(event);
+	  if (!NATIVE_REJECTION_EVENT && (handler = global_1['on' + name])) handler(event);
 	  else if (name === UNHANDLED_REJECTION) hostReportErrors('Unhandled promise rejection', reason);
 	};
 
-	var onUnhandled = function (promise, state) {
+	var onUnhandled = function (state) {
 	  task$1.call(global_1, function () {
+	    var promise = state.facade;
 	    var value = state.value;
 	    var IS_UNHANDLED = isUnhandled(state);
 	    var result;
 	    if (IS_UNHANDLED) {
 	      result = perform(function () {
-	        if (IS_NODE$1) {
+	        if (engineIsNode) {
 	          process$3.emit('unhandledRejection', value, promise);
 	        } else dispatchEvent(UNHANDLED_REJECTION, promise, value);
 	      });
 	      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
-	      state.rejection = IS_NODE$1 || isUnhandled(state) ? UNHANDLED : HANDLED;
+	      state.rejection = engineIsNode || isUnhandled(state) ? UNHANDLED : HANDLED;
 	      if (result.error) throw result.value;
 	    }
 	  });
@@ -2299,55 +2341,56 @@ var notStore = (function (exports) {
 	  return state.rejection !== HANDLED && !state.parent;
 	};
 
-	var onHandleUnhandled = function (promise, state) {
+	var onHandleUnhandled = function (state) {
 	  task$1.call(global_1, function () {
-	    if (IS_NODE$1) {
+	    var promise = state.facade;
+	    if (engineIsNode) {
 	      process$3.emit('rejectionHandled', promise);
 	    } else dispatchEvent(REJECTION_HANDLED, promise, state.value);
 	  });
 	};
 
-	var bind = function (fn, promise, state, unwrap) {
+	var bind = function (fn, state, unwrap) {
 	  return function (value) {
-	    fn(promise, state, value, unwrap);
+	    fn(state, value, unwrap);
 	  };
 	};
 
-	var internalReject = function (promise, state, value, unwrap) {
+	var internalReject = function (state, value, unwrap) {
 	  if (state.done) return;
 	  state.done = true;
 	  if (unwrap) state = unwrap;
 	  state.value = value;
 	  state.state = REJECTED;
-	  notify$1(promise, state, true);
+	  notify$1(state, true);
 	};
 
-	var internalResolve = function (promise, state, value, unwrap) {
+	var internalResolve = function (state, value, unwrap) {
 	  if (state.done) return;
 	  state.done = true;
 	  if (unwrap) state = unwrap;
 	  try {
-	    if (promise === value) throw TypeError$1("Promise can't be resolved itself");
+	    if (state.facade === value) throw TypeError$1("Promise can't be resolved itself");
 	    var then = isThenable(value);
 	    if (then) {
 	      microtask(function () {
 	        var wrapper = { done: false };
 	        try {
 	          then.call(value,
-	            bind(internalResolve, promise, wrapper, state),
-	            bind(internalReject, promise, wrapper, state)
+	            bind(internalResolve, wrapper, state),
+	            bind(internalReject, wrapper, state)
 	          );
 	        } catch (error) {
-	          internalReject(promise, wrapper, error, state);
+	          internalReject(wrapper, error, state);
 	        }
 	      });
 	    } else {
 	      state.value = value;
 	      state.state = FULFILLED;
-	      notify$1(promise, state, false);
+	      notify$1(state, false);
 	    }
 	  } catch (error) {
-	    internalReject(promise, { done: false }, error, state);
+	    internalReject({ done: false }, error, state);
 	  }
 	};
 
@@ -2360,9 +2403,9 @@ var notStore = (function (exports) {
 	    Internal.call(this);
 	    var state = getInternalState$2(this);
 	    try {
-	      executor(bind(internalResolve, this, state), bind(internalReject, this, state));
+	      executor(bind(internalResolve, state), bind(internalReject, state));
 	    } catch (error) {
-	      internalReject(this, state, error);
+	      internalReject(state, error);
 	    }
 	  };
 	  // eslint-disable-next-line no-unused-vars
@@ -2380,20 +2423,20 @@ var notStore = (function (exports) {
 	  };
 	  Internal.prototype = redefineAll(PromiseConstructor.prototype, {
 	    // `Promise.prototype.then` method
-	    // https://tc39.github.io/ecma262/#sec-promise.prototype.then
+	    // https://tc39.es/ecma262/#sec-promise.prototype.then
 	    then: function then(onFulfilled, onRejected) {
 	      var state = getInternalPromiseState(this);
 	      var reaction = newPromiseCapability$1(speciesConstructor(this, PromiseConstructor));
 	      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
 	      reaction.fail = typeof onRejected == 'function' && onRejected;
-	      reaction.domain = IS_NODE$1 ? process$3.domain : undefined;
+	      reaction.domain = engineIsNode ? process$3.domain : undefined;
 	      state.parent = true;
 	      state.reactions.push(reaction);
-	      if (state.state != PENDING) notify$1(this, state, false);
+	      if (state.state != PENDING) notify$1(state, false);
 	      return reaction.promise;
 	    },
 	    // `Promise.prototype.catch` method
-	    // https://tc39.github.io/ecma262/#sec-promise.prototype.catch
+	    // https://tc39.es/ecma262/#sec-promise.prototype.catch
 	    'catch': function (onRejected) {
 	      return this.then(undefined, onRejected);
 	    }
@@ -2402,8 +2445,8 @@ var notStore = (function (exports) {
 	    var promise = new Internal();
 	    var state = getInternalState$2(promise);
 	    this.promise = promise;
-	    this.resolve = bind(internalResolve, promise, state);
-	    this.reject = bind(internalReject, promise, state);
+	    this.resolve = bind(internalResolve, state);
+	    this.reject = bind(internalReject, state);
 	  };
 	  newPromiseCapability.f = newPromiseCapability$1 = function (C) {
 	    return C === PromiseConstructor || C === PromiseWrapper
@@ -2445,7 +2488,7 @@ var notStore = (function (exports) {
 	// statics
 	_export({ target: PROMISE, stat: true, forced: FORCED$1 }, {
 	  // `Promise.reject` method
-	  // https://tc39.github.io/ecma262/#sec-promise.reject
+	  // https://tc39.es/ecma262/#sec-promise.reject
 	  reject: function reject(r) {
 	    var capability = newPromiseCapability$1(this);
 	    capability.reject.call(undefined, r);
@@ -2455,7 +2498,7 @@ var notStore = (function (exports) {
 
 	_export({ target: PROMISE, stat: true, forced:  FORCED$1 }, {
 	  // `Promise.resolve` method
-	  // https://tc39.github.io/ecma262/#sec-promise.resolve
+	  // https://tc39.es/ecma262/#sec-promise.resolve
 	  resolve: function resolve(x) {
 	    return promiseResolve( this, x);
 	  }
@@ -2463,7 +2506,7 @@ var notStore = (function (exports) {
 
 	_export({ target: PROMISE, stat: true, forced: INCORRECT_ITERATION$1 }, {
 	  // `Promise.all` method
-	  // https://tc39.github.io/ecma262/#sec-promise.all
+	  // https://tc39.es/ecma262/#sec-promise.all
 	  all: function all(iterable) {
 	    var C = this;
 	    var capability = newPromiseCapability$1(C);
@@ -2474,7 +2517,7 @@ var notStore = (function (exports) {
 	      var values = [];
 	      var counter = 0;
 	      var remaining = 1;
-	      iterate_1(iterable, function (promise) {
+	      iterate(iterable, function (promise) {
 	        var index = counter++;
 	        var alreadyCalled = false;
 	        values.push(undefined);
@@ -2492,14 +2535,14 @@ var notStore = (function (exports) {
 	    return capability.promise;
 	  },
 	  // `Promise.race` method
-	  // https://tc39.github.io/ecma262/#sec-promise.race
+	  // https://tc39.es/ecma262/#sec-promise.race
 	  race: function race(iterable) {
 	    var C = this;
 	    var capability = newPromiseCapability$1(C);
 	    var reject = capability.reject;
 	    var result = perform(function () {
 	      var $promiseResolve = aFunction$1(C.resolve);
-	      iterate_1(iterable, function (promise) {
+	      iterate(iterable, function (promise) {
 	        $promiseResolve.call(C, promise).then(capability.resolve, reject);
 	      });
 	    });
@@ -2509,7 +2552,7 @@ var notStore = (function (exports) {
 	});
 
 	// `RegExp.prototype.flags` getter implementation
-	// https://tc39.github.io/ecma262/#sec-get-regexp.prototype.flags
+	// https://tc39.es/ecma262/#sec-get-regexp.prototype.flags
 	var regexpFlags = function () {
 	  var that = anObject(this);
 	  var result = '';
@@ -2531,7 +2574,7 @@ var notStore = (function (exports) {
 	var INCORRECT_NAME = nativeToString.name != TO_STRING;
 
 	// `RegExp.prototype.toString` method
-	// https://tc39.github.io/ecma262/#sec-regexp.prototype.tostring
+	// https://tc39.es/ecma262/#sec-regexp.prototype.tostring
 	if (NOT_GENERIC || INCORRECT_NAME) {
 	  redefine(RegExp.prototype, TO_STRING, function toString() {
 	    var R = anObject(this);
@@ -2560,7 +2603,7 @@ var notStore = (function (exports) {
 
 	var stringMultibyte = {
 	  // `String.prototype.codePointAt` method
-	  // https://tc39.github.io/ecma262/#sec-string.prototype.codepointat
+	  // https://tc39.es/ecma262/#sec-string.prototype.codepointat
 	  codeAt: createMethod$2(false),
 	  // `String.prototype.at` method
 	  // https://github.com/mathiasbynens/String.prototype.at
@@ -2576,7 +2619,7 @@ var notStore = (function (exports) {
 	var getInternalState$3 = internalState.getterFor(STRING_ITERATOR);
 
 	// `String.prototype[@@iterator]` method
-	// https://tc39.github.io/ecma262/#sec-string.prototype-@@iterator
+	// https://tc39.es/ecma262/#sec-string.prototype-@@iterator
 	defineIterator(String, 'String', function (iterated) {
 	  setInternalState$3(this, {
 	    type: STRING_ITERATOR,
@@ -2584,7 +2627,7 @@ var notStore = (function (exports) {
 	    index: 0
 	  });
 	// `%StringIteratorPrototype%.next` method
-	// https://tc39.github.io/ecma262/#sec-%stringiteratorprototype%.next
+	// https://tc39.es/ecma262/#sec-%stringiteratorprototype%.next
 	}, function next() {
 	  var state = getInternalState$3(this);
 	  var string = state.string;
@@ -4347,7 +4390,7 @@ var notStore = (function (exports) {
 	}
 	function get_current_component() {
 	    if (!current_component)
-	        throw new Error(`Function called outside component initialization`);
+	        throw new Error('Function called outside component initialization');
 	    return current_component;
 	}
 	function onMount(fn) {
@@ -4667,6 +4710,9 @@ var notStore = (function (exports) {
 	    }
 	    set_current_component(parent_component);
 	}
+	/**
+	 * Base class for Svelte components. Used when dev=false.
+	 */
 	class SvelteComponent {
 	    $destroy() {
 	        destroy_component(this, 1);
@@ -4690,7 +4736,7 @@ var notStore = (function (exports) {
 	    }
 	}
 
-	/* src/standalone/confirm.svelte generated by Svelte v3.29.0 */
+	/* src/standalone/confirm.svelte generated by Svelte v3.31.2 */
 
 	function create_fragment(ctx) {
 		let div2;
@@ -4833,6 +4879,7 @@ var notStore = (function (exports) {
 	}
 
 	function instance($$self, $$props, $$invalidate) {
+		let disabled;
 		let approved = false;
 		let { title = "title" } = $$props;
 		let { text = "text" } = $$props;
@@ -4869,8 +4916,6 @@ var notStore = (function (exports) {
 			if ("reject" in $$props) $$invalidate(9, reject = $$props.reject);
 			if ("label" in $$props) $$invalidate(3, label = $$props.label);
 		};
-
-		let disabled;
 
 		$$self.$$.update = () => {
 			if ($$self.$$.dirty & /*approved*/ 16) {
@@ -5027,7 +5072,7 @@ var notStore = (function (exports) {
 		get: get$1
 	});
 
-	/* src/standalone/file.svelte generated by Svelte v3.29.0 */
+	/* src/standalone/file.svelte generated by Svelte v3.31.2 */
 
 	function create_if_block_2(ctx) {
 		let progress_1;
@@ -5071,7 +5116,7 @@ var notStore = (function (exports) {
 		let t1;
 		let div1;
 		let div0;
-		let t2_value = /*data*/ ctx[4].name + "";
+		let t2_value = /*data*/ ctx[3].name + "";
 		let t2;
 		let if_block = !/*hideDeleteButton*/ ctx[2] && create_if_block_1(ctx);
 
@@ -5086,13 +5131,14 @@ var notStore = (function (exports) {
 				div0 = element("div");
 				t2 = text(t2_value);
 				attr(img, "draggable", "true");
-				if (img.src !== (img_src_value = /*data*/ ctx[4].path.small.cloud.Location)) attr(img, "src", img_src_value);
-				attr(img, "alt", img_alt_value = /*data*/ ctx[4].name);
-				attr(img, "class", "svelte-1n0ppue");
-				attr(div0, "class", "text svelte-1n0ppue");
+				if (img.src !== (img_src_value = /*data*/ ctx[3].path.small.cloud.Location)) attr(img, "src", img_src_value);
+				attr(img, "alt", img_alt_value = /*data*/ ctx[3].name);
+				attr(img, "crossorigin", "anonymous");
+				attr(img, "class", "svelte-evde9a");
+				attr(div0, "class", "text svelte-evde9a");
 				attr(div1, "draggable", "true");
-				attr(div1, "class", "middle svelte-1n0ppue");
-				attr(figure, "class", "image is-4by3 svelte-1n0ppue");
+				attr(div1, "class", "middle svelte-evde9a");
+				attr(figure, "class", "image is-4by3 svelte-evde9a");
 			},
 			m(target, anchor) {
 				insert(target, figure, anchor);
@@ -5118,15 +5164,15 @@ var notStore = (function (exports) {
 					if_block = null;
 				}
 
-				if (dirty & /*data*/ 16 && img.src !== (img_src_value = /*data*/ ctx[4].path.small.cloud.Location)) {
+				if (dirty & /*data*/ 8 && img.src !== (img_src_value = /*data*/ ctx[3].path.small.cloud.Location)) {
 					attr(img, "src", img_src_value);
 				}
 
-				if (dirty & /*data*/ 16 && img_alt_value !== (img_alt_value = /*data*/ ctx[4].name)) {
+				if (dirty & /*data*/ 8 && img_alt_value !== (img_alt_value = /*data*/ ctx[3].name)) {
 					attr(img, "alt", img_alt_value);
 				}
 
-				if (dirty & /*data*/ 16 && t2_value !== (t2_value = /*data*/ ctx[4].name + "")) set_data(t2, t2_value);
+				if (dirty & /*data*/ 8 && t2_value !== (t2_value = /*data*/ ctx[3].name + "")) set_data(t2, t2_value);
 			},
 			d(detaching) {
 				if (detaching) detach(figure);
@@ -5144,13 +5190,13 @@ var notStore = (function (exports) {
 		return {
 			c() {
 				button = element("button");
-				attr(button, "class", "delete svelte-1n0ppue");
+				attr(button, "class", "delete svelte-evde9a");
 			},
 			m(target, anchor) {
 				insert(target, button, anchor);
 
 				if (!mounted) {
-					dispose = listen(button, "click", /*remove*/ ctx[7]);
+					dispose = listen(button, "click", /*remove*/ ctx[6]);
 					mounted = true;
 				}
 			},
@@ -5171,7 +5217,7 @@ var notStore = (function (exports) {
 		let mounted;
 		let dispose;
 		let if_block0 = /*notUploaded*/ ctx[1] && create_if_block_2(ctx);
-		let if_block1 = /*data*/ ctx[4].path && create_if_block(ctx);
+		let if_block1 = /*data*/ ctx[3].path && create_if_block(ctx);
 
 		return {
 			c() {
@@ -5179,8 +5225,8 @@ var notStore = (function (exports) {
 				if (if_block0) if_block0.c();
 				t = space();
 				if (if_block1) if_block1.c();
-				attr(div, "class", div_class_value = "tile file is-" + /*elementSize*/ ctx[3] + " is-child " + /*ifSelected*/ ctx[5] + " svelte-1n0ppue");
-				attr(div, "data-uuid", div_data_uuid_value = /*data*/ ctx[4].uuid);
+				attr(div, "class", div_class_value = "column file-tile is-one-quarter-desktop is-half-mobile " + /*ifSelected*/ ctx[4] + " svelte-evde9a");
+				attr(div, "data-uuid", div_data_uuid_value = /*data*/ ctx[3].uuid);
 			},
 			m(target, anchor) {
 				insert(target, div, anchor);
@@ -5189,7 +5235,7 @@ var notStore = (function (exports) {
 				if (if_block1) if_block1.m(div, null);
 
 				if (!mounted) {
-					dispose = listen(div, "click", /*onClick*/ ctx[6]);
+					dispose = listen(div, "click", /*onClick*/ ctx[5]);
 					mounted = true;
 				}
 			},
@@ -5207,7 +5253,7 @@ var notStore = (function (exports) {
 					if_block0 = null;
 				}
 
-				if (/*data*/ ctx[4].path) {
+				if (/*data*/ ctx[3].path) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
@@ -5220,11 +5266,11 @@ var notStore = (function (exports) {
 					if_block1 = null;
 				}
 
-				if (dirty & /*elementSize, ifSelected*/ 40 && div_class_value !== (div_class_value = "tile file is-" + /*elementSize*/ ctx[3] + " is-child " + /*ifSelected*/ ctx[5] + " svelte-1n0ppue")) {
+				if (dirty & /*ifSelected*/ 16 && div_class_value !== (div_class_value = "column file-tile is-one-quarter-desktop is-half-mobile " + /*ifSelected*/ ctx[4] + " svelte-evde9a")) {
 					attr(div, "class", div_class_value);
 				}
 
-				if (dirty & /*data*/ 16 && div_data_uuid_value !== (div_data_uuid_value = /*data*/ ctx[4].uuid)) {
+				if (dirty & /*data*/ 8 && div_data_uuid_value !== (div_data_uuid_value = /*data*/ ctx[3].uuid)) {
 					attr(div, "data-uuid", div_data_uuid_value);
 				}
 			},
@@ -5241,13 +5287,13 @@ var notStore = (function (exports) {
 	}
 
 	function instance$1($$self, $$props, $$invalidate) {
+		let ifSelected;
 		const dispatch = createEventDispatcher();
 		let { progress = 0 } = $$props;
 		let { selected = false } = $$props;
 		let { notUploaded = false } = $$props;
 		let { selectMany = false } = $$props;
 		let { hideDeleteButton = false } = $$props;
-		let { elementSize = 3 } = $$props;
 		let { bucketId } = $$props;
 
 		let { data = {
@@ -5259,9 +5305,9 @@ var notStore = (function (exports) {
 		onMount(() => {
 			get$1(bucketId).selected.subscribe(value => {
 				if (value.indexOf(data.uuid) > -1) {
-					$$invalidate(8, selected = true);
+					$$invalidate(7, selected = true);
 				} else {
-					$$invalidate(8, selected = false);
+					$$invalidate(7, selected = false);
 				}
 			});
 		});
@@ -5301,20 +5347,17 @@ var notStore = (function (exports) {
 
 		$$self.$$set = $$props => {
 			if ("progress" in $$props) $$invalidate(0, progress = $$props.progress);
-			if ("selected" in $$props) $$invalidate(8, selected = $$props.selected);
+			if ("selected" in $$props) $$invalidate(7, selected = $$props.selected);
 			if ("notUploaded" in $$props) $$invalidate(1, notUploaded = $$props.notUploaded);
-			if ("selectMany" in $$props) $$invalidate(9, selectMany = $$props.selectMany);
+			if ("selectMany" in $$props) $$invalidate(8, selectMany = $$props.selectMany);
 			if ("hideDeleteButton" in $$props) $$invalidate(2, hideDeleteButton = $$props.hideDeleteButton);
-			if ("elementSize" in $$props) $$invalidate(3, elementSize = $$props.elementSize);
-			if ("bucketId" in $$props) $$invalidate(10, bucketId = $$props.bucketId);
-			if ("data" in $$props) $$invalidate(4, data = $$props.data);
+			if ("bucketId" in $$props) $$invalidate(9, bucketId = $$props.bucketId);
+			if ("data" in $$props) $$invalidate(3, data = $$props.data);
 		};
 
-		let ifSelected;
-
 		$$self.$$.update = () => {
-			if ($$self.$$.dirty & /*selected*/ 256) {
-				 $$invalidate(5, ifSelected = selected ? "selected" : "");
+			if ($$self.$$.dirty & /*selected*/ 128) {
+				 $$invalidate(4, ifSelected = selected ? "selected" : "");
 			}
 		};
 
@@ -5322,7 +5365,6 @@ var notStore = (function (exports) {
 			progress,
 			notUploaded,
 			hideDeleteButton,
-			elementSize,
 			data,
 			ifSelected,
 			onClick,
@@ -5339,36 +5381,35 @@ var notStore = (function (exports) {
 
 			init(this, options, instance$1, create_fragment$1, safe_not_equal, {
 				progress: 0,
-				selected: 8,
+				selected: 7,
 				notUploaded: 1,
-				selectMany: 9,
+				selectMany: 8,
 				hideDeleteButton: 2,
-				elementSize: 3,
-				bucketId: 10,
-				data: 4
+				bucketId: 9,
+				data: 3
 			});
 		}
 	}
 
-	/* src/standalone/storage.svelte generated by Svelte v3.29.0 */
+	/* src/standalone/storage.svelte generated by Svelte v3.31.2 */
 
 	function get_each_context(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[25] = list[i];
-		child_ctx[26] = list;
-		child_ctx[27] = i;
+		child_ctx[24] = list[i];
+		child_ctx[25] = list;
+		child_ctx[26] = i;
 		return child_ctx;
 	}
 
 	function get_each_context_1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[25] = list[i];
-		child_ctx[28] = list;
-		child_ctx[29] = i;
+		child_ctx[24] = list[i];
+		child_ctx[27] = list;
+		child_ctx[28] = i;
 		return child_ctx;
 	}
 
-	// (126:0) {#if !popup && show}
+	// (127:0) {#if !popup && show}
 	function create_if_block_1$1(ctx) {
 		let div1;
 		let div0;
@@ -5393,8 +5434,8 @@ var notStore = (function (exports) {
 					each_blocks[i].c();
 				}
 
-				attr(div0, "class", "file-list");
-				attr(div1, "class", "container svelte-18hgx6z");
+				attr(div0, "class", "file-list columns is-mobile is-multiline");
+				attr(div1, "class", "file-list-wrapper svelte-1fpasgh");
 			},
 			m(target, anchor) {
 				insert(target, div1, anchor);
@@ -5461,14 +5502,14 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (129:2) {#each files as file, index}
+	// (130:1) {#each files as file, index}
 	function create_each_block_1(ctx) {
 		let notfileitem;
 		let updating_data;
 		let current;
 
 		function notfileitem_data_binding(value) {
-			/*notfileitem_data_binding*/ ctx[17].call(null, value, /*file*/ ctx[25], /*each_value_1*/ ctx[28], /*index*/ ctx[29]);
+			/*notfileitem_data_binding*/ ctx[17].call(null, value, /*file*/ ctx[24], /*each_value_1*/ ctx[27], /*index*/ ctx[28]);
 		}
 
 		let notfileitem_props = {
@@ -5477,8 +5518,8 @@ var notStore = (function (exports) {
 			selectMany: /*selectMany*/ ctx[3]
 		};
 
-		if (/*file*/ ctx[25] !== void 0) {
-			notfileitem_props.data = /*file*/ ctx[25];
+		if (/*file*/ ctx[24] !== void 0) {
+			notfileitem_props.data = /*file*/ ctx[24];
 		}
 
 		notfileitem = new File({ props: notfileitem_props });
@@ -5503,7 +5544,7 @@ var notStore = (function (exports) {
 
 				if (!updating_data && dirty & /*files*/ 1) {
 					updating_data = true;
-					notfileitem_changes.data = /*file*/ ctx[25];
+					notfileitem_changes.data = /*file*/ ctx[24];
 					add_flush_callback(() => updating_data = false);
 				}
 
@@ -5524,19 +5565,18 @@ var notStore = (function (exports) {
 		};
 	}
 
-	// (136:0) {#if popup && show}
+	// (137:0) {#if popup && show}
 	function create_if_block$1(ctx) {
-		let div4;
+		let div3;
 		let div0;
 		let t0;
-		let div3;
+		let div2;
 		let header;
 		let p;
 		let t2;
 		let button0;
 		let t3;
 		let section;
-		let div2;
 		let div1;
 		let each_blocks = [];
 		let each_1_lookup = new Map();
@@ -5551,7 +5591,7 @@ var notStore = (function (exports) {
 		let mounted;
 		let dispose;
 		let each_value = /*files*/ ctx[0];
-		const get_key = ctx => /*file*/ ctx[25].id;
+		const get_key = ctx => /*file*/ ctx[24].id;
 
 		for (let i = 0; i < each_value.length; i += 1) {
 			let child_ctx = get_each_context(ctx, each_value, i);
@@ -5561,10 +5601,10 @@ var notStore = (function (exports) {
 
 		return {
 			c() {
-				div4 = element("div");
+				div3 = element("div");
 				div0 = element("div");
 				t0 = space();
-				div3 = element("div");
+				div2 = element("div");
 				header = element("header");
 				p = element("p");
 				p.textContent = "Выберите файл";
@@ -5572,7 +5612,6 @@ var notStore = (function (exports) {
 				button0 = element("button");
 				t3 = space();
 				section = element("section");
-				div2 = element("div");
 				div1 = element("div");
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
@@ -5594,42 +5633,40 @@ var notStore = (function (exports) {
 				attr(button0, "class", "delete");
 				attr(button0, "aria-label", "close");
 				attr(header, "class", "modal-card-head");
-				attr(div1, "class", "file-list");
-				attr(div2, "class", "container svelte-18hgx6z");
+				attr(div1, "class", "file-list columns is-multiline");
 				attr(section, "class", "modal-card-body");
 				attr(button1, "class", "button is-success");
 				attr(button2, "class", "button is-danger");
 				attr(button3, "class", "button");
 				attr(footer, "class", "modal-card-foot");
-				attr(div3, "class", "modal-card");
-				attr(div4, "class", "modal is-active");
+				attr(div2, "class", "modal-card");
+				attr(div3, "class", "modal is-active");
 			},
 			m(target, anchor) {
-				insert(target, div4, anchor);
-				append(div4, div0);
-				append(div4, t0);
-				append(div4, div3);
-				append(div3, header);
+				insert(target, div3, anchor);
+				append(div3, div0);
+				append(div3, t0);
+				append(div3, div2);
+				append(div2, header);
 				append(header, p);
 				append(header, t2);
 				append(header, button0);
-				append(div3, t3);
-				append(div3, section);
-				append(section, div2);
-				append(div2, div1);
+				append(div2, t3);
+				append(div2, section);
+				append(section, div1);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].m(div1, null);
 				}
 
-				append(div3, t4);
-				append(div3, footer);
+				append(div2, t4);
+				append(div2, footer);
 				append(footer, button1);
 				append(footer, t6);
 				append(footer, button2);
 				append(footer, t8);
 				append(footer, button3);
-				/*div4_binding*/ ctx[22](div4);
+				/*div3_binding*/ ctx[22](div3);
 				current = true;
 
 				if (!mounted) {
@@ -5645,7 +5682,7 @@ var notStore = (function (exports) {
 			},
 			p(ctx, dirty) {
 				if (dirty & /*id, selectMany, files, removeFile*/ 4109) {
-					const each_value = /*files*/ ctx[0];
+					each_value = /*files*/ ctx[0];
 					group_outros();
 					each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, outro_and_destroy_block, create_each_block, null, get_each_context);
 					check_outros();
@@ -5668,20 +5705,20 @@ var notStore = (function (exports) {
 				current = false;
 			},
 			d(detaching) {
-				if (detaching) detach(div4);
+				if (detaching) detach(div3);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].d();
 				}
 
-				/*div4_binding*/ ctx[22](null);
+				/*div3_binding*/ ctx[22](null);
 				mounted = false;
 				run_all(dispose);
 			}
 		};
 	}
 
-	// (147:5) {#each files as file(file.id)}
+	// (147:4) {#each files as file(file.id)}
 	function create_each_block(key_1, ctx) {
 		let first;
 		let notfileitem;
@@ -5689,7 +5726,7 @@ var notStore = (function (exports) {
 		let current;
 
 		function notfileitem_data_binding_1(value) {
-			/*notfileitem_data_binding_1*/ ctx[20].call(null, value, /*file*/ ctx[25], /*each_value*/ ctx[26], /*file_index*/ ctx[27]);
+			/*notfileitem_data_binding_1*/ ctx[20].call(null, value, /*file*/ ctx[24], /*each_value*/ ctx[25], /*file_index*/ ctx[26]);
 		}
 
 		let notfileitem_props = {
@@ -5697,8 +5734,8 @@ var notStore = (function (exports) {
 			selectMany: /*selectMany*/ ctx[3]
 		};
 
-		if (/*file*/ ctx[25] !== void 0) {
-			notfileitem_props.data = /*file*/ ctx[25];
+		if (/*file*/ ctx[24] !== void 0) {
+			notfileitem_props.data = /*file*/ ctx[24];
 		}
 
 		notfileitem = new File({ props: notfileitem_props });
@@ -5727,7 +5764,7 @@ var notStore = (function (exports) {
 
 				if (!updating_data && dirty & /*files*/ 1) {
 					updating_data = true;
-					notfileitem_changes.data = /*file*/ ctx[25];
+					notfileitem_changes.data = /*file*/ ctx[24];
 					add_flush_callback(() => updating_data = false);
 				}
 
@@ -5851,6 +5888,17 @@ var notStore = (function (exports) {
 		let { onReject } = $$props;
 		let { onResolve } = $$props;
 
+		/*
+		function getListContainer() {
+			if (modalList) {
+				return modalList.querySelectorAll('.file-list');
+			} else if (inlineList) {
+				return inlineList.querySelectorAll('.file-list');
+			} else {
+				return false;
+			}
+		}
+	*/
 		onMount(() => {
 			get$1(id).files.subscribe(value => {
 				files.forEach((file, id) => {
@@ -5954,7 +6002,7 @@ var notStore = (function (exports) {
 			bubble($$self, event);
 		}
 
-		function div4_binding($$value) {
+		function div3_binding($$value) {
 			binding_callbacks[$$value ? "unshift" : "push"](() => {
 				modalList = $$value;
 				$$invalidate(7, modalList);
@@ -5996,7 +6044,7 @@ var notStore = (function (exports) {
 			div1_binding,
 			notfileitem_data_binding_1,
 			selected_handler_1,
-			div4_binding
+			div3_binding
 		];
 	}
 
@@ -6023,7 +6071,7 @@ var notStore = (function (exports) {
 		}
 	}
 
-	/* src/standalone/file.upload.svelte generated by Svelte v3.29.0 */
+	/* src/standalone/file.upload.svelte generated by Svelte v3.31.2 */
 
 	function create_if_block_1$2(ctx) {
 		let progress;
@@ -6162,170 +6210,218 @@ var notStore = (function (exports) {
 		}
 	}
 
-	/* src/standalone/upload.svelte generated by Svelte v3.29.0 */
+	/* src/standalone/upload.svelte generated by Svelte v3.31.2 */
 
 	function get_each_context$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[9] = list[i];
+		child_ctx[11] = list[i];
 		return child_ctx;
 	}
 
-	function get_each_context_1$1(ctx, list, i) {
-		const child_ctx = ctx.slice();
-		child_ctx[9] = list[i];
-		return child_ctx;
-	}
-
-	// (40:0) {#if !popup && show}
-	function create_if_block_3(ctx) {
-		let div0;
+	// (70:0) {#if show }
+	function create_if_block$3(ctx) {
+		let div;
 		let label;
 		let form;
 		let input;
 		let t0;
-		let span1;
-		let t2;
-		let div1;
-		let t3;
-		let div1_class_value;
+		let t1;
+		let current_block_type_index;
+		let if_block;
+		let if_block_anchor;
 		let current;
 		let mounted;
 		let dispose;
-		let if_block0 = /*uploads*/ ctx[0].length === 0 && create_if_block_5();
-		let if_block1 = /*uploads*/ ctx[0].length > 0 && create_if_block_4(ctx);
+		const if_block_creators = [create_if_block_1$3, create_else_block];
+		const if_blocks = [];
+
+		function select_block_type(ctx, dirty) {
+			if (/*uploads*/ ctx[0].length === 0) return 0;
+			return 1;
+		}
+
+		current_block_type_index = select_block_type(ctx);
+		if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
 		return {
 			c() {
-				div0 = element("div");
+				div = element("div");
 				label = element("label");
 				form = element("form");
 				input = element("input");
-				t0 = space();
-				span1 = element("span");
-				span1.innerHTML = `<span class="file-label svelte-cpvw0r">Выберите изображения для загрузки</span>`;
-				t2 = space();
-				div1 = element("div");
-				if (if_block0) if_block0.c();
-				t3 = space();
-				if (if_block1) if_block1.c();
+				t0 = text("\n\t\t\tВыберите изображения для загрузки");
+				t1 = space();
+				if_block.c();
+				if_block_anchor = empty();
 				attr(input, "class", "file-input");
 				attr(input, "type", "file");
 				attr(input, "name", "file");
 				attr(input, "accept", "image/*");
 				input.multiple = "true";
-				attr(span1, "class", "file-cta svelte-cpvw0r");
 				attr(form, "action", "./");
-				attr(label, "class", "file-label svelte-cpvw0r");
-				attr(div0, "class", "file is-boxed dropzone svelte-cpvw0r");
-				attr(div1, "class", div1_class_value = "previews " + (/*short*/ ctx[4] ? "short" : "") + " svelte-cpvw0r");
+				attr(form, "class", "svelte-1ldlpof");
+				attr(label, "for", "file");
+				attr(label, "class", "svelte-1ldlpof");
+				attr(div, "class", "box has-background-light is-size-4-desktop is-size-5-mobile dropzone svelte-1ldlpof");
 			},
 			m(target, anchor) {
-				insert(target, div0, anchor);
-				append(div0, label);
+				insert(target, div, anchor);
+				append(div, label);
 				append(label, form);
 				append(form, input);
 				append(form, t0);
-				append(form, span1);
-				insert(target, t2, anchor);
-				insert(target, div1, anchor);
-				if (if_block0) if_block0.m(div1, null);
-				append(div1, t3);
-				if (if_block1) if_block1.m(div1, null);
+				/*div_binding*/ ctx[7](div);
+				insert(target, t1, anchor);
+				if_blocks[current_block_type_index].m(target, anchor);
+				insert(target, if_block_anchor, anchor);
 				current = true;
 
 				if (!mounted) {
-					dispose = listen(input, "change", /*onChange*/ ctx[7]);
+					dispose = listen(input, "change", /*onChange*/ ctx[5]);
 					mounted = true;
 				}
 			},
 			p(ctx, dirty) {
-				if (/*uploads*/ ctx[0].length === 0) {
-					if (if_block0) ; else {
-						if_block0 = create_if_block_5();
-						if_block0.c();
-						if_block0.m(div1, t3);
-					}
-				} else if (if_block0) {
-					if_block0.d(1);
-					if_block0 = null;
-				}
+				let previous_block_index = current_block_type_index;
+				current_block_type_index = select_block_type(ctx);
 
-				if (/*uploads*/ ctx[0].length > 0) {
-					if (if_block1) {
-						if_block1.p(ctx, dirty);
-
-						if (dirty & /*uploads*/ 1) {
-							transition_in(if_block1, 1);
-						}
-					} else {
-						if_block1 = create_if_block_4(ctx);
-						if_block1.c();
-						transition_in(if_block1, 1);
-						if_block1.m(div1, null);
-					}
-				} else if (if_block1) {
+				if (current_block_type_index === previous_block_index) {
+					if_blocks[current_block_type_index].p(ctx, dirty);
+				} else {
 					group_outros();
 
-					transition_out(if_block1, 1, 1, () => {
-						if_block1 = null;
+					transition_out(if_blocks[previous_block_index], 1, 1, () => {
+						if_blocks[previous_block_index] = null;
 					});
 
 					check_outros();
-				}
+					if_block = if_blocks[current_block_type_index];
 
-				if (!current || dirty & /*short*/ 16 && div1_class_value !== (div1_class_value = "previews " + (/*short*/ ctx[4] ? "short" : "") + " svelte-cpvw0r")) {
-					attr(div1, "class", div1_class_value);
+					if (!if_block) {
+						if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+						if_block.c();
+					} else {
+						if_block.p(ctx, dirty);
+					}
+
+					transition_in(if_block, 1);
+					if_block.m(if_block_anchor.parentNode, if_block_anchor);
 				}
 			},
 			i(local) {
 				if (current) return;
-				transition_in(if_block1);
+				transition_in(if_block);
 				current = true;
 			},
 			o(local) {
-				transition_out(if_block1);
+				transition_out(if_block);
 				current = false;
 			},
 			d(detaching) {
-				if (detaching) detach(div0);
-				if (detaching) detach(t2);
-				if (detaching) detach(div1);
-				if (if_block0) if_block0.d();
-				if (if_block1) if_block1.d();
+				if (detaching) detach(div);
+				/*div_binding*/ ctx[7](null);
+				if (detaching) detach(t1);
+				if_blocks[current_block_type_index].d(detaching);
+				if (detaching) detach(if_block_anchor);
 				mounted = false;
 				dispose();
 			}
 		};
 	}
 
-	// (52:1) {#if uploads.length === 0}
-	function create_if_block_5(ctx) {
-		let h2;
+	// (83:0) {:else}
+	function create_else_block(ctx) {
+		let div;
+		let div_class_value;
+		let current;
+		let if_block = /*uploads*/ ctx[0].length > 0 && create_if_block_2$1(ctx);
 
 		return {
 			c() {
-				h2 = element("h2");
-				h2.textContent = "Нету загружаемых файлов";
-				attr(h2, "class", "subtitle");
+				div = element("div");
+				if (if_block) if_block.c();
+				attr(div, "class", div_class_value = "previews " + (/*short*/ ctx[3] ? "short" : "long") + " svelte-1ldlpof");
 			},
 			m(target, anchor) {
-				insert(target, h2, anchor);
+				insert(target, div, anchor);
+				if (if_block) if_block.m(div, null);
+				current = true;
+			},
+			p(ctx, dirty) {
+				if (/*uploads*/ ctx[0].length > 0) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+
+						if (dirty & /*uploads*/ 1) {
+							transition_in(if_block, 1);
+						}
+					} else {
+						if_block = create_if_block_2$1(ctx);
+						if_block.c();
+						transition_in(if_block, 1);
+						if_block.m(div, null);
+					}
+				} else if (if_block) {
+					group_outros();
+
+					transition_out(if_block, 1, 1, () => {
+						if_block = null;
+					});
+
+					check_outros();
+				}
+
+				if (!current || dirty & /*short*/ 8 && div_class_value !== (div_class_value = "previews " + (/*short*/ ctx[3] ? "short" : "long") + " svelte-1ldlpof")) {
+					attr(div, "class", div_class_value);
+				}
+			},
+			i(local) {
+				if (current) return;
+				transition_in(if_block);
+				current = true;
+			},
+			o(local) {
+				transition_out(if_block);
+				current = false;
 			},
 			d(detaching) {
-				if (detaching) detach(h2);
+				if (detaching) detach(div);
+				if (if_block) if_block.d();
 			}
 		};
 	}
 
-	// (55:1) {#if uploads.length > 0}
-	function create_if_block_4(ctx) {
+	// (79:0) {#if uploads.length === 0}
+	function create_if_block_1$3(ctx) {
+		let div;
+
+		return {
+			c() {
+				div = element("div");
+				div.innerHTML = `<h2 class="subtitle">Нет загружаемых файлов</h2>`;
+				attr(div, "class", "previews has-text-centered svelte-1ldlpof");
+			},
+			m(target, anchor) {
+				insert(target, div, anchor);
+			},
+			p: noop,
+			i: noop,
+			o: noop,
+			d(detaching) {
+				if (detaching) detach(div);
+			}
+		};
+	}
+
+	// (85:1) {#if uploads.length > 0}
+	function create_if_block_2$1(ctx) {
 		let each_1_anchor;
 		let current;
-		let each_value_1 = /*uploads*/ ctx[0];
+		let each_value = /*uploads*/ ctx[0];
 		let each_blocks = [];
 
-		for (let i = 0; i < each_value_1.length; i += 1) {
-			each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
+		for (let i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
 		}
 
 		const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -6350,292 +6446,6 @@ var notStore = (function (exports) {
 			},
 			p(ctx, dirty) {
 				if (dirty & /*id, uploads*/ 5) {
-					each_value_1 = /*uploads*/ ctx[0];
-					let i;
-
-					for (i = 0; i < each_value_1.length; i += 1) {
-						const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
-
-						if (each_blocks[i]) {
-							each_blocks[i].p(child_ctx, dirty);
-							transition_in(each_blocks[i], 1);
-						} else {
-							each_blocks[i] = create_each_block_1$1(child_ctx);
-							each_blocks[i].c();
-							transition_in(each_blocks[i], 1);
-							each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
-						}
-					}
-
-					group_outros();
-
-					for (i = each_value_1.length; i < each_blocks.length; i += 1) {
-						out(i);
-					}
-
-					check_outros();
-				}
-			},
-			i(local) {
-				if (current) return;
-
-				for (let i = 0; i < each_value_1.length; i += 1) {
-					transition_in(each_blocks[i]);
-				}
-
-				current = true;
-			},
-			o(local) {
-				each_blocks = each_blocks.filter(Boolean);
-
-				for (let i = 0; i < each_blocks.length; i += 1) {
-					transition_out(each_blocks[i]);
-				}
-
-				current = false;
-			},
-			d(detaching) {
-				destroy_each(each_blocks, detaching);
-				if (detaching) detach(each_1_anchor);
-			}
-		};
-	}
-
-	// (56:1) {#each uploads as upload}
-	function create_each_block_1$1(ctx) {
-		let notfileupload;
-		let current;
-
-		notfileupload = new File_upload({
-				props: {
-					bucketId: /*id*/ ctx[2],
-					data: /*upload*/ ctx[9]
-				}
-			});
-
-		return {
-			c() {
-				create_component(notfileupload.$$.fragment);
-			},
-			m(target, anchor) {
-				mount_component(notfileupload, target, anchor);
-				current = true;
-			},
-			p(ctx, dirty) {
-				const notfileupload_changes = {};
-				if (dirty & /*id*/ 4) notfileupload_changes.bucketId = /*id*/ ctx[2];
-				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[9];
-				notfileupload.$set(notfileupload_changes);
-			},
-			i(local) {
-				if (current) return;
-				transition_in(notfileupload.$$.fragment, local);
-				current = true;
-			},
-			o(local) {
-				transition_out(notfileupload.$$.fragment, local);
-				current = false;
-			},
-			d(detaching) {
-				destroy_component(notfileupload, detaching);
-			}
-		};
-	}
-
-	// (63:0) {#if popup && show}
-	function create_if_block$3(ctx) {
-		let div3;
-		let div0;
-		let t0;
-		let div2;
-		let header;
-		let p;
-		let t2;
-		let button0;
-		let t3;
-		let section;
-		let div1;
-		let t4;
-		let t5;
-		let footer;
-		let button1;
-		let current;
-		let mounted;
-		let dispose;
-		let if_block0 = /*uploads*/ ctx[0].length === 0 && create_if_block_2$1();
-		let if_block1 = /*uploads*/ ctx[0].length > 0 && create_if_block_1$3(ctx);
-
-		return {
-			c() {
-				div3 = element("div");
-				div0 = element("div");
-				t0 = space();
-				div2 = element("div");
-				header = element("header");
-				p = element("p");
-				p.textContent = "Добавьте файлы для загрузки";
-				t2 = space();
-				button0 = element("button");
-				t3 = space();
-				section = element("section");
-				div1 = element("div");
-				if (if_block0) if_block0.c();
-				t4 = space();
-				if (if_block1) if_block1.c();
-				t5 = space();
-				footer = element("footer");
-				button1 = element("button");
-				button1.textContent = "Завершить";
-				attr(div0, "class", "modal-background");
-				attr(p, "class", "modal-card-title");
-				attr(button0, "class", "delete");
-				attr(button0, "aria-label", "close");
-				attr(header, "class", "modal-card-head");
-				attr(div1, "class", "container");
-				attr(section, "class", "modal-card-body");
-				attr(button1, "class", "button is-success");
-				attr(footer, "class", "modal-card-foot");
-				attr(div2, "class", "modal-card");
-				attr(div3, "class", "modal is-active");
-			},
-			m(target, anchor) {
-				insert(target, div3, anchor);
-				append(div3, div0);
-				append(div3, t0);
-				append(div3, div2);
-				append(div2, header);
-				append(header, p);
-				append(header, t2);
-				append(header, button0);
-				append(div2, t3);
-				append(div2, section);
-				append(section, div1);
-				if (if_block0) if_block0.m(div1, null);
-				append(div1, t4);
-				if (if_block1) if_block1.m(div1, null);
-				append(div2, t5);
-				append(div2, footer);
-				append(footer, button1);
-				current = true;
-
-				if (!mounted) {
-					dispose = [
-						listen(button0, "click", /*closePopup*/ ctx[5]),
-						listen(button1, "click", /*resolvePopup*/ ctx[6])
-					];
-
-					mounted = true;
-				}
-			},
-			p(ctx, dirty) {
-				if (/*uploads*/ ctx[0].length === 0) {
-					if (if_block0) ; else {
-						if_block0 = create_if_block_2$1();
-						if_block0.c();
-						if_block0.m(div1, t4);
-					}
-				} else if (if_block0) {
-					if_block0.d(1);
-					if_block0 = null;
-				}
-
-				if (/*uploads*/ ctx[0].length > 0) {
-					if (if_block1) {
-						if_block1.p(ctx, dirty);
-
-						if (dirty & /*uploads*/ 1) {
-							transition_in(if_block1, 1);
-						}
-					} else {
-						if_block1 = create_if_block_1$3(ctx);
-						if_block1.c();
-						transition_in(if_block1, 1);
-						if_block1.m(div1, null);
-					}
-				} else if (if_block1) {
-					group_outros();
-
-					transition_out(if_block1, 1, 1, () => {
-						if_block1 = null;
-					});
-
-					check_outros();
-				}
-			},
-			i(local) {
-				if (current) return;
-				transition_in(if_block1);
-				current = true;
-			},
-			o(local) {
-				transition_out(if_block1);
-				current = false;
-			},
-			d(detaching) {
-				if (detaching) detach(div3);
-				if (if_block0) if_block0.d();
-				if (if_block1) if_block1.d();
-				mounted = false;
-				run_all(dispose);
-			}
-		};
-	}
-
-	// (73:4) {#if uploads.length === 0}
-	function create_if_block_2$1(ctx) {
-		let h2;
-
-		return {
-			c() {
-				h2 = element("h2");
-				h2.textContent = "Нету загружаемых файлов";
-				attr(h2, "class", "subtitle");
-			},
-			m(target, anchor) {
-				insert(target, h2, anchor);
-			},
-			d(detaching) {
-				if (detaching) detach(h2);
-			}
-		};
-	}
-
-	// (76:4) {#if uploads.length > 0}
-	function create_if_block_1$3(ctx) {
-		let div;
-		let current;
-		let each_value = /*uploads*/ ctx[0];
-		let each_blocks = [];
-
-		for (let i = 0; i < each_value.length; i += 1) {
-			each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
-		}
-
-		const out = i => transition_out(each_blocks[i], 1, 1, () => {
-			each_blocks[i] = null;
-		});
-
-		return {
-			c() {
-				div = element("div");
-
-				for (let i = 0; i < each_blocks.length; i += 1) {
-					each_blocks[i].c();
-				}
-
-				attr(div, "class", "file-list");
-			},
-			m(target, anchor) {
-				insert(target, div, anchor);
-
-				for (let i = 0; i < each_blocks.length; i += 1) {
-					each_blocks[i].m(div, null);
-				}
-
-				current = true;
-			},
-			p(ctx, dirty) {
-				if (dirty & /*id, uploads*/ 5) {
 					each_value = /*uploads*/ ctx[0];
 					let i;
 
@@ -6649,7 +6459,7 @@ var notStore = (function (exports) {
 							each_blocks[i] = create_each_block$1(child_ctx);
 							each_blocks[i].c();
 							transition_in(each_blocks[i], 1);
-							each_blocks[i].m(div, null);
+							each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
 						}
 					}
 
@@ -6681,13 +6491,13 @@ var notStore = (function (exports) {
 				current = false;
 			},
 			d(detaching) {
-				if (detaching) detach(div);
 				destroy_each(each_blocks, detaching);
+				if (detaching) detach(each_1_anchor);
 			}
 		};
 	}
 
-	// (78:5) {#each uploads as upload}
+	// (86:1) {#each uploads as upload}
 	function create_each_block$1(ctx) {
 		let notfileupload;
 		let current;
@@ -6695,7 +6505,7 @@ var notStore = (function (exports) {
 		notfileupload = new File_upload({
 				props: {
 					bucketId: /*id*/ ctx[2],
-					data: /*upload*/ ctx[9]
+					data: /*upload*/ ctx[11]
 				}
 			});
 
@@ -6710,7 +6520,7 @@ var notStore = (function (exports) {
 			p(ctx, dirty) {
 				const notfileupload_changes = {};
 				if (dirty & /*id*/ 4) notfileupload_changes.bucketId = /*id*/ ctx[2];
-				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[9];
+				if (dirty & /*uploads*/ 1) notfileupload_changes.data = /*upload*/ ctx[11];
 				notfileupload.$set(notfileupload_changes);
 			},
 			i(local) {
@@ -6729,68 +6539,39 @@ var notStore = (function (exports) {
 	}
 
 	function create_fragment$4(ctx) {
-		let t;
-		let if_block1_anchor;
+		let if_block_anchor;
 		let current;
-		let if_block0 = !/*popup*/ ctx[3] && /*show*/ ctx[1] && create_if_block_3(ctx);
-		let if_block1 = /*popup*/ ctx[3] && /*show*/ ctx[1] && create_if_block$3(ctx);
+		let if_block = /*show*/ ctx[1] && create_if_block$3(ctx);
 
 		return {
 			c() {
-				if (if_block0) if_block0.c();
-				t = space();
-				if (if_block1) if_block1.c();
-				if_block1_anchor = empty();
+				if (if_block) if_block.c();
+				if_block_anchor = empty();
 			},
 			m(target, anchor) {
-				if (if_block0) if_block0.m(target, anchor);
-				insert(target, t, anchor);
-				if (if_block1) if_block1.m(target, anchor);
-				insert(target, if_block1_anchor, anchor);
+				if (if_block) if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
 				current = true;
 			},
 			p(ctx, [dirty]) {
-				if (!/*popup*/ ctx[3] && /*show*/ ctx[1]) {
-					if (if_block0) {
-						if_block0.p(ctx, dirty);
+				if (/*show*/ ctx[1]) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
 
-						if (dirty & /*popup, show*/ 10) {
-							transition_in(if_block0, 1);
+						if (dirty & /*show*/ 2) {
+							transition_in(if_block, 1);
 						}
 					} else {
-						if_block0 = create_if_block_3(ctx);
-						if_block0.c();
-						transition_in(if_block0, 1);
-						if_block0.m(t.parentNode, t);
+						if_block = create_if_block$3(ctx);
+						if_block.c();
+						transition_in(if_block, 1);
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
 					}
-				} else if (if_block0) {
+				} else if (if_block) {
 					group_outros();
 
-					transition_out(if_block0, 1, 1, () => {
-						if_block0 = null;
-					});
-
-					check_outros();
-				}
-
-				if (/*popup*/ ctx[3] && /*show*/ ctx[1]) {
-					if (if_block1) {
-						if_block1.p(ctx, dirty);
-
-						if (dirty & /*popup, show*/ 10) {
-							transition_in(if_block1, 1);
-						}
-					} else {
-						if_block1 = create_if_block$3(ctx);
-						if_block1.c();
-						transition_in(if_block1, 1);
-						if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
-					}
-				} else if (if_block1) {
-					group_outros();
-
-					transition_out(if_block1, 1, 1, () => {
-						if_block1 = null;
+					transition_out(if_block, 1, 1, () => {
+						if_block = null;
 					});
 
 					check_outros();
@@ -6798,29 +6579,25 @@ var notStore = (function (exports) {
 			},
 			i(local) {
 				if (current) return;
-				transition_in(if_block0);
-				transition_in(if_block1);
+				transition_in(if_block);
 				current = true;
 			},
 			o(local) {
-				transition_out(if_block0);
-				transition_out(if_block1);
+				transition_out(if_block);
 				current = false;
 			},
 			d(detaching) {
-				if (if_block0) if_block0.d(detaching);
-				if (detaching) detach(t);
-				if (if_block1) if_block1.d(detaching);
-				if (detaching) detach(if_block1_anchor);
+				if (if_block) if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
 			}
 		};
 	}
 
 	function instance$4($$self, $$props, $$invalidate) {
 		const dispatch = createEventDispatcher();
+		let dropzone;
 		let { id } = $$props;
 		let { uploads = [] } = $$props;
-		let { popup = false } = $$props;
 		let { show = false } = $$props;
 		let { short = false } = $$props;
 
@@ -6828,7 +6605,38 @@ var notStore = (function (exports) {
 			get$1(id).uploads.subscribe(value => {
 				$$invalidate(0, uploads = value);
 			});
+
+			if (dropzone) {
+				initDropzone();
+			}
 		});
+
+		function initDropzone() {
+			dropzone.addEventListener("dragenter", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				dropzone.classList.add("has-background-white");
+			});
+
+			dropzone.addEventListener("dragleave", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				dropzone.classList.remove("has-background-white");
+			});
+
+			// DROP TO UPLOAD FILE
+			dropzone.addEventListener("dragover", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+			});
+
+			dropzone.addEventListener("drop", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				dropzone.classList.remove("has-background-white");
+				dispatch("filesAdded", e.dataTransfer.files);
+			});
+		}
 
 		function closePopup() {
 			$$invalidate(1, show = false);
@@ -6840,19 +6648,24 @@ var notStore = (function (exports) {
 		}
 
 		function onChange(ev) {
-			console.log("on input change", ev);
 			dispatch("filesAdded", ev.target.files);
+		}
+
+		function div_binding($$value) {
+			binding_callbacks[$$value ? "unshift" : "push"](() => {
+				dropzone = $$value;
+				$$invalidate(4, dropzone);
+			});
 		}
 
 		$$self.$$set = $$props => {
 			if ("id" in $$props) $$invalidate(2, id = $$props.id);
 			if ("uploads" in $$props) $$invalidate(0, uploads = $$props.uploads);
-			if ("popup" in $$props) $$invalidate(3, popup = $$props.popup);
 			if ("show" in $$props) $$invalidate(1, show = $$props.show);
-			if ("short" in $$props) $$invalidate(4, short = $$props.short);
+			if ("short" in $$props) $$invalidate(3, short = $$props.short);
 		};
 
-		return [uploads, show, id, popup, short, closePopup, resolvePopup, onChange];
+		return [uploads, show, id, short, dropzone, onChange, resolvePopup, div_binding];
 	}
 
 	class Upload extends SvelteComponent {
@@ -6862,46 +6675,41 @@ var notStore = (function (exports) {
 			init(this, options, instance$4, create_fragment$4, safe_not_equal, {
 				id: 2,
 				uploads: 0,
-				popup: 3,
 				show: 1,
-				short: 4
+				short: 3,
+				resolvePopup: 6
 			});
+		}
+
+		get resolvePopup() {
+			return this.$$.ctx[6];
 		}
 	}
 
-	/* src/standalone/complex.svelte generated by Svelte v3.29.0 */
+	/* src/standalone/complex.svelte generated by Svelte v3.31.2 */
 
 	function create_if_block_1$4(ctx) {
 		let div3;
 		let div0;
 		let t0;
 		let div2;
-		let header;
-		let p;
-		let t2;
-		let button0;
-		let t3;
+		let t1;
 		let section;
 		let div1;
 		let uploadercomponent;
 		let updating_id;
-		let t4;
+		let t2;
 		let storagecomponent;
 		let updating_id_1;
 		let updating_selectMany;
-		let t5;
-		let footer;
-		let button1;
-		let t7;
-		let button2;
-		let t9;
-		let button3;
+		let t3;
 		let current;
 		let mounted;
 		let dispose;
+		let if_block0 = !/*short*/ ctx[3] && create_if_block_3(ctx);
 
 		function uploadercomponent_id_binding(value) {
-			/*uploadercomponent_id_binding*/ ctx[17].call(null, value);
+			/*uploadercomponent_id_binding*/ ctx[18].call(null, value);
 		}
 
 		let uploadercomponent_props = { popup: false, show: true, short: true };
@@ -6912,14 +6720,14 @@ var notStore = (function (exports) {
 
 		uploadercomponent = new Upload({ props: uploadercomponent_props });
 		binding_callbacks.push(() => bind$1(uploadercomponent, "id", uploadercomponent_id_binding));
-		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[9]);
+		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[10]);
 
 		function storagecomponent_id_binding(value) {
-			/*storagecomponent_id_binding*/ ctx[18].call(null, value);
+			/*storagecomponent_id_binding*/ ctx[19].call(null, value);
 		}
 
 		function storagecomponent_selectMany_binding(value) {
-			/*storagecomponent_selectMany_binding*/ ctx[19].call(null, value);
+			/*storagecomponent_selectMany_binding*/ ctx[20].call(null, value);
 		}
 
 		let storagecomponent_props = { popup: false, show: true };
@@ -6935,8 +6743,9 @@ var notStore = (function (exports) {
 		storagecomponent = new Storage({ props: storagecomponent_props });
 		binding_callbacks.push(() => bind$1(storagecomponent, "id", storagecomponent_id_binding));
 		binding_callbacks.push(() => bind$1(storagecomponent, "selectMany", storagecomponent_selectMany_binding));
-		storagecomponent.$on("remove", /*removeFile*/ ctx[11]);
-		storagecomponent.$on("selected", /*onSelected*/ ctx[8]);
+		storagecomponent.$on("remove", /*removeFile*/ ctx[12]);
+		storagecomponent.$on("selected", /*onSelected*/ ctx[9]);
+		let if_block1 = !/*short*/ ctx[3] && create_if_block_2$2(ctx);
 
 		return {
 			c() {
@@ -6944,39 +6753,19 @@ var notStore = (function (exports) {
 				div0 = element("div");
 				t0 = space();
 				div2 = element("div");
-				header = element("header");
-				p = element("p");
-				p.textContent = "Добавьте файлы для загрузки";
-				t2 = space();
-				button0 = element("button");
-				t3 = space();
+				if (if_block0) if_block0.c();
+				t1 = space();
 				section = element("section");
 				div1 = element("div");
 				create_component(uploadercomponent.$$.fragment);
-				t4 = space();
+				t2 = space();
 				create_component(storagecomponent.$$.fragment);
-				t5 = space();
-				footer = element("footer");
-				button1 = element("button");
-				button1.textContent = "Выбрать";
-				t7 = space();
-				button2 = element("button");
-				button2.textContent = "Удалить";
-				t9 = space();
-				button3 = element("button");
-				button3.textContent = "Закрыть";
+				t3 = space();
+				if (if_block1) if_block1.c();
 				attr(div0, "class", "modal-background");
-				attr(p, "class", "modal-card-title");
-				attr(button0, "class", "delete");
-				attr(button0, "aria-label", "close");
-				attr(header, "class", "modal-card-head");
 				attr(div1, "class", "container");
 				attr(section, "class", "modal-card-body");
-				attr(button1, "class", "button is-success");
-				attr(button2, "class", "button is-danger");
-				attr(button3, "class", "button");
-				attr(footer, "class", "modal-card-foot");
-				attr(div2, "class", "modal-card");
+				attr(div2, "class", "modal-card box is-rounded");
 				attr(div3, "class", "modal is-active");
 			},
 			m(target, anchor) {
@@ -6984,37 +6773,36 @@ var notStore = (function (exports) {
 				append(div3, div0);
 				append(div3, t0);
 				append(div3, div2);
-				append(div2, header);
-				append(header, p);
-				append(header, t2);
-				append(header, button0);
-				append(div2, t3);
+				if (if_block0) if_block0.m(div2, null);
+				append(div2, t1);
 				append(div2, section);
 				append(section, div1);
 				mount_component(uploadercomponent, div1, null);
-				append(div1, t4);
+				append(div1, t2);
 				mount_component(storagecomponent, div1, null);
-				append(div2, t5);
-				append(div2, footer);
-				append(footer, button1);
-				append(footer, t7);
-				append(footer, button2);
-				append(footer, t9);
-				append(footer, button3);
+				append(div2, t3);
+				if (if_block1) if_block1.m(div2, null);
 				current = true;
 
 				if (!mounted) {
-					dispose = [
-						listen(button0, "click", /*closePopup*/ ctx[5]),
-						listen(button1, "click", /*resolvePopup*/ ctx[6]),
-						listen(button2, "click", /*removeSelected*/ ctx[10]),
-						listen(button3, "click", /*rejectPopup*/ ctx[7])
-					];
-
+					dispose = listen(div0, "click", /*rejectPopup*/ ctx[8]);
 					mounted = true;
 				}
 			},
 			p(ctx, dirty) {
+				if (!/*short*/ ctx[3]) {
+					if (if_block0) {
+						if_block0.p(ctx, dirty);
+					} else {
+						if_block0 = create_if_block_3(ctx);
+						if_block0.c();
+						if_block0.m(div2, t1);
+					}
+				} else if (if_block0) {
+					if_block0.d(1);
+					if_block0 = null;
+				}
+
 				const uploadercomponent_changes = {};
 
 				if (!updating_id && dirty & /*id*/ 1) {
@@ -7039,6 +6827,19 @@ var notStore = (function (exports) {
 				}
 
 				storagecomponent.$set(storagecomponent_changes);
+
+				if (!/*short*/ ctx[3]) {
+					if (if_block1) {
+						if_block1.p(ctx, dirty);
+					} else {
+						if_block1 = create_if_block_2$2(ctx);
+						if_block1.c();
+						if_block1.m(div2, null);
+					}
+				} else if (if_block1) {
+					if_block1.d(1);
+					if_block1 = null;
+				}
 			},
 			i(local) {
 				if (current) return;
@@ -7053,15 +6854,112 @@ var notStore = (function (exports) {
 			},
 			d(detaching) {
 				if (detaching) detach(div3);
+				if (if_block0) if_block0.d();
 				destroy_component(uploadercomponent);
 				destroy_component(storagecomponent);
+				if (if_block1) if_block1.d();
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	// (115:2) {#if !short }
+	function create_if_block_3(ctx) {
+		let header;
+		let p;
+		let t1;
+		let button;
+		let mounted;
+		let dispose;
+
+		return {
+			c() {
+				header = element("header");
+				p = element("p");
+				p.textContent = "Добавьте файлы для загрузки";
+				t1 = space();
+				button = element("button");
+				attr(p, "class", "modal-card-title");
+				attr(button, "class", "delete");
+				attr(button, "aria-label", "close");
+				attr(header, "class", "modal-card-head");
+			},
+			m(target, anchor) {
+				insert(target, header, anchor);
+				append(header, p);
+				append(header, t1);
+				append(header, button);
+
+				if (!mounted) {
+					dispose = listen(button, "click", /*closePopup*/ ctx[6]);
+					mounted = true;
+				}
+			},
+			p: noop,
+			d(detaching) {
+				if (detaching) detach(header);
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	// (127:2) {#if !short }
+	function create_if_block_2$2(ctx) {
+		let footer;
+		let button0;
+		let t1;
+		let button1;
+		let t3;
+		let button2;
+		let mounted;
+		let dispose;
+
+		return {
+			c() {
+				footer = element("footer");
+				button0 = element("button");
+				button0.textContent = "Выбрать";
+				t1 = space();
+				button1 = element("button");
+				button1.textContent = "Удалить";
+				t3 = space();
+				button2 = element("button");
+				button2.textContent = "Закрыть";
+				attr(button0, "class", "button is-success");
+				attr(button1, "class", "button is-danger");
+				attr(button2, "class", "button");
+				attr(footer, "class", "modal-card-foot");
+			},
+			m(target, anchor) {
+				insert(target, footer, anchor);
+				append(footer, button0);
+				append(footer, t1);
+				append(footer, button1);
+				append(footer, t3);
+				append(footer, button2);
+
+				if (!mounted) {
+					dispose = [
+						listen(button0, "click", /*resolvePopup*/ ctx[7]),
+						listen(button1, "click", /*removeSelected*/ ctx[11]),
+						listen(button2, "click", /*rejectPopup*/ ctx[8])
+					];
+
+					mounted = true;
+				}
+			},
+			p: noop,
+			d(detaching) {
+				if (detaching) detach(footer);
 				mounted = false;
 				run_all(dispose);
 			}
 		};
 	}
 
-	// (133:0) {#if !popup && show}
+	// (138:0) {#if !popup && show}
 	function create_if_block$4(ctx) {
 		let uploadercomponent;
 		let t;
@@ -7076,19 +6974,19 @@ var notStore = (function (exports) {
 				}
 			});
 
-		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[9]);
+		uploadercomponent.$on("filesAdded", /*onChange*/ ctx[10]);
 
 		storagecomponent = new Storage({
 				props: {
 					popup: false,
-					elementSize: /*elementSize*/ ctx[4],
+					elementSize: /*elementSize*/ ctx[5],
 					show: true,
 					id: /*id*/ ctx[0],
 					selectMany: false
 				}
 			});
 
-		storagecomponent.$on("remove", /*removeFile*/ ctx[11]);
+		storagecomponent.$on("remove", /*removeFile*/ ctx[12]);
 
 		return {
 			c() {
@@ -7107,7 +7005,7 @@ var notStore = (function (exports) {
 				if (dirty & /*id*/ 1) uploadercomponent_changes.id = /*id*/ ctx[0];
 				uploadercomponent.$set(uploadercomponent_changes);
 				const storagecomponent_changes = {};
-				if (dirty & /*elementSize*/ 16) storagecomponent_changes.elementSize = /*elementSize*/ ctx[4];
+				if (dirty & /*elementSize*/ 32) storagecomponent_changes.elementSize = /*elementSize*/ ctx[5];
 				if (dirty & /*id*/ 1) storagecomponent_changes.id = /*id*/ ctx[0];
 				storagecomponent.$set(storagecomponent_changes);
 			},
@@ -7134,8 +7032,8 @@ var notStore = (function (exports) {
 		let t;
 		let if_block1_anchor;
 		let current;
-		let if_block0 = /*popup*/ ctx[3] && /*show*/ ctx[2] && create_if_block_1$4(ctx);
-		let if_block1 = !/*popup*/ ctx[3] && /*show*/ ctx[2] && create_if_block$4(ctx);
+		let if_block0 = /*popup*/ ctx[4] && /*show*/ ctx[2] && create_if_block_1$4(ctx);
+		let if_block1 = !/*popup*/ ctx[4] && /*show*/ ctx[2] && create_if_block$4(ctx);
 
 		return {
 			c() {
@@ -7152,11 +7050,11 @@ var notStore = (function (exports) {
 				current = true;
 			},
 			p(ctx, [dirty]) {
-				if (/*popup*/ ctx[3] && /*show*/ ctx[2]) {
+				if (/*popup*/ ctx[4] && /*show*/ ctx[2]) {
 					if (if_block0) {
 						if_block0.p(ctx, dirty);
 
-						if (dirty & /*popup, show*/ 12) {
+						if (dirty & /*popup, show*/ 20) {
 							transition_in(if_block0, 1);
 						}
 					} else {
@@ -7175,11 +7073,11 @@ var notStore = (function (exports) {
 					check_outros();
 				}
 
-				if (!/*popup*/ ctx[3] && /*show*/ ctx[2]) {
+				if (!/*popup*/ ctx[4] && /*show*/ ctx[2]) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 
-						if (dirty & /*popup, show*/ 12) {
+						if (dirty & /*popup, show*/ 20) {
 							transition_in(if_block1, 1);
 						}
 					} else {
@@ -7223,11 +7121,11 @@ var notStore = (function (exports) {
 
 		onMount(() => {
 			get$1(id).files.subscribe(value => {
-				$$invalidate(12, files = value);
+				$$invalidate(13, files = value);
 			});
 
 			get$1(id).selected.subscribe(value => {
-				$$invalidate(13, selected = value);
+				$$invalidate(14, selected = value);
 			});
 		});
 
@@ -7236,6 +7134,7 @@ var notStore = (function (exports) {
 		let { selected = [] } = $$props;
 		let { selectMany } = $$props;
 		let { selectOnClick } = $$props;
+		let { short = false } = $$props;
 		let { show = true } = $$props;
 		let { popup = true } = $$props;
 		let { elementSize = 3 } = $$props;
@@ -7256,14 +7155,14 @@ var notStore = (function (exports) {
 
 				if (onResolve) {
 					onResolve(images);
-					$$invalidate(15, onResolve = null);
+					$$invalidate(16, onResolve = null);
 				} else {
 					dispatch("resolve", { selected: images });
 				}
 			} else {
 				if (onResolve) {
 					onResolve([]);
-					$$invalidate(15, onResolve = null);
+					$$invalidate(16, onResolve = null);
 				} else {
 					dispatch("resolve", { selected: [] });
 				}
@@ -7275,7 +7174,7 @@ var notStore = (function (exports) {
 
 			if (onReject) {
 				onReject();
-				$$invalidate(14, onReject = null);
+				$$invalidate(15, onReject = null);
 			} else {
 				dispatch("reject");
 			}
@@ -7299,8 +7198,8 @@ var notStore = (function (exports) {
 			}).then(() => {
 				dispatch("remove", { selected });
 			}).catch(() => {
-				console.eror("remove disapproved");
-			});
+				
+			}); //console.error('remove disapproved');
 		}
 
 		function removeFile(ev) {
@@ -7324,21 +7223,23 @@ var notStore = (function (exports) {
 
 		$$self.$$set = $$props => {
 			if ("id" in $$props) $$invalidate(0, id = $$props.id);
-			if ("files" in $$props) $$invalidate(12, files = $$props.files);
-			if ("selected" in $$props) $$invalidate(13, selected = $$props.selected);
+			if ("files" in $$props) $$invalidate(13, files = $$props.files);
+			if ("selected" in $$props) $$invalidate(14, selected = $$props.selected);
 			if ("selectMany" in $$props) $$invalidate(1, selectMany = $$props.selectMany);
-			if ("selectOnClick" in $$props) $$invalidate(16, selectOnClick = $$props.selectOnClick);
+			if ("selectOnClick" in $$props) $$invalidate(17, selectOnClick = $$props.selectOnClick);
+			if ("short" in $$props) $$invalidate(3, short = $$props.short);
 			if ("show" in $$props) $$invalidate(2, show = $$props.show);
-			if ("popup" in $$props) $$invalidate(3, popup = $$props.popup);
-			if ("elementSize" in $$props) $$invalidate(4, elementSize = $$props.elementSize);
-			if ("onReject" in $$props) $$invalidate(14, onReject = $$props.onReject);
-			if ("onResolve" in $$props) $$invalidate(15, onResolve = $$props.onResolve);
+			if ("popup" in $$props) $$invalidate(4, popup = $$props.popup);
+			if ("elementSize" in $$props) $$invalidate(5, elementSize = $$props.elementSize);
+			if ("onReject" in $$props) $$invalidate(15, onReject = $$props.onReject);
+			if ("onResolve" in $$props) $$invalidate(16, onResolve = $$props.onResolve);
 		};
 
 		return [
 			id,
 			selectMany,
 			show,
+			short,
 			popup,
 			elementSize,
 			closePopup,
@@ -7365,15 +7266,16 @@ var notStore = (function (exports) {
 
 			init(this, options, instance$5, create_fragment$5, safe_not_equal, {
 				id: 0,
-				files: 12,
-				selected: 13,
+				files: 13,
+				selected: 14,
 				selectMany: 1,
-				selectOnClick: 16,
+				selectOnClick: 17,
+				short: 3,
 				show: 2,
-				popup: 3,
-				elementSize: 4,
-				onReject: 14,
-				onResolve: 15
+				popup: 4,
+				elementSize: 5,
+				onReject: 15,
+				onResolve: 16
 			});
 		}
 	}
@@ -7498,13 +7400,13 @@ var notStore = (function (exports) {
 
 	var stringTrim = {
 	  // `String.prototype.{ trimLeft, trimStart }` methods
-	  // https://tc39.github.io/ecma262/#sec-string.prototype.trimstart
+	  // https://tc39.es/ecma262/#sec-string.prototype.trimstart
 	  start: createMethod$3(1),
 	  // `String.prototype.{ trimRight, trimEnd }` methods
-	  // https://tc39.github.io/ecma262/#sec-string.prototype.trimend
+	  // https://tc39.es/ecma262/#sec-string.prototype.trimend
 	  end: createMethod$3(2),
 	  // `String.prototype.trim` method
-	  // https://tc39.github.io/ecma262/#sec-string.prototype.trim
+	  // https://tc39.es/ecma262/#sec-string.prototype.trim
 	  trim: createMethod$3(3)
 	};
 
@@ -7521,7 +7423,7 @@ var notStore = (function (exports) {
 	var BROKEN_CLASSOF = classofRaw(objectCreate(NumberPrototype)) == NUMBER;
 
 	// `ToNumber` abstract operation
-	// https://tc39.github.io/ecma262/#sec-tonumber
+	// https://tc39.es/ecma262/#sec-tonumber
 	var toNumber = function (argument) {
 	  var it = toPrimitive(argument, false);
 	  var first, third, radix, maxCode, digits, length, index, code;
@@ -7550,7 +7452,7 @@ var notStore = (function (exports) {
 	};
 
 	// `Number` constructor
-	// https://tc39.github.io/ecma262/#sec-number-constructor
+	// https://tc39.es/ecma262/#sec-number-constructor
 	if (isForced_1(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {
 	  var NumberWrapper = function Number(value) {
 	    var it = arguments.length < 1 ? 0 : value;
@@ -7565,7 +7467,9 @@ var notStore = (function (exports) {
 	    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
 	    // ES2015 (in case, if modules with ES2015 Number statics required before):
 	    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
-	    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
+	    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger,' +
+	    // ESNext
+	    'fromString,range'
 	  ).split(','), j = 0, key; keys$1.length > j; j++) {
 	    if (has(NativeNumber, key = keys$1[j]) && !has(NumberWrapper, key)) {
 	      defineProperty$6(NumberWrapper, key, getOwnPropertyDescriptor$3(NativeNumber, key));
@@ -7579,7 +7483,7 @@ var notStore = (function (exports) {
 	var FAILS_ON_PRIMITIVES = fails(function () { objectKeys(1); });
 
 	// `Object.keys` method
-	// https://tc39.github.io/ecma262/#sec-object.keys
+	// https://tc39.es/ecma262/#sec-object.keys
 	_export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
 	  keys: function keys(it) {
 	    return objectKeys(toObject(it));
@@ -7695,6 +7599,8 @@ var notStore = (function (exports) {
 
 	var regexpExec = patchedExec;
 
+	// `RegExp.prototype.exec` method
+	// https://tc39.es/ecma262/#sec-regexp.prototype.exec
 	_export({ target: 'RegExp', proto: true, forced: /./.exec !== regexpExec }, {
 	  exec: regexpExec
 	});
@@ -7827,13 +7733,52 @@ var notStore = (function (exports) {
 	var charAt$1 = stringMultibyte.charAt;
 
 	// `AdvanceStringIndex` abstract operation
-	// https://tc39.github.io/ecma262/#sec-advancestringindex
+	// https://tc39.es/ecma262/#sec-advancestringindex
 	var advanceStringIndex = function (S, index, unicode) {
 	  return index + (unicode ? charAt$1(S, index).length : 1);
 	};
 
+	var floor$1 = Math.floor;
+	var replace = ''.replace;
+	var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d\d?|<[^>]*>)/g;
+	var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d\d?)/g;
+
+	// https://tc39.es/ecma262/#sec-getsubstitution
+	var getSubstitution = function (matched, str, position, captures, namedCaptures, replacement) {
+	  var tailPos = position + matched.length;
+	  var m = captures.length;
+	  var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
+	  if (namedCaptures !== undefined) {
+	    namedCaptures = toObject(namedCaptures);
+	    symbols = SUBSTITUTION_SYMBOLS;
+	  }
+	  return replace.call(replacement, symbols, function (match, ch) {
+	    var capture;
+	    switch (ch.charAt(0)) {
+	      case '$': return '$';
+	      case '&': return matched;
+	      case '`': return str.slice(0, position);
+	      case "'": return str.slice(tailPos);
+	      case '<':
+	        capture = namedCaptures[ch.slice(1, -1)];
+	        break;
+	      default: // \d\d?
+	        var n = +ch;
+	        if (n === 0) return match;
+	        if (n > m) {
+	          var f = floor$1(n / 10);
+	          if (f === 0) return match;
+	          if (f <= m) return captures[f - 1] === undefined ? ch.charAt(1) : captures[f - 1] + ch.charAt(1);
+	          return match;
+	        }
+	        capture = captures[n - 1];
+	    }
+	    return capture === undefined ? '' : capture;
+	  });
+	};
+
 	// `RegExpExec` abstract operation
-	// https://tc39.github.io/ecma262/#sec-regexpexec
+	// https://tc39.es/ecma262/#sec-regexpexec
 	var regexpExecAbstract = function (R, S) {
 	  var exec = R.exec;
 	  if (typeof exec === 'function') {
@@ -7853,9 +7798,6 @@ var notStore = (function (exports) {
 
 	var max$3 = Math.max;
 	var min$3 = Math.min;
-	var floor$1 = Math.floor;
-	var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d\d?|<[^>]*>)/g;
-	var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d\d?)/g;
 
 	var maybeToString = function (it) {
 	  return it === undefined ? it : String(it);
@@ -7869,7 +7811,7 @@ var notStore = (function (exports) {
 
 	  return [
 	    // `String.prototype.replace` method
-	    // https://tc39.github.io/ecma262/#sec-string.prototype.replace
+	    // https://tc39.es/ecma262/#sec-string.prototype.replace
 	    function replace(searchValue, replaceValue) {
 	      var O = requireObjectCoercible(this);
 	      var replacer = searchValue == undefined ? undefined : searchValue[REPLACE];
@@ -7878,7 +7820,7 @@ var notStore = (function (exports) {
 	        : nativeReplace.call(String(O), searchValue, replaceValue);
 	    },
 	    // `RegExp.prototype[@@replace]` method
-	    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@replace
+	    // https://tc39.es/ecma262/#sec-regexp.prototype-@@replace
 	    function (regexp, replaceValue) {
 	      if (
 	        (!REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE && REPLACE_KEEPS_$0) ||
@@ -7941,40 +7883,6 @@ var notStore = (function (exports) {
 	      return accumulatedResult + S.slice(nextSourcePosition);
 	    }
 	  ];
-
-	  // https://tc39.github.io/ecma262/#sec-getsubstitution
-	  function getSubstitution(matched, str, position, captures, namedCaptures, replacement) {
-	    var tailPos = position + matched.length;
-	    var m = captures.length;
-	    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
-	    if (namedCaptures !== undefined) {
-	      namedCaptures = toObject(namedCaptures);
-	      symbols = SUBSTITUTION_SYMBOLS;
-	    }
-	    return nativeReplace.call(replacement, symbols, function (match, ch) {
-	      var capture;
-	      switch (ch.charAt(0)) {
-	        case '$': return '$';
-	        case '&': return matched;
-	        case '`': return str.slice(0, position);
-	        case "'": return str.slice(tailPos);
-	        case '<':
-	          capture = namedCaptures[ch.slice(1, -1)];
-	          break;
-	        default: // \d\d?
-	          var n = +ch;
-	          if (n === 0) return match;
-	          if (n > m) {
-	            var f = floor$1(n / 10);
-	            if (f === 0) return match;
-	            if (f <= m) return captures[f - 1] === undefined ? ch.charAt(1) : captures[f - 1] + ch.charAt(1);
-	            return match;
-	          }
-	          capture = captures[n - 1];
-	      }
-	      return capture === undefined ? '' : capture;
-	    });
-	  }
 	});
 
 	/*
@@ -8676,7 +8584,6 @@ var notStore = (function (exports) {
 
 	function _arrayLikeToArray$2(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-	/* global FileReader, document, Image */
 	var DEFAULT_OPTS = {
 	  bucket: 'client',
 	  server: '',
@@ -8757,7 +8664,8 @@ var notStore = (function (exports) {
 	          selectMany: this.options.selectMany,
 	          selectOnClick: this.options.selectOnClick,
 	          show: this.options.complex && this.options.complex.show,
-	          popup: this.options.complex && this.options.complex.popup
+	          popup: this.options.complex && this.options.complex.popup,
+	          short: this.options.complex && this.options.complex.short
 	        }
 	      });
 	      this.ui.complex.$on('remove', this.removeFiles.bind(this));
@@ -8773,7 +8681,8 @@ var notStore = (function (exports) {
 	          id: this.options.id,
 	          selectMany: this.options.selectMany,
 	          popup: this.options.storage && this.options.storage.popup,
-	          show: this.options.storage && this.options.storage.show
+	          show: this.options.storage && this.options.storage.show,
+	          selectOnClick: this.options.selectOnClick
 	        }
 	      });
 	      this.ui.storage.$on('remove', this.removeFiles.bind(this));
@@ -8786,7 +8695,8 @@ var notStore = (function (exports) {
 	        props: {
 	          id: this.options.id,
 	          popup: this.options.upload && this.options.upload.popup,
-	          show: this.options.upload && this.options.upload.show
+	          show: this.options.upload && this.options.upload.show,
+	          short: this.options.upload && this.options.upload.short
 	        }
 	      });
 	      this.ui.upload.$on('filesAdded', this.onUploads.bind(this));

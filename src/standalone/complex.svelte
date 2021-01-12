@@ -1,6 +1,7 @@
 <script>
-
-	import { onMount } from 'svelte';
+	import {
+		onMount
+	} from 'svelte';
 	import UploaderComponent from './upload.svelte';
 	import StorageComponent from './storage.svelte';
 	import {
@@ -74,8 +75,8 @@
 		}
 	}
 
-	function onSelected(){
-		if (selectOnClick){
+	function onSelected() {
+		if (selectOnClick) {
 			resolvePopup();
 		}
 	}
@@ -86,31 +87,30 @@
 
 	function removeSelected() {
 		Confirmation.ask({
-				title: `Удаление файлов (${selected.length}) `,
-				text: 'Файлы будут удалены без возможнеости восстановления!',
-				approval: 'Удалить файлы?'
-			})
+			title: `Удаление файлов (${selected.length}) `,
+			text: 'Файлы будут удалены без возможнеости восстановления!',
+			approval: 'Удалить файлы?'
+		})
 			.then(() => {
 				dispatch('remove', {
 					selected
 				});
 			})
 			.catch(() => {
-				console.eror('remove disapproved');
+				//console.error('remove disapproved');
 			});
 	}
 
-	function removeFile(ev){
+	function removeFile(ev) {
 		dispatch('remove', {
 			selected: ev.detail.selected
 		});
 	}
-
 </script>
 
 {#if popup && show}
 <div class="modal is-active">
-	<div class="modal-background"  on:click="{rejectPopup}"></div>
+	<div class="modal-background" on:click="{rejectPopup}"></div>
 	<div class="modal-card box is-rounded">
 		{#if !short }
 		<header class="modal-card-head">

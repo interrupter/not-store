@@ -1,4 +1,4 @@
-/* global FileReader, document, Image */
+
 const DEFAULT_OPTS = {
 	bucket: 'client',
 	server: '',

@@ -9,10 +9,10 @@ const
 		MODEL_NAME,
 		MODEL_TITLE: 'Файл',
 		populate: {
-			listAndCount: [ 'userId' ]
+			listAndCount: ['userId']
 		},
-		RESPONSE:{
-			full: ['get','getRaw','create']
+		RESPONSE: {
+			full: ['get', 'getRaw', 'create']
 		},
 	},
 	modMeta = require('not-meta');
@@ -228,10 +228,40 @@ exports._create = (req, res, next) => {
 	createNew(req.params.bucket ? req.params.bucket : 'server', req, res, next);
 };
 
-exports._delete = function(req, res) {
-	var id = parseInt(req.params.fileID);
+function retrieveFileRecord(fileID, sessionId) {
 	let File = App.getModel('File');
-	File.getOneByIDAndRemove(id, undefined)
+	return File.getOneByIDAndRemove(fileID, sessionId);
+}
+
+async function deleteFile(fileID, sessionId = undefined, admin = false) {
+	if (isNaN(fileID)) {
+		throw new notError('delete error; fileID isNaN', {
+			fileID,
+			sid: sessionId,
+			admin
+		});
+	} else {
+		if (admin) {
+			return retrieveFileRecord(fileID, undefined);
+		} else if (typeof sessionId !== undefined && sessionId !== null && sessionId && sessionId.length > 10) {
+			return retrieveFileRecord(fileID, sessionId);
+		} else {
+			throw new notError('delete error; no user session id', {
+				fileID,
+				sid: sessionId,
+				admin
+			});
+		}
+	}
+}
+
+exports.deleteFile = deleteFile;
+
+exports._delete = function(req, res) {
+	let fileID = parseInt(req.params.fileID),
+		sessionId = res.session.id;
+	let File = App.getModel('File');
+	File.getOneByIDAndRemove(fileID, undefined, true)
 		.then((rec) => {
 			res.status(200).json({
 				status: 'ok',
@@ -239,7 +269,15 @@ exports._delete = function(req, res) {
 			});
 		})
 		.catch((err) => {
-			App.report(new notError('delete error, admin level', {}, err));
+			if (err instanceof notError) {
+				App.report(err);
+			} else {
+				App.report(new notError('delete error, admin level', {
+					fileID,
+					sid: sessionId,
+					admin: true
+				}, err));
+			}
 			res.status(500).json({
 				status: 'error',
 				message: 'delete file error'
@@ -248,35 +286,30 @@ exports._delete = function(req, res) {
 };
 
 exports.delete = function(req, res) {
-	let id = parseInt(req.params.fileID);
-	if (typeof req.session.id !== undefined) {
-		let File = App.getModel('File');
-		File.getOneByIDAndRemove(id, req.session.id)
-			.then((rec) => {
-				res.status(200).json({
-					status: 'ok',
-					result: rec
-				});
-			})
-			.catch((err) => {
-				App.report(new notError('delete error, user level', {
-					fileID: id,
-					sid: req.session.id
-				}, err));
-				res.status(500).json({
-					error: 'delete file error'
-				});
+	let fileID = parseInt(req.params.fileID),
+		sessionId = res.session.id;
+	deleteFile(fileID, sessionId, false)
+		.then((rec) => {
+			res.status(200).json({
+				status: 'ok',
+				result: rec
 			});
-	} else {
-		App.report(new notError('delete error, user level; no user session id', {
-			fileID: id,
-			sid: req.session.id
-		}));
-		res.status(500).json({
-			status: 'error',
-			message: 'no user session data'
+		})
+		.catch((err) => {
+			if (err instanceof notError) {
+				App.report(err);
+			} else {
+				App.report(new notError('delete error, user level', {
+					fileID,
+					sid: sessionId,
+					admin: false
+				}, err));
+			}
+			res.status(500).json({
+				status: 'error',
+				message: 'delete file error'
+			});
 		});
-	}
 };
 
 

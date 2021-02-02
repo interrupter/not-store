@@ -1,13 +1,13 @@
 <script>
 	import {
+		createEventDispatcher,
 		onMount
 	} from 'svelte';
+	const dispatch = createEventDispatcher();
+
 	import UploaderComponent from './upload.svelte';
 	import StorageComponent from './storage.svelte';
-	import {
-		createEventDispatcher
-	} from 'svelte';
-	const dispatch = createEventDispatcher();
+
 	import * as FileStores from './file.stores.js';
 	import {
 		Confirmation

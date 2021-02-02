@@ -1,15 +1,13 @@
 <script>
 	import {
+		onMount,
 		createEventDispatcher
 	} from 'svelte';
 	const dispatch = createEventDispatcher();
 
 	import NotFileUpload from './file.upload.svelte';
 	import * as FileStores from './file.stores.js';
-	import {
-		onMount
-	} from 'svelte';
-
+	
 	let dropzone;
 
 	export let id;

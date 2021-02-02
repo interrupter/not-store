@@ -4,11 +4,10 @@
 	let modalList = null;
 
 	import {
-		onMount
-	} from 'svelte';
-	import {
+		onMount,
 		createEventDispatcher
 	} from 'svelte';
+
 	const dispatch = createEventDispatcher();
 
 	import {
@@ -159,6 +158,10 @@
 {/if}
 
 <style>
+	.file-list{
+		margin: 0px!important;
+	}
+
 	.file-list-wrapper{
 		height: 25vh;
 		overflow-y: scroll;

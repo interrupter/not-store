@@ -1,5 +1,8 @@
 <script>
-	import { createEventDispatcher,onMount } from 'svelte';
+	import {
+		createEventDispatcher,
+		onMount
+	} from 'svelte';
 	const dispatch = createEventDispatcher();
 
 	import { Confirmation } from './confirm.js';
@@ -48,19 +51,15 @@
 
 
 	function remove(ev){
-		console.log('remove file', ev);
 		Confirmation.ask({
 			title: 		`Удаление файла (${data.name}) `,
 			text: 		'Файл будет удалён без возможнеости восстановления!',
 			approval: 'Удалить файл?'
 		})
 			.then(()=>{
-				console.log('remove approved');
 				dispatch('remove', data);
 			})
-			.catch(()=>{
-				console.log('remove disapprove');
-			});
+			.catch(()=>{});
 	}
 
 	$: ifSelected = selected ? 'selected' : '';

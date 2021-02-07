@@ -224,7 +224,6 @@ class notStoreYandex extends EventEmitter {
 	}
 
 	getMetadata(filename) {
-		console.log(filename);		
 		return new Promise((resolve, reject) => {
 			try {
 				sharp(filename).metadata((err, metadata) => {

@@ -20,7 +20,7 @@ module.exports = {
 	},
   initialize: (notApp)=>{
     let Store = notApp.getModel('Store');
-    Store.listAndCount(0, 100, {}, { active: true }, null)
+    Store.listAndCount(0, 100, {}, { active: true, __latest: true, __closed:false }, null)
       .then((results)=>{
         notApp.logger.log(`Found ${results.count} stores options`);
         if(results.count > 0){

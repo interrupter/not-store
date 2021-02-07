@@ -14,7 +14,7 @@
 	<progress class="progress is-link"></progress>
 	{/if}
 	{#if data.preview}
-	<figure class="image is-4by3">
+	<figure class="image is-4by3 is-fullwidth">
 		<img alt={data.name} src="{data.preview}" />
 	</figure>
 	{/if}
@@ -35,7 +35,6 @@
 	figure.image img {
 		opacity: 1;
 		display: block;
-		width: 100%;
 		object-fit: cover;
 		transition: .5s ease;
 		backface-visibility: hidden;

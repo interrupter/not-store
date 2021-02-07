@@ -71,7 +71,7 @@
 	<progress class="progress is-link" value="{progress}" max="100">{progress}%</progress>
 	{/if}
 	{#if data.path}
-	<figure class="image is-4by3">
+	<figure class="image is-4by3 is-fullwidth">
 		{#if !hideDeleteButton}
 		<button class="delete" on:click="{remove}"></button>
 		{/if}
@@ -95,7 +95,6 @@
 	figure.image img {
 		opacity: 1;
 		display: block;
-		width: 100%;
 		object-fit: cover;
 		transition: .5s ease;
 		backface-visibility: hidden;

@@ -60,6 +60,14 @@ class ncFile extends ncCRUD {
         searchable: true,
         sortable: true,
         type: 'image',
+        preprocessor:(value, item)=>{
+          return [{
+            title: 	  item.name,
+            url: 		  value,
+            urlFull: 	item.path.small.cloud.Location,
+            cors: 	  'anonymous'
+          }]
+        }
       }, {
         path: ':_id',
         title: 'Действия',

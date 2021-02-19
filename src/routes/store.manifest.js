@@ -9,7 +9,7 @@ module.exports = {
 			data: ['record'],
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}]
 		},
 		get: {
@@ -18,7 +18,7 @@ module.exports = {
 			isArray: false,
 			rules:[{
 				auth: true,
-				admin: true
+				root: true
 			}],
 			postFix: '/:record[_id]/:actionName'
 		},
@@ -26,7 +26,7 @@ module.exports = {
 			method: 'post',
 			rules:[{
 				auth: true,
-				admin: true
+				root: true
 			}],
 			data: ['record'],
 			postFix: '/:record[_id]/:actionName'
@@ -37,7 +37,7 @@ module.exports = {
 			data: ['pager', 'sorter', 'filter', 'search'],
 			rules:[{
 				auth: true,
-				admin: true
+				root: true
 			}],
 			postFix: '/:actionName'
 		},
@@ -47,7 +47,7 @@ module.exports = {
 			isArray: false,
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}]
 		}
 	}

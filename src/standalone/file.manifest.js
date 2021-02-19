@@ -10,13 +10,13 @@ module.exports = {
 			postFix: '/:bucket?',
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}, {
 				auth: true,
-				admin: false
+				root: false
 			}, {
 				auth: false,
-				admin: false
+				root: false
 			}]
 		},
 		list: {
@@ -40,13 +40,13 @@ module.exports = {
 			],
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}, {
 				auth: true,
-				admin: false
+				root: false
 			}, {
 				auth: false,
-				admin: false
+				root: false
 			}]
 		},
 		listAndCount: {
@@ -69,7 +69,7 @@ module.exports = {
 			],
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}, {
 				auth: true,
 				role: 'admin'
@@ -98,13 +98,13 @@ module.exports = {
 			],
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}, {
 				auth: true,
-				admin: false
+				root: false
 			}, {
 				auth: false,
-				admin: false
+				root: false
 			}]
 		},
 		delete: {
@@ -113,13 +113,13 @@ module.exports = {
 			isArray: false,
 			rules: [{
 				auth: true,
-				admin: true
+				root: true
 			}, {
 				auth: true,
-				admin: false
+				root: false
 			}, {
 				auth: false,
-				admin: false
+				root: false
 			}]
 		},
 	}

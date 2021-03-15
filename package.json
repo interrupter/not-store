@@ -57,7 +57,7 @@
 				"not-filter": "^0.2.9",
 				"not-log": "0.0.18",
 				"not-meta": "0.0.17",
-				"not-node": "^3.3.71",
+				"not-node": "^3.3.80",
 				"not-path": "^1.0.0",
 				"not-ws": "0.0.22",
 				"rollup-plugin-babel": "^4.4.0",

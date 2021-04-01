@@ -49,7 +49,7 @@
 				"easy-yandex-s3": "^1.1.6",
 				"is-stream": "^2.0.0",
 				"mkdirp": "*",
-				"mongoose": "^5.11.11",
+				"mongoose": "^5.12.3",
 				"not-bulma": "*",
 				"not-config": "0.1.3",
 				"not-error": "0.0.23",

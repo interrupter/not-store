@@ -1,128 +1,125 @@
 {
-		"name": "not-store",
-		"version": "1.0.53",
-		"description": "file storage interface",
-		"main": "index.js",
-		"repository": "https://github.com/interrupter/not-store",
-		"scripts": {
-				"build": "./bin/build.sh",
-				"buildtest": "ENV=test ./bin/build.sh && rm -rf ./test/browser/assets/store/* && mv dist/* ./test/browser/assets/store/",
-				"cypress:run": "NODE_ENV=test ./node_modules/.bin/cypress run",
-				"cypress:open": "NODE_ENV=test ./node_modules/.bin/cypress open",
-				"test:open": "npm run cypress:open",
-				"test:run": "npm run cypress:run",
-				"test:node": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY ./node_modules/.bin/mocha spec ./test/node",
-				"test:node:clear": "rm -rf test/tmp/*",
-				"test:server": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY nyc --silent node --inspect=8357 ./test/server/index.js",
-				"debug:server": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY node --inspect=8357 ./test/server/index.js",
-				"test:server:off": "wget -qO- http://localhost:7357/terminate",
-				"test": "npm run test:server & npm run test:node && npm run test:run",
-				"lint": "/usr/local/bin/eslint --ext svelte3 ./src/**/**/**/**",
-				"pretest": "./node_modules/.bin/eslint ./src/**/**",
-				"docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
-				"cover": "npm run test:server & sleep 1m && npm run cover:node && npm run cover:run && npm run cover:report",
-				"cover:run": "nyc --silent npm run cypress:run",
-				"cover:node": "nyc --silent npm run test:node",
-				"cover:report": "npm run test:server:off && npm run test:node:clear && npm run cover:report:slim",
-				"cover:report:slim": "nyc report"
-		},
-		"svelte": "src/standalone/index.js",
-		"keywords": [
-				"not",
-				"store",
-				"file",
-				"unified"
-		],
-		"author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
-		"license": "ISC",
-		"dependencies": {
-				"@babel/plugin-proposal-class-properties": "^7.13.0",
-				"@babel/plugin-syntax-class-properties": "^7.12.13",
-				"@shopify/draggable": "^1.0.0-beta.11",
-				"async": "*",
-				"aws-sdk": "^2.922.0",
-				"connect": "^3.7.0",
-				"connect-mongo": "^4.4.1",
-				"download": "^8.0.0",
-				"easy-yandex-s3": "^1.1.6",
-				"is-stream": "^2.0.0",
-				"mkdirp": "*",
-				"mongoose": "^5.12.13",
-				"rollup-plugin-babel": "^4.4.0",
-				"rollup-plugin-filesize": "^9.1.1",
-				"sharp": "^0.28.3",
-				"streamifier": "^0.1.1",
-				"svelte-dnd-action": "^0.9.8",
-				"valid-url": "^1.0.9"
-		},
-		"devDependencies": {
-				"@cypress/code-coverage": "^3.9.6",
-				"babel-eslint": "^10.1.0",
-				"babel-plugin-istanbul": "^6.0.0",
-				"chai": "*",
-				"chai-as-promised": "^7.1.1",
-				"cors": "^2.8.5",
-				"cypress": "^7.4.0",
-				"cypress-file-upload": "^5.0.7",
-				"eslint": "*",
-				"eslint-plugin-svelte3": "^3.2.0",
-				"express": "^4.17.1",
-				"express-fileupload": "^1.2.1",
-				"express-session": "^1.17.2",
-				"helmet": "^4.6.0",
-				"istanbul": "*",
-				"method-override": "^3.0.0",
-				"mocha": "*",
-				"mockgoose": "^8.0.4",
-				"mongodb-memory-server": "^6.9.6",
-				"postcss": "^8.3.0",
-				"request": "^2.88.2",
-				"retire": "^3.0.0",
-				"rollup-plugin-istanbul": "^3.0.0",
-				"rollup-plugin-svelte": "^7.1.0",
-				"superagent": "^6.1.0",
-				"svelte": "^3.38.2",
-				"uuid": "^8.3.2"
-		},
-		"nyc": {
-				"include": [
-						"index.js",
-						"src/**/**/**.js",
-						"src/**/**/**.svelte",
-						"test/browser/assets/store/**.js"
-				],
-				"exclude": [
-						"test/node/",
-						"rollup/",
-						"cypress/",
-						"node_modules/"
-				],
-				"reporter": [
-						"html"
-				],
-				"check-coverage": false,
-				"per-file": false,
-				"lines": 95,
-				"statements": 95,
-				"functions": 95,
-				"branches": 95,
-				"watermarks": {
-						"lines": [
-								80,
-								95
-						],
-						"functions": [
-								80,
-								95
-						],
-						"branches": [
-								80,
-								95
-						],
-						"statements": [
-								80,
-								95
-						]
-				}
-		}
+  "name": "not-store",
+  "version": "1.0.54",
+  "description": "file storage interface",
+  "main": "index.js",
+  "repository": "https://github.com/interrupter/not-store",
+  "scripts": {
+    "build": "./bin/build.sh",
+    "buildtest": "ENV=test ./bin/build.sh && rm -rf ./test/browser/assets/store/* && mv dist/* ./test/browser/assets/store/",
+    "cypress:run": "NODE_ENV=test ./node_modules/.bin/cypress run",
+    "cypress:open": "NODE_ENV=test ./node_modules/.bin/cypress open",
+    "test:open": "npm run cypress:open",
+    "test:run": "npm run cypress:run",
+    "test:node": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY ./node_modules/.bin/mocha spec ./test/node",
+    "test:node:clear": "rm -rf test/tmp/*",
+    "test:server": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY nyc --silent node --inspect=8357 ./test/server/index.js",
+    "debug:server": "modules__store__common__s3__bucket=$TEST_YA_BUCKET modules__store__common__s3__id=$TEST_YA_CLOUD modules__store__common__s3__key=$TEST_YA_KEY node --inspect=8357 ./test/server/index.js",
+    "test:server:off": "wget -qO- http://localhost:7357/terminate",
+    "test": "npm run test:server & npm run test:node && npm run test:run",
+    "lint": "/usr/local/bin/eslint --ext svelte3 ./src/**/**/**/**",
+    "pretest": "./node_modules/.bin/eslint ./src/**/**",
+    "docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
+    "cover": "npm run test:server & sleep 1m && npm run cover:node && npm run cover:run && npm run cover:report",
+    "cover:run": "nyc --silent npm run cypress:run",
+    "cover:node": "nyc --silent npm run test:node",
+    "cover:report": "npm run test:server:off && npm run test:node:clear && npm run cover:report:slim",
+    "cover:report:slim": "nyc report"
+  },
+  "svelte": "src/standalone/index.js",
+  "keywords": [
+    "not",
+    "store",
+    "file",
+    "unified"
+  ],
+  "author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
+  "license": "ISC",
+  "dependencies": {
+    "@shopify/draggable": "^1.0.0-beta.11",
+    "aws-sdk": "^2.922.0",
+    "download": "^8.0.0",
+    "easy-yandex-s3": "^1.1.6",
+    "is-stream": "^2.0.0",
+    "mkdirp": "*",
+    "sharp": "^0.28.3",
+    "streamifier": "^0.1.1",
+    "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "svelte-dnd-action": "^0.9.8",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-syntax-class-properties": "^7.12.13",
+    "connect": "^3.7.0",
+    "connect-mongo": "^4.4.1",
+    "mongoose": "^5.12.13",
+    "@cypress/code-coverage": "^3.9.6",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-istanbul": "^6.0.0",
+    "chai": "*",
+    "chai-as-promised": "^7.1.1",
+    "cors": "^2.8.5",
+    "cypress": "^7.4.0",
+    "cypress-file-upload": "^5.0.7",
+    "eslint": "*",
+    "eslint-plugin-svelte3": "^3.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "istanbul": "*",
+    "method-override": "^3.0.0",
+    "mocha": "*",
+    "mockgoose": "^8.0.4",
+    "mongodb-memory-server": "^6.9.6",
+    "postcss": "^8.3.0",
+    "request": "^2.88.2",
+    "retire": "^3.0.0",
+    "rollup-plugin-istanbul": "^3.0.0",
+    "rollup-plugin-svelte": "^7.1.0",
+    "superagent": "^6.1.0",
+    "svelte": "^3.38.2",
+    "uuid": "^8.3.2"
+  },
+  "nyc": {
+    "include": [
+      "index.js",
+      "src/**/**/**.js",
+      "src/**/**/**.svelte",
+      "test/browser/assets/store/**.js"
+    ],
+    "exclude": [
+      "test/node/",
+      "rollup/",
+      "cypress/",
+      "node_modules/"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "check-coverage": false,
+    "per-file": false,
+    "lines": 95,
+    "statements": 95,
+    "functions": 95,
+    "branches": 95,
+    "watermarks": {
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
+    }
+  }
 }

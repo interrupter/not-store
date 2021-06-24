@@ -81,5 +81,5 @@
   "middleware": {
 
   },
-  "importModulesFromNPM": ["not-error-collect", "not-error"]
+  "importModulesFromNPM": ["not-error"]
 }

@@ -14,6 +14,8 @@ const LABELS = {
 };
 
 class ncFile extends ncCRUD {
+  static MODULE_NAME = MODULE_NAME;
+  static MODEL_NAME = MODEL_NAME;
   constructor(app, params) {
     super(app, `${MODEL_NAME}`);
     this.setModuleName(MODULE_NAME);
@@ -23,7 +25,7 @@ class ncFile extends ncCRUD {
     this.setOptions('params', params);
     this.setOptions('list', {
 			interface: {
-				factory: 				this.getModel(),
+				factory: 				this.getInterface(),
 				combined: 			true,
 				combinedAction: 'listAndCount'
 			},

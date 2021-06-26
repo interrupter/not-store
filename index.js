@@ -1,6 +1,6 @@
 const path = require('path');
-const notError = require('not-error').notError;
-
+const {notError} = require('not-error');
+const Log = require('not-log')(module, 'init');
 const notStore = require('./src/common/store');
 const notStoreImage = require('./src/common/storeImage');
 const notStoreAWS = require('./src/common/storeAWS');
@@ -15,6 +15,7 @@ module.exports = {
 	paths: {
 		routes:				path.join(__dirname, '/src/routes'),
     controllers:	path.join(__dirname, '/src/controllers'),
+    logics:	      path.join(__dirname, '/src/logics'),
 		models:				path.join(__dirname, '/src/models'),
     fields:       path.join(__dirname, '/src/fields'),
 	},
@@ -22,25 +23,25 @@ module.exports = {
     let Store = notApp.getModel('Store');
     Store.listAndCount(0, 100, {}, { active: true, __latest: true, __closed:false }, null)
       .then((results)=>{
-        notApp.logger.log(`Found ${results.count} stores options`);
+        Log.log(`Found ${results.count} stores options`);
         if(results.count > 0){
-          notApp.logger.log(`Stores init start`);
+          Log.log(`Stores init start`);
           for(let storeOpts of results.list){
-            notApp.logger.log(`Adding ${storeOpts.name} via ${storeOpts.driver}`);
+            Log.log(`Adding ${storeOpts.name} via ${storeOpts.driver}`);
             try{
               let options = JSON.parse(storeOpts.options);
               let store = new module.exports[storeOpts.driver](options);
             	notStore.addInterface(storeOpts.name, store);
             }catch(e){
-              notApp.logger.error(`notStore storage initialization failed; ${storeOpts.name} via ${storeOpts.driver}`);
+              Log.error(`notStore storage initialization failed; ${storeOpts.name} via ${storeOpts.driver}`);
               notApp.report(new notError('notStore storage initialization failed', { store: storeOpts }, e));
             }
           }
         }
-        notApp.logger.log(`Stores init end`);
+        Log.log(`Stores init end`);
       })
       .catch((e)=>{
-        notApp.logger.error(`notStore initialization failed`);
+        Log.error(`notStore initialization failed`);
         notApp.report(new notError('notStore initialization failed', {}, e));
       });
   }

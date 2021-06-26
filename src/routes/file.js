@@ -4,7 +4,8 @@ const
 	UserActions = [],
 	AdminActions = [
 		'listAndCount',
-		'get'
+		'get',
+		'getRaw'
 	],
 	MODEL_NAME = 'File',
 	MODEL_OPTIONS = {

@@ -107,6 +107,37 @@ module.exports = {
 				root: false
 			}]
 		},
+		getRaw: {
+			method: 'GET',
+			isArray: false,
+			postFix: '/:record[_id]',
+			data: ['filter', 'record'],
+			fields: [
+				'_id',
+				'fileID',
+				'name',
+				'extension',
+				'bucket',
+				'metadata',
+				'path',
+				'userIp',
+				'userId',
+				'session',
+				'width',
+				'height',
+				'size',
+			],
+			rules: [{
+				auth: true,
+				root: true
+			}, {
+				auth: true,
+				root: false
+			}, {
+				auth: false,
+				root: false
+			}]
+		},
 		delete: {
 			method: 'DELETE',
 			postFix: '/:record[_id]',

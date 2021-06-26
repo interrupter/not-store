@@ -34,18 +34,27 @@ exports.schemaOptions = {
 };
 
 exports.thisStatics = {
-	async getOneByIDAndRemove(ID, sessionId) {
-		let query = {};
-		query[this.schema.statics.__incField] = parseInt(ID);
-		query['__latest'] = true;
-		if (sessionId) {
-			query['session'] = sessionId;
+	async getOneByIdAndRemove(_id, sessionId) {
+		try{
+			let query = {
+				_id,
+				__latest: true,
+				__closed: false
+			};
+			if (sessionId) {
+				query['session'] = sessionId;
+			}
+			let rec = await this.findOne(query);
+			if(rec){
+				await rec.close();
+				await store.delete(rec.bucket, rec.metadata);
+				return rec;
+			}else{
+				return false;
+			}
+		}catch(e){
+			return false;
 		}
-		let rec = await this.deleteOne(query);
-		if(rec){
-			await store.delete(rec.bucket, rec.metadata);
-		}
-		return rec;
 	}
 };
 

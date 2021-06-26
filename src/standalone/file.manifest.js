@@ -109,7 +109,7 @@ module.exports = {
 		},
 		delete: {
 			method: 'DELETE',
-			postFix: '/:record[fileID]',
+			postFix: '/:record[_id]',
 			isArray: false,
 			rules: [{
 				auth: true,

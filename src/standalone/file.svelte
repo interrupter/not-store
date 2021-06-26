@@ -50,7 +50,7 @@
 	}
 
 
-	function remove(ev){
+	function remove(){
 		Confirmation.ask({
 			title: 		`Удаление файла (${data.name}) `,
 			text: 		'Файл будет удалён без возможнеости восстановления!',

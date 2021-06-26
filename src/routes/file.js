@@ -1,3 +1,5 @@
+const Log = require('not-log')(module, 'routes');
+
 const
 	UserActions = [],
 	AdminActions = [
@@ -17,299 +19,168 @@ const
 	},
 	modMeta = require('not-meta');
 
-const store = require('../../').notStore,
-	App = require('not-node').Application,
+const
+	notNode = require('not-node'),
 	Auth = require('not-node').Auth,
 	query = require('not-filter'),
-	mongoose = require('mongoose'),
-	routine = require('not-node').Routine,
-	notError = require('not-error').notError,
-	config = require('not-config').readerForModule('store');
+	notError = require('not-error').notError;
 
-
-const METADATA_FORBIDDEN_FIELDS = ['exif', 'xmp', 'icc', 'iptc'];
 
 exports.before = () => {};
 
-exports._list = function(req, res) {
-	let File = App.getModel('File'),
-		thisSchema = App.getModelSchema('File'),
-		{
-			size,
-			skip
-		} = query.pager.process(req) || {
-			size: 200,
-			skip: 0,
-			page: 0
-		},
-		filter = query.filter.process(req, thisSchema),
-		sorter = query.sorter.process(req, thisSchema);
-	App.logger.info('this is _list filter', req.query, filter);
-	File.listAndPopulate(skip, size, sorter, filter, [])
-		.then((items) => {
-			res.status(200).json(items);
-		})
-		.catch((err) => {
-			App.report(new notError('store.list error, admin level', {}, err));
-			res.status(500).json({});
-		});
-};
-
-exports.list = function(req, res) {
-	let File = App.getModel('File'),
-		thisSchema = App.getModelSchema('File'),
-		{
-			size,
-			skip
-		} = query.pager.process(req) || {
-			size: 200,
-			skip: 0,
-			page: 0
-		},
-		filter = query.filter.process(req, thisSchema),
-		sorter = query.sorter.process(req, thisSchema);
-	if (!filter) {
-		filter = {};
+exports._list = async function(req, res) {
+	const App = notNode.Application;
+	try{
+		let File = App.getLogic('File'),
+			thisSchema = App.getModelSchema('File'),
+			{
+				size,
+				skip
+			} = query.pager.process(req) || {
+				size: 200,
+				skip: 0,
+				page: 0
+			},
+			filter = query.filter.process(req, thisSchema),
+			sorter = query.sorter.process(req, thisSchema);
+		Log.info('this is _list filter', req.query, filter);
+		let result = await File.list({skip, size, sorter, filter});
+		res.status(200).json(result);
+	}catch(e){
+		App.report(new notError('store._list error', {}, e));
+		res.status(500).json({status: 'error'});
 	}
-	filter = query.filter.modifyRules(filter, {
-		session: req.session.id
-	});
-	File.listAndPopulate(skip, size, sorter, filter, [])
-		.then((items) => {
-			res.status(200).json(items);
-		})
-		.catch((err) => {
-			App.report(new notError('store.list error, user level', {}, err));
-			res.status(500).json({});
-		});
 };
 
-function clearMetadata(metadata) {
-	METADATA_FORBIDDEN_FIELDS.forEach((fieldName) => {
-		if (Object.prototype.hasOwnProperty.call(metadata, fieldName)) {
-			delete metadata[fieldName];
-		}
-	});
-}
+exports.list = async function(req, res) {
+	const App = notNode.Application;
+	try{
+		let File = App.getLogic('File'),
+			thisSchema = App.getModelSchema('File'),
+			{
+				size,
+				skip
+			} = query.pager.process(req) || {
+				size: 200,
+				skip: 0,
+				page: 0
+			},
+			filter = query.filter.process(req, thisSchema),
+			sorter = query.sorter.process(req, thisSchema);
+		Log.info('this is list filter', req.query, filter);
+		if (!filter) {filter = {};}
+		filter = query.filter.modifyRules(filter, {session: Auth.getSessionId(req)});
+		let result = await File.list({skip, size, sorter, filter});
+		res.status(200).json(result);
+	}catch(e){
+		App.report(new notError('store.list error', {}, e));
+		res.status(500).json({status: 'error'});
+	}
+};
 
-function uploadFile(req, bucket, file, info) {
-	return store.add(bucket, file)
-		.then(async (data) => {
-			let File = App.getModel('File');
-			let session = req.session ? req.session.id : undefined;
-			//if admin set session in query, override his own for this request
-			if (Auth.ifAdmin(req)) {
-				if (req.query.session) {
-					session = req.query.session;
-				}
-			}
-			clearMetadata(data.metadata);
-			App.logger.debug('store.add.then', bucket, req.get('X-FILENAME'), data);
-			let fileData = {
-				uuid: data.metadata.uuid,
-				bucket: bucket,
-				name: info.name || data.metadata.name,
-				extension: data.metadata.format || info.mimetype,
-				metadata: data.metadata,
-				path: data.store,
-				size: 0,
-				session: session,
-				width: data.metadata.width,
-				height: data.metadata.height,
-				userIp: req.connection.remoteAddress,
-				userId: req.session && req.session.user && (mongoose.Types.ObjectId.isValid(req.session.user)) ? req.session.user : undefined
+
+exports.create = async (req, res) => {
+	const App = notNode.Application;
+	try{
+		let sessionId = Auth.getSessionId(req),
+			userIp = 		Auth.getIP(req),
+			userId = 		Auth.getUserId(req);
+		if(req.files){
+			let query = {
+				bucket: 'client',
+				files: req.files,
+				userIp,
+				ownerId: userId,
+				sessionId,
+				admin: false
 			};
-			App.logger.debug(fileData);
-			return routine.add(File, fileData);
-		});
-}
-
-exports.uploadFile = uploadFile;
-
-let createNew = function(bucket = 'client', req, res) {
-	App.logger.debug('file.createNew');
-	App.logger.debug(req.files);
-	let session = req.session ? req.session.id : undefined;
-	//if admin set session in query, override his own for this request
-	if (Auth.ifAdmin(req)) {
-		if (req.query.session) {
-			session = req.query.session;
+			let result = await App.getLogic('not-store//File').upload(query);
+			res.status(result.code || 200).json(result);
+		}else{
+			throw new Error('Empty files list');
 		}
-	}
-	if (!session) {
-		App.report(
-			new notError('User session is undefined', {
-				userIp: req.connection.remoteAddress
-			})
-		);
-		res.status(500).json({
-			'status': 'error'
-		});
-	}
-	if (bucket && Object.keys(config.get('buckets')).indexOf(bucket) > -1) {
-		let uploads = [];
-		let slimFiles = {};
-		if (req.files && Object.keys(req.files).length > 0) {
-			for (let t of Object.keys(req.files)) {
-				let fileField = req.files[t];
-				if (Array.isArray(fileField)) {
-					slimFiles[t] = [];
-					Object.keys(fileField).forEach((fileFieldKey) => {
-						let oneFileFromField = fileField[fileFieldKey];
-						let slimInfo = {
-							name: oneFileFromField.name,
-							size: oneFileFromField.size,
-							format: oneFileFromField.format
-						};
-						slimFiles[t].push(slimInfo);
-						uploads.push(uploadFile(req, bucket, oneFileFromField.data, slimInfo));
-					});
-				} else {
-					let slimInfo = {
-						name: fileField.name,
-						size: fileField.size,
-						format: fileField.format
-					};
-					slimFiles[t] = slimInfo;
-					uploads.push(uploadFile(req, bucket, fileField.data, slimInfo));
-				}
-			}
-		}
-		Promise.allSettled(uploads)
-			.then((results) => {
-				let noErrors = true;
-				results.forEach((item) => {
-					if (item.status === 'rejected') {
-						noErrors = false;
-						App.logger.debug(item);
-					}
-				});
-				App.logger.debug('data saved to db ' + (noErrors ? 'without' : 'with') + ' errors');
-				App.logger.debug('store.add.then.return/redirect');
-				if (noErrors) {
-					res.status(200).json({
-						'status': 'ok',
-						'result': results
-					});
-				} else {
-					App.report(new notError('Uploads not saved', {
-						results
-					}));
-					res.status(500).json({
-						'status': 'error',
-						'result': results
-					});
-				}
-			})
-			.catch((err) => {
-				App.report(new notError('cant write fileData to db', {
-					uploads
-				}, err));
-				res.status(500).json({
-					'status': 'error'
-				});
-			});
-	} else {
-		App.report(new notError('store.add error, bucket is not exist', {
-			bucket
+	}catch(e){
+		App.report(new notError('File upload error', {
+			sid: Auth.getSessionId(req),
+			userIp: Auth.getIP(req),
+			admin: false
 		}));
-		res.status(500).json({
-			'status': 'error'
-		});
+		res.status(500).json({status: 'error'});
 	}
 };
 
-
-exports.create = (req, res, next) => {
-	createNew('client', req, res, next);
-};
-
-exports._create = (req, res, next) => {
-	createNew(req.params.bucket ? req.params.bucket : 'server', req, res, next);
-};
-
-function retrieveFileRecord(fileID, sessionId) {
-	let File = App.getModel('File');
-	return File.getOneByIDAndRemove(fileID, sessionId);
-}
-
-async function deleteFile(fileID, sessionId = undefined, admin = false) {
-	if (isNaN(fileID)) {
-		throw new notError('delete error; fileID isNaN', {
-			fileID,
-			sid: sessionId,
-			admin
-		});
-	} else {
-		if (admin) {
-			return retrieveFileRecord(fileID, undefined);
-		} else if (typeof sessionId !== undefined && sessionId !== null && sessionId && sessionId.length > 10) {
-			return retrieveFileRecord(fileID, sessionId);
-		} else {
-			throw new notError('delete error; no user session id', {
-				fileID,
-				sid: sessionId,
-				admin
-			});
+exports._create = async (req, res) => {
+	const App = notNode.Application;
+	try{
+		let userIp = Auth.getIP(req),
+			userId = 		Auth.getUserId(req),
+			bucket = req.params.bucket ? req.params.bucket : 'server',
+			sessionId = req.query.session?req.query.session:undefined;
+		if(req.files){
+			let query = {
+				bucket,
+				sessionId,
+				ownerId: userId,
+				files: req.files,
+				userIp,
+				admin: true
+			};
+			let result = await App.getLogic('not-store//File').upload(query);
+			res.status(result.code || 200).json(result);
+		}else{
+			throw new Error('Empty files list');
 		}
+	}catch(e){
+		App.report(new notError('File upload error', {
+			sid: Auth.getSessionId(req),
+			userIp: Auth.getIP(req),
+			admin: true
+		}));
+		res.status(500).json({status: 'error'});
 	}
-}
-
-exports.deleteFile = deleteFile;
-
-exports._delete = function(req, res) {
-	let fileID = parseInt(req.params.fileID),
-		sessionId = res.session.id;
-	let File = App.getModel('File');
-	File.getOneByIDAndRemove(fileID, undefined, true)
-		.then((rec) => {
-			res.status(200).json({
-				status: 'ok',
-				result: rec
-			});
-		})
-		.catch((err) => {
-			if (err instanceof notError) {
-				App.report(err);
-			} else {
-				App.report(new notError('delete error, admin level', {
-					fileID,
-					sid: sessionId,
-					admin: true
-				}, err));
-			}
-			res.status(500).json({
-				status: 'error',
-				message: 'delete file error'
-			});
-		});
 };
 
-exports.delete = function(req, res) {
-	let fileID = parseInt(req.params.fileID),
-		sessionId = res.session.id;
-	deleteFile(fileID, sessionId, false)
-		.then((rec) => {
-			res.status(200).json({
-				status: 'ok',
-				result: rec
-			});
-		})
-		.catch((err) => {
-			if (err instanceof notError) {
-				App.report(err);
-			} else {
-				App.report(new notError('delete error, user level', {
-					fileID,
-					sid: sessionId,
-					admin: false
-				}, err));
-			}
-			res.status(500).json({
-				status: 'error',
-				message: 'delete file error'
-			});
-		});
+exports._delete = async function(req, res) {
+	const App = notNode.Application;
+	try{
+		let fileId = req.params._id;
+		let query = {
+			fileId,
+			sessionId: undefined,
+			admin: true,
+		};
+		let result = await App.getLogic('not-store//File').delete(query);
+		res.status(result.code || 200).json(result);
+	}catch(e){
+		App.report(new notError('File delete error', {
+			params: req.params,
+			sid: false,
+			admin: true
+		}));
+		res.status(500).json({status: 'error', message: e.message});
+	}
+};
+
+exports.delete = async function(req, res) {
+	const App = notNode.Application;
+	try{
+		let fileId = req.params._id,
+			sessionId = Auth.getSessionId(req);
+		let query = {
+			fileId,
+			sessionId,
+			admin: false
+		};
+		let result = await App.getLogic('not-store//File').delete(query);
+		res.status(result.code || 200).json(result);
+	}catch(e){
+		App.report(new notError('File delete error', {
+			params: req.params,
+			sid: false,
+			admin: false
+		}));
+		res.status(500).json({status: 'error'});
+	}
 };
 
 

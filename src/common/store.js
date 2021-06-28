@@ -53,7 +53,7 @@ function extendFromInterface(storeInterface) {
 	for (let i of getAllMethods(storeInterface)) {
 		if (!Object.prototype.hasOwnProperty.call(exports, i)) {
 			//eslint-disable-next-line no-console
-			console.log('Add new methods for interface forwarding', i);
+			//console.log('Add new methods for interface forwarding', i);
 			exports[i] = createStandartCall(i);
 		}
 	}

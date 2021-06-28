@@ -127,12 +127,16 @@ class notStore {
 			.setFilter(reqOpts)
 			.setSorter({fileID: -1})
 			.$list({});
-		return req.then((data) => {
-			this.storage.files.update((value) => {
-				value.splice(0, value.length, ...data);
-				return value;
-			});
-			return data;
+		return req.then(({status, result}) => {
+			if(status === 'ok'){
+				this.storage.files.update((value) => {
+					value.splice(0, value.length, ...result);
+					return value;
+				});
+				return result;
+			}else{
+				return [];
+			}
 		}).catch((err) => {
 			console.error(err, 'Список загруженных файлов не доступен!');
 		});

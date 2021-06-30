@@ -109,10 +109,10 @@ class File {
 				Log.debug('data saved to db ' + (errors ? 'with' : 'without') + ' errors');
 				Log.debug('store.add.then.return/redirect');
 				if (errors) {
-					return {status: 'ok',result: results};
-				} else {
 					App.report(new notError('Uploads not saved', {results}));
 					return {status: 'error',result: results};
+				} else {
+					return {status: 'ok',result: results};
 				}
 			}else{
 				return {status: 'error'};

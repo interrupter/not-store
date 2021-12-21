@@ -1,5 +1,5 @@
 const store = require('../../').notStore;
-const initFields = require('not-node').Fields.initFields;
+
 const MODEL_NAME = 'File';
 
 const FIELDS = [
@@ -25,7 +25,7 @@ exports.enrich = {
 	validators: true
 };
 
-exports.thisSchema = initFields(FIELDS, 'model');
+exports.FIELDS = FIELDS;
 
 exports.schemaOptions = {
 	schemaOptions: {

@@ -42,7 +42,7 @@
     "download": "^8.0.0",
     "easy-yandex-s3": "^1.1.6",
     "is-stream": "^2.0.0",
-    "mkdirp": "*",
+    "mkdirp": "0.5.2",
     "sharp": "^0.28.3",
     "streamifier": "^0.1.1",
     "valid-url": "^1.0.9"

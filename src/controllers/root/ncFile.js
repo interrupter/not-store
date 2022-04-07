@@ -1,8 +1,10 @@
 import Validators from '../common/validators.js';
 
 import {
-  ncCRUD
+  Frame
 } from 'not-bulma';
+
+const {notCRUD} = Frame;
 
 const MODULE_NAME = '';
 const MODEL_NAME = 'file';
@@ -13,9 +15,11 @@ const LABELS = {
   single: 'Файл',
 };
 
-class ncFile extends ncCRUD {
+class ncFile extends notCRUD {
+
   static MODULE_NAME = MODULE_NAME;
   static MODEL_NAME = MODEL_NAME;
+  
   constructor(app, params) {
     super(app, `${MODEL_NAME}`);
     this.setModuleName(MODULE_NAME);

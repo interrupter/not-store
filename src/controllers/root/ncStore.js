@@ -1,12 +1,18 @@
 const ERROR_DEFAULT = 'Что пошло не так.';
 
 import {
-	Breadcrumbs,
-	Table as notTable,
-	UIError,
+  Frame,
+	Elements
+} from 'not-bulma';
+
+const {
+	notBreadcrumbs,
+	notTable,
 	notController,
 	notCommon
-} from 'not-bulma';
+} = Frame;
+
+const {UIError} = Elements.Notifications;
 
 import Common from '../common/index.js';
 import UIEdit from '../common/ui.store.edit.svelte';
@@ -25,7 +31,7 @@ class ncStore extends notController {
 		this.els = {};
 		this.setModuleName('store');
 		this.buildFrame();
-		Breadcrumbs.setHead(BREADCRUMBS).render({
+		notBreadcrumbs.setHead(BREADCRUMBS).render({
 			root: app.getOptions('router:root'),
 			target: this.els.top,
 			navigate: (url) => app.getWorking('router').navigate(url)
@@ -35,7 +41,7 @@ class ncStore extends notController {
 	}
 
 	setBreadcrumbs(tail) {
-		Breadcrumbs.setTail(tail).update();
+		notBreadcrumbs.setTail(tail).update();
 	}
 
 	buildFrame() {

@@ -43,7 +43,7 @@
     "easy-yandex-s3": "^1.1.6",
     "mkdirp": "*",
     "is-stream": "2.*",
-    "sharp": "^0.30.3",
+    "sharp": "^0.30.5",
     "streamifier": "^0.1.1",
     "valid-url": "^1.0.9"
   },

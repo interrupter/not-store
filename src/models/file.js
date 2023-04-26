@@ -1,4 +1,5 @@
 const store = require("../../").notStore;
+const config = require("not-config").readerForModule("store");
 
 const MODEL_NAME = "File";
 
@@ -11,7 +12,7 @@ const FIELDS = [
     "path",
     ["userIp", {}, "ip"],
     "userId",
-    "session",
+    ["session", { required: !!config.get("sessionRequired") }],
     "size",
     "width",
     "height",

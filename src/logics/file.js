@@ -19,18 +19,19 @@ function clearMetadata(metadata) {
     });
 }
 
-function uploadFile(bucket, file, info, owner) {
-    const App = notNode.Application;
-    return store.add(bucket, file).then(async (data) => {
-        let File = App.getModel("File");
+async function uploadFile(bucket, file, info, owner) {
+    try {
+        const App = notNode.Application;
+        const data = await store.add(bucket, file);
+        const File = App.getModel("File");
         clearMetadata(data.metadata);
-        let fileName = info.name || data.metadata.name;
+        let fileName = info?.name || data.metadata.name;
         App.logger.debug("store.add.then", bucket, fileName, data);
         let fileData = {
             uuid: data.metadata.uuid,
             bucket: bucket,
             name: fileName,
-            extension: data.metadata.format || info.mimetype,
+            extension: data.metadata.format || info?.mimetype,
             metadata: data.metadata,
             path: data.store,
             size: 0,
@@ -42,7 +43,10 @@ function uploadFile(bucket, file, info, owner) {
         };
         App.logger.debug(fileData);
         return File.add(fileData);
-    });
+    } catch (e) {
+        Log.error(e);
+        notNode.Application.report(e);
+    }
 }
 
 function createUploads(files, bucket, owner) {

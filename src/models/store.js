@@ -32,14 +32,4 @@ exports.thisSchema = {
         required: true,
         default: true,
     },
-    userIp: {
-        type: String,
-        searchable: true,
-        required: true,
-    },
-    session: {
-        type: String,
-        searchable: true,
-        required: true,
-    },
 };

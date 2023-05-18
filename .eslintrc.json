@@ -1,42 +1,31 @@
 {
-	"parserOptions": {
-		"ecmaVersion": 2020,
-		"sourceType": "module",
-		"ecmaFeatures": {
-			"experimentalObjectRestSpread": true
-		}
-	},
-	"env": {
-		"browser": true,
-		"commonjs": true,
-		"es6": true,
-		"node": true,
-		"mongo": true,
-		"mocha": true
-	},
-	"plugins": [
-		"svelte3"
-	],
-	"overrides": [{
-		"files": ["*.svelte"],
-		"processor": "svelte3/svelte3"
-	}],
-	"extends": "eslint:recommended",
-	"rules": {
-		"indent": [
-			"error",
-			"tab", {
-				"SwitchCase": 0
-			}
-		],
-		"linebreak-style": [
-			"error",
-			"unix"
-		],
-		"semi": [
-			"error",
-			"always"
-		],
-		"no-useless-escape": [0]
-	}
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true,
+        "mongo": true,
+        "mocha": true
+    },
+    "plugins": ["svelte3"],
+    "overrides": [
+        {
+            "files": ["*.svelte"],
+            "processor": "svelte3/svelte3"
+        }
+    ],
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "semi": ["error", "always"],
+        "no-useless-escape": [0]
+    }
 }

@@ -28,6 +28,9 @@ export default class Common {
   }, {
     id: 'notStoreImage',
     title: 'Локальное хранение - изображения'
+  }, {
+    id: 'timeweb',
+    title: 'TimeWeb - изображения'
   }]
 
   static FIELDS = {

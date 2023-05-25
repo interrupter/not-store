@@ -1,6 +1,6 @@
 module.exports = {
-    timeweb: require('./timeweb.driver'),
-    aws: require('./aws.driver'),
-    yandex: require('./yandex.driver'),
-    image: require('./image.driver'),
+    aws:        require('./aws/aws.driver'),
+    local:      require('./local/local.driver'),
+    timeweb:    require('./timeweb/timeweb.driver'),
+    yandex:     require('./yandex/yandex.driver'),
 };

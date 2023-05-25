@@ -2,6 +2,15 @@ const notStoreProcessor = require("../../proto/processor");
 const sharp = require("sharp");
 
 class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
+    static getDescription() {
+        return {
+            id: "image.thumbs.create",
+            title: "Создание миниатюр изображения",
+            optionsUI: "UIStoreProcessorOptionsImageThumbsCreate",
+            metadataUI: "UIStoreProcessorMetadataImageThumbsCreate",
+        };
+    }
+
     static makeThumb(src, dest, size) {
         let image = sharp(src, {
             failOnError: false,

@@ -1,12 +1,14 @@
+const { MODULE_NAME } = require("../const");
+
 module.exports = {
-  ui:{
-    component: 'UITextfield',
-    placeholder: 'Бакет',
-    label: 'Бакет'
-  },
-  model:{
-    type: String,
-    searchable: true,
-    required: true
-  }
+    ui: {
+        component: "UITextfield",
+        placeholder: `${MODULE_NAME}:field_bucket_placeholder`,
+        label: `${MODULE_NAME}:field_bucket_label`,
+    },
+    model: {
+        type: String,
+        searchable: true,
+        required: true,
+    },
 };

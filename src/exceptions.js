@@ -1,5 +1,27 @@
 const notError = require("not-error/src/error.node.cjs");
 
+class notStoreExceptionFilenameToReadableStreamError extends notError {
+    constructor(source, e) {
+        super(
+            "notStoreExceptionFilenameToReadableStreamError",
+            {
+                source,
+            },
+            e
+        );
+    }
+}
+module.exports.notStoreExceptionFilenameToReadableStreamError =
+    notStoreExceptionFilenameToReadableStreamError;
+
+class notStoreExceptionDirectUploadError extends notError {
+    constructor(details, e) {
+        super("notStoreExceptionDirectUploadError", details, e);
+    }
+}
+module.exports.notStoreExceptionDirectUploadError =
+    notStoreExceptionDirectUploadError;
+
 class notStoreExceptionProccesorRunError extends notError {
     constructor(pipe, filename, driverName, e) {
         super(

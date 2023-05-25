@@ -2,6 +2,14 @@ const notStoreProcessor = require("../../proto/processor");
 const path = require("node:path");
 
 class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
+    static getDescription() {
+        return {
+            id: "image.thumbs.delete.remote",
+            title: "Удаление миниатюр из облака",
+            optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteRemote",
+        };
+    }
+
     static listOfFilesToDelete(metadata /*, preprocOptions*/) {
         const variantsToDelete = { ...metadata.thumbs };
 

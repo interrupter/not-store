@@ -1,13 +1,15 @@
-const Schema = require('mongoose').Schema;
+const { MODULE_NAME } = require("../const");
+
+const Schema = require("mongoose").Schema;
 
 module.exports = {
-  ui:{
-    component: 'UIJSON',
-    placeholder: 'Пути',
-    label: 'Пути'
-  },
-  model: {
-    type: Schema.Types.Mixed,
-    required: false
-  }
+    ui: {
+        component: "UITexteditor",
+        placeholder: `${MODULE_NAME}:field_path_placeholder`,
+        label: `${MODULE_NAME}:field_path_label`,
+    },
+    model: {
+        type: Schema.Types.Mixed,
+        required: false,
+    },
 };

@@ -1,0 +1,14 @@
+{
+    "store_plural": "Stores",
+    "store_single": "Store",
+    "field_driver_label": "Driver",
+    "field_metadata_label": "Metadata",
+    "field_options_label": "Options",
+    "field_name_label": "Name",
+    "field_processors_label": "Processors",
+    "field_driver_placeholder": "Select store driver",
+    "driver_aws_title": "AWS",
+    "driver_local_title": "Local file system",
+    "driver_timeweb_title": "TimeWeb Cloud",
+    "driver_yandex_title": "Yandex Cloud"
+}

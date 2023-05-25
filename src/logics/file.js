@@ -9,22 +9,12 @@ const { notError } = require("not-error");
 const NAME = "File";
 exports.thisLogicName = NAME;
 
-const METADATA_FORBIDDEN_FIELDS = ["exif", "xmp", "icc", "iptc"];
-
-function clearMetadata(metadata) {
-    METADATA_FORBIDDEN_FIELDS.forEach((fieldName) => {
-        if (Object.prototype.hasOwnProperty.call(metadata, fieldName)) {
-            delete metadata[fieldName];
-        }
-    });
-}
-
 async function uploadFile(bucket, file, info, owner) {
     try {
         const App = notNode.Application;
         const data = await store.add(bucket, file);
         const File = App.getModel("File");
-        clearMetadata(data.metadata);
+
         let fileName = info?.name || data.metadata.name;
         App.logger.debug("store.add.then", bucket, fileName, data);
         let fileData = {
@@ -184,7 +174,7 @@ class File {
                         return { status: "failed" };
                     }
                 } else if (
-                    typeof sessionId !== undefined &&
+                    typeof sessionId !== "undefined" &&
                     sessionId !== null &&
                     sessionId &&
                     sessionId.length > 10

@@ -5,7 +5,7 @@ const {
 const DEFAULT_CONFIG_READER = require("./config.readers/not-store.reader");
 
 const DEFAULT_DRIVERS = require("./drivers/index");
-
+const notStoreProcessors = require("./store.processors");
 /**
  *  notStore.get(store_config_name).add();
  **/
@@ -27,6 +27,16 @@ class notStore {
         this.#drivers[name] = driver;
     }
 
+    static listDrivers() {
+        return Object.keys(this.#drivers).map((id) =>
+            this.#drivers[id].getDescription()
+        );
+    }
+
+    static listProcessors() {
+        return notStoreProcessors.list();
+    }
+
     static async get(storeName) {
         const storeConfig = await this.#configReader.for(storeName);
         return this.#getDriverForConfig(storeConfig);
@@ -34,7 +44,10 @@ class notStore {
 
     static #getDriverForConfig(storeConfig) {
         if (Object.hasOwn(this.#drivers, storeConfig.driver)) {
-            return new this.#drivers[storeConfig.driver](storeConfig.options);
+            return new this.#drivers[storeConfig.driver](
+                storeConfig.options,
+                storeConfig.processors
+            );
         }
         throw new notStoreExceptionDriverIsNotExists(storeConfig.driver);
     }

@@ -1,6 +1,14 @@
 const notStoreProcessor = require("../../proto/processor");
 
 class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
+    static getDescription() {
+        return {
+            id: "image.thumbs.delete.local",
+            title: "Удаление локальных миниатюр",
+            optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteLocal",
+        };
+    }
+
     static listOfFilesToDelete(metadata, preprocOptions) {
         const variantsToDelete = { ...metadata.thumbs };
         if (preprocOptions.saveOriginal && variantsToDelete.original) {

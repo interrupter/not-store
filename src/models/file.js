@@ -14,8 +14,6 @@ const FIELDS = [
     "userId",
     ["session", { required: !!config.get("sessionRequired") }],
     "size",
-    "width",
-    "height",
 ];
 
 exports.thisModelName = MODEL_NAME;

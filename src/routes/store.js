@@ -1,37 +1,37 @@
-const
-	UserActions = [],
-	AdminActions = [
-		'create',
-		'update',
-		'get',
-		'listAndCount',
-		'delete'
-	],
-	MODEL_NAME = 'Store',
-	MODEL_OPTIONS = {
-		MODEL_NAME,
-		MODEL_TITLE: 'Хранилище',
-		RESPONSE: {
-			full: ['get', 'update', 'delete']
-		}
-	},
-	modMeta = require('not-meta');
+const { MODULE_NAME } = require("../const");
+const MODEL_NAME = "Store";
+const notNode = require("not-node");
 
+const {
+    //	say,
+    //	config,
+    //	Log,
+    before,
+    after,
+    getLogic,
+    //	getModel,
+    //	getModelSchema,
+} = notNode.Bootstrap.notBootstrapRoute({
+    target: module,
+    MODEL_NAME,
+    MODULE_NAME,
+    defaultAccessRule: true,
+});
 
-exports.getIP = (req) => {
-	return req.headers['x-forwarded-for'] ||
-		req.connection.remoteAddress ||
-		req.socket.remoteAddress ||
-		req.connection.socket.remoteAddress;
-};
+const StoreGenericRoute = notNode.Generic.GenericRoute({
+    before,
+    after,
+    getLogic,
+});
 
-exports.before = (req) => {
-	if (req.body) {
-		req.body.session = req.session.id;
-		req.body.userId = req.user._id;
-		req.body.userIp = exports.getIP(req);
-	}
-};
+class StoreRoute extends StoreGenericRoute {
+    static async _listDrivers(/*req, res, next, prepared*/) {
+        return await getLogic().listDrivers();
+    }
 
-modMeta.extend(modMeta.Route, module.exports, AdminActions, MODEL_OPTIONS, '_');
-modMeta.extend(modMeta.Route, module.exports, UserActions, MODEL_OPTIONS);
+    static async _listProcessors(/*req, res, next, prepared*/) {
+        return await getLogic().listProcessors();
+    }
+}
+
+module.exports = StoreRoute;

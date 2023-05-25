@@ -1,0 +1,14 @@
+{
+    "store_plural": "Хранилища",
+    "store_single": "Хранилище",
+    "field_driver_label": "Драйвер",
+    "field_metadata_label": "Метаданные",
+    "field_options_label": "Опции",
+    "field_name_label": "Название",
+    "field_processors_label": "Обработчики",
+    "field_driver_placeholder": "Выберите драйвер хранилища",
+    "driver_aws_title": "AWS",
+    "driver_local_title": "Локальная файловая система",
+    "driver_timeweb_title": "Облако TimeWeb",
+    "driver_yandex_title": "Облако Yandex"
+}

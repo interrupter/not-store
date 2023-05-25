@@ -1,6 +1,15 @@
 const notStoreProcessor = require("../../proto/processor");
 
 class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
+    static getDescription() {
+        return {
+            id: "image.thumbs.upload",
+            title: "Загрузка миниатюр в хранилище",
+            optionsUI: "UIStoreProcessorOptionsImageThumbsUpload",
+            metadataUI: "UIStoreProcessorMetadataImageThumbsUpload",
+        };
+    }
+
     static updateMetadata(metadata, cloudNames) {
         let variantsShortNames = Object.keys(metadata.thumbs);
         for (let t = 0; t < cloudNames.length; t++) {

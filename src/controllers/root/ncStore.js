@@ -14,12 +14,31 @@ const BOTTOM_CLASS = [],
     MAIN_CLASS = [];
 
 let DRIVERS_CACHE = [];
+let PROCESSORS_CACHE = [];
 
 notFormRules.add("changeComponent", (value, master, slaves, form) => {
     console.log("change component", value, master, slaves, form);
-    return {
-        _componentName: DRIVERS_CACHE.find((itm) => itm.id === value).ui,
-    };
+    const el = DRIVERS_CACHE.find((itm) => itm.id === value);
+    if (el && el.ui) {
+        return {
+            _componentName: el.ui,
+        };
+    } else {
+        return {};
+    }
+});
+
+notFormRules.add("changeProcessorsProps", (value, master, slaves, form) => {
+    console.log("change processors props", value, master, slaves, form);
+    const el = DRIVERS_CACHE.find((itm) => itm.id === value);
+    if (el && el.actions) {
+        return {
+            actions: el.actions,
+            processors: PROCESSORS_CACHE,
+        };
+    } else {
+        return {};
+    }
 });
 
 class ncStore extends notCRUD {
@@ -36,6 +55,13 @@ class ncStore extends notCRUD {
         this.setOptions("update.masters", {
             driver: {
                 changeComponent: ["options"],
+                changeProcessorsProps: ["processors"],
+            },
+        });
+        this.setOptions("create.masters", {
+            driver: {
+                changeComponent: ["options"],
+                changeProcessorsProps: ["processors"],
             },
         });
         this.setOptions("list", {
@@ -100,6 +126,11 @@ class ncStore extends notCRUD {
                 preprocessor: (value) => {
                     return [
                         {
+                            action: this.goTest.bind(this, value),
+                            title: "Тест",
+                            size: "small",
+                        },
+                        {
                             action: this.goDetails.bind(this, value),
                             title: "Подробнее",
                             size: "small",
@@ -135,7 +166,13 @@ class ncStore extends notCRUD {
     }
 
     createDefault() {
-        return {};
+        return {
+            name: "",
+            driver: "",
+            options: {},
+            processors: {},
+            active: true,
+        };
     }
 
     async preloadKeys() {
@@ -147,6 +184,7 @@ class ncStore extends notCRUD {
             const processorsList = await this.getModel()
                 .$listProcessors()
                 .then((resp) => resp.result);
+            PROCESSORS_CACHE = processorsList;
             const listsSet = {
                 drivers: driversList,
                 processors: processorsList,
@@ -157,6 +195,16 @@ class ncStore extends notCRUD {
         } catch (e) {
             this.report(e);
             this.showErrorMessage(e);
+        }
+    }
+
+    async goTest(_id) {
+        try {
+            console.log("test store", ...arguments);
+            const res = await this.getModel({ _id }).$test();
+            this.log(res);
+        } catch (error) {
+            this.error(error);
         }
     }
 }

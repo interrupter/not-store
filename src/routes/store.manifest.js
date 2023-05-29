@@ -57,19 +57,28 @@ module.exports = {
             method: "get",
             data: ["record"],
             isArray: false,
+            return: [
+                "_id",
+                "storeID",
+                "name",
+                "driver",
+                "options",
+                "processors",
+                "active",
+            ],
+            fields: [
+                "_id",
+                "storeID",
+                "name",
+                "driver",
+                "options",
+                "processors",
+                "active",
+            ],
             rules: [
                 {
                     auth: true,
                     root: true,
-                    fields: [
-                        "_id",
-                        "storeID",
-                        "name",
-                        "driver",
-                        "options",
-                        "processors",
-                        "active",
-                    ],
                 },
             ],
             postFix: "/:record[_id]/:actionName",
@@ -131,6 +140,17 @@ module.exports = {
         delete: {
             method: "DELETE",
             postFix: "/:record[_id]",
+            isArray: false,
+            rules: [
+                {
+                    auth: true,
+                    root: true,
+                },
+            ],
+        },
+        test: {
+            method: "GET",
+            postFix: "/:record[_id]/:actionName",
             isArray: false,
             rules: [
                 {

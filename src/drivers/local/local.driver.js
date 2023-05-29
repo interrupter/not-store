@@ -12,6 +12,7 @@ class notStoreDriverLocal extends notStoreDriver {
             id: "local",
             title: `${MODULE_NAME}:driver_local_title`,
             ui: "notStoreUIDriverOptionsLocal",
+            actions: [],
         };
     }
 

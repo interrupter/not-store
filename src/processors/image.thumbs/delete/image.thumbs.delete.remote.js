@@ -1,4 +1,4 @@
-const notStoreProcessor = require("../../proto/processor");
+const notStoreProcessor = require("../../../proto/processor");
 const path = require("node:path");
 
 class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
@@ -6,6 +6,7 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
         return {
             id: "image.thumbs.delete.remote",
             title: "Удаление миниатюр из облака",
+            optionsDefault: this.getOptions(),
             optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteRemote",
         };
     }
@@ -18,8 +19,8 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
         );
     }
 
-    static async run(filename, metadata, preprocOptions, driver) {
-        const filenames = this.listOfFilesToDelete(metadata, preprocOptions);
+    static async run(filename, metadata, options, driver) {
+        const filenames = this.listOfFilesToDelete(metadata, options);
         if (filenames.length) {
             await Promise.all(filenames.map(driver.removeLocalFile));
         }

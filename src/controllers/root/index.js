@@ -11,6 +11,8 @@ import notStoreUIDriverOptionsTimeweb from "../../drivers/timeweb/timeweb.driver
 import notStoreUIDriverOptionsYandex from "../../drivers/yandex/yandex.driver.options.ui.svelte";
 import { MODULE_NAME } from "../../const.js";
 
+import { UIStoreProcessorOptionsImageThumbsCreate } from "../../processors/uis.js";
+
 const uis = {
     //specialized UIs of drivers options
     notStoreUIDriverOptionsAWS,
@@ -21,6 +23,8 @@ const uis = {
     FUIFileMetadata,
     FUIStoreOptions,
     FUIStoreProcessors,
+    //processors UIs options editors and metadata viewers
+    UIStoreProcessorOptionsImageThumbsCreate,
 };
 
 let manifest = {

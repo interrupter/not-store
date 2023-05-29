@@ -10,5 +10,19 @@
     "driver_aws_title": "AWS",
     "driver_local_title": "Локальная файловая система",
     "driver_timeweb_title": "Облако TimeWeb",
-    "driver_yandex_title": "Облако Yandex"
+    "driver_yandex_title": "Облако Yandex",
+    "field_store_driver_timeweb_options_ACL": "ACL",
+    "field_store_driver_timeweb_options_accessKeyId": "Идентификатор ключа/ Логин",
+    "field_store_driver_timeweb_options_secretAccessKey": "Секретный ключ / Пароль",
+    "field_store_driver_timeweb_options_apiVersion": "Версия API",
+    "field_store_driver_timeweb_options_endpoint": "Точка доступа",
+    "field_store_driver_timeweb_options_region": "Регион",
+    "field_store_driver_timeweb_options_s3ForcePathStyle": "Стиль путей S3",
+    "field_store_driver_timeweb_options_bucket": "Хранилище",
+    "field_store_driver_timeweb_options_path": "Путь в хранилище",
+    "field_store_driver_timeweb_options_tmp": "Локальная временная папка",
+    "field_store_driver_timeweb_options_groupFiles": "Группировать файлы",
+    "field_store_processor_image.thumbs.create_options_saveOriginal": "Сохранить оригинал",
+    "field_store_processor_image.thumbs.create_options_resize.fit": "Размещение при масштабировании",
+    "field_store_processor_image.thumbs.create_options_sizes": "Размеры миниатюр"
 }

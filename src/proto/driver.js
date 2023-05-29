@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const Stream = require("stream");
 const http = require("http");
+const { v4: uuidv4 } = require("uuid");
 const https = require("https");
 const isStream = require("is-stream");
 const isUrl = require("valid-url");
@@ -58,9 +59,9 @@ class notStoreDriver {
      * @param {string} name 	name of options property
      * @returns {*}	value from options or process.ENV
      */
-    static getOptionValueCheckENV(name) {
+    getOptionValueCheckENV(name) {
         return notNode.Common.getValueFromEnv(
-            this.#options,
+            this.options,
             name,
             OPT_ENV_CHECKS
         );
@@ -112,7 +113,7 @@ class notStoreDriver {
      *	@returns	{string}	UUIDv4 name
      */
     randomFilename() {
-        return UUID.v4();
+        return uuidv4();
     }
 
     /**

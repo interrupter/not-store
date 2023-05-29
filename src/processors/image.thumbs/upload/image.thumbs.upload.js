@@ -1,10 +1,11 @@
-const notStoreProcessor = require("../../proto/processor");
+const notStoreProcessor = require("../../../proto/processor");
 
 class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
     static getDescription() {
         return {
             id: "image.thumbs.upload",
             title: "Загрузка миниатюр в хранилище",
+            optionsDefault: this.getOptions(),
             optionsUI: "UIStoreProcessorOptionsImageThumbsUpload",
             metadataUI: "UIStoreProcessorMetadataImageThumbsUpload",
         };
@@ -17,9 +18,9 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
         }
     }
 
-    static async run(filename, metadata, preprocOptions, driver) {
-        const filenames = Object.keys(metadata.thumbs).map(
-            (thumb) => thumb.filename
+    static async run(filename, metadata, options, driver) {
+        const filenames = Object.values(metadata.thumbs).map(
+            (thumb) => thumb.local
         );
         if (filenames.length) {
             let cloudNames = await driver.directUploadMany(

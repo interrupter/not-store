@@ -14,6 +14,14 @@ class notStoreExceptionFilenameToReadableStreamError extends notError {
 module.exports.notStoreExceptionFilenameToReadableStreamError =
     notStoreExceptionFilenameToReadableStreamError;
 
+class notStoreExceptionDirectDeleteError extends notError {
+    constructor(details, e) {
+        super("notStoreExceptionDirectDeleteError", details, e);
+    }
+}
+module.exports.notStoreExceptionDirectDeleteError =
+    notStoreExceptionDirectDeleteError;
+
 class notStoreExceptionDirectUploadError extends notError {
     constructor(details, e) {
         super("notStoreExceptionDirectUploadError", details, e);

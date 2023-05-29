@@ -32,6 +32,10 @@ class StoreRoute extends StoreGenericRoute {
     static async _listProcessors(/*req, res, next, prepared*/) {
         return await getLogic().listProcessors();
     }
+
+    static async _test(){
+        return await getLogic().test();
+    }
 }
 
 module.exports = StoreRoute;

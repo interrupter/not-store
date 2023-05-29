@@ -8,7 +8,7 @@ const {
 } = require("../exceptions");
 
 class notStoreConfigReaderNotStoreMongoDB extends notStoreConfigReader {
-    #MODEL_NAME = "Store";
+    static #MODEL_NAME = "Store";
 
     static async for(storeName) {
         return this.#loadConfigForStore(storeName);
@@ -29,10 +29,8 @@ class notStoreConfigReaderNotStoreMongoDB extends notStoreConfigReader {
                 }
                 return {
                     driver: config.driver,
-                    options: await notNode.Common.tryParseAsync(
-                        config.options,
-                        {}
-                    ),
+                    options: config.options,
+                    processors: config.processors,
                 };
             } else {
                 throw new notStoreExceptionConfigIsNotExists(

@@ -10,5 +10,19 @@
     "driver_aws_title": "AWS",
     "driver_local_title": "Local file system",
     "driver_timeweb_title": "TimeWeb Cloud",
-    "driver_yandex_title": "Yandex Cloud"
+    "driver_yandex_title": "Yandex Cloud",
+    "field_store_driver_timeweb_options_ACL": "ACL",
+    "field_store_driver_timeweb_options_accessKeyId": "Access Key Id / Login",
+    "field_store_driver_timeweb_options_secretAccessKey": "Secret Access Key / Password",
+    "field_store_driver_timeweb_options_apiVersion": "API version",
+    "field_store_driver_timeweb_options_endpoint": "End-point",
+    "field_store_driver_timeweb_options_region": "Region",
+    "field_store_driver_timeweb_options_s3ForcePathStyle": "S3 Force Path Style",
+    "field_store_driver_timeweb_options_bucket": "Bucket",
+    "field_store_driver_timeweb_options_path": "Path in bucket",
+    "field_store_driver_timeweb_options_tmp": "Local tmp dir",
+    "field_store_driver_timeweb_options_groupFiles": "Group files",
+    "field_store_processor_image.thumbs.create_options_saveOriginal": "Save original",
+    "field_store_processor_image.thumbs.create_options_resize.fit": "Resize Fit",
+    "field_store_processor_image.thumbs.create_options_sizes": "Thumbs sizes"
 }

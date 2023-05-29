@@ -11,13 +11,14 @@ const CONTENT = [
     "locales",
     "models",
     "fields",
+    "forms",
 ];
 
 module.exports = {
     notStore,
     name: MODULE_NAME,
     paths: generatePaths(CONTENT, __dirname + "/src"),
-    initialize: () => {
+    initialize: (/*notApp*/) => {
         const configReaderName = config.get("configReader");
         if (Object.hasOwn(configReaders, configReaderName)) {
             notStore.setConfigReader(configReaders[configReaderName]);

@@ -1,5 +1,7 @@
+const Log = require("not-log")(module, "Timeweb driver");
 const { MODULE_NAME } = require("../../const");
 const S3 = require("aws-sdk/clients/s3");
+
 const notError = require("not-error/src/error.node.cjs");
 const notNode = require("not-node");
 const path = require("node:path");
@@ -7,6 +9,7 @@ const path = require("node:path");
 const {
     notStoreExceptionAddToStoreError,
     notStoreExceptionDirectUploadError,
+    notStoreExceptionDirectDeleteError,
     notStoreExceptionDeleteFromStoreError,
     notStoreExceptionListStoreError,
 } = require("not-store/src/exceptions");
@@ -53,6 +56,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
             id: "timeweb",
             title: `${MODULE_NAME}:driver_timeweb_title`,
             ui: "notStoreUIDriverOptionsTimeweb",
+            actions: ["add", "delete", "list"],
         };
     }
 
@@ -78,16 +82,25 @@ class notStoreDriverTimeweb extends notStoreDriver {
 
     async add(file) {
         let tmpFilename;
+        const metadata = {};
+        Log.log(file);
         try {
-            tmpFilename = this.stashFile(file);
-            const metadata = {};
+            Log.log("start stash");
+            tmpFilename = await this.stashFile(file);
+            Log.log("stashed", tmpFilename);
+            Log.log("run pre processors");
             await this.runPreProcessors("add", tmpFilename, metadata);
+            Log.log("run action");
             await this.directUpload(
                 tmpFilename,
                 this.getPathInStore(tmpFilename)
             );
+            Log.log("run post processors");
             await this.runPostProcessors("add", tmpFilename, metadata);
+            Log.log("done", [tmpFilename, JSON.stringify(metadata, null, 4)]);
+            return [tmpFilename, metadata];
         } catch (e) {
+            Log.error(e);
             if (e instanceof notError) {
                 notNode.Application.report(e);
             } else {
@@ -96,10 +109,12 @@ class notStoreDriverTimeweb extends notStoreDriver {
                 );
             }
         } finally {
+            Log.log("finally");
             if (
                 tmpFilename &&
                 (await notNode.Common.tryFileAsync(tmpFilename))
             ) {
+                Log.log("remove local file");
                 await this.removeLocalFile(tmpFilename);
             }
         }
@@ -108,8 +123,8 @@ class notStoreDriverTimeweb extends notStoreDriver {
     async directUpload(file, folder) {
         try {
             const uploadParams = {
-                Bucket: this.options.bucket,
-                Key: path.basename(file),
+                Bucket: this.getOptionValueCheckENV("bucket"),
+                Key: path.join(folder, path.basename(file)),
                 Body: await this.readableStreamFromFilename(file),
             };
             return await this.#s3.upload(uploadParams).promise();
@@ -124,18 +139,27 @@ class notStoreDriverTimeweb extends notStoreDriver {
         }
     }
 
-    directUploadMany(filenames, folder) {
-        let list = filenames.map((filename) => {
-            return {
-                path: filename,
-                save_name: true,
-            };
-        });
-        return this.#s3.Upload(list, folder);
+    async directUploadMany(filenames, folder) {
+        return await Promise.all(
+            filenames.map((fname) => this.directUpload(fname, folder))
+        );
     }
 
-    directDelete(key) {
-        return this.#s3.Remove(key);
+    async directDelete(key) {
+        try {
+            const params = {
+                Key: key,
+                Bucket: this.getOptionValueCheckENV("bucket"),
+            };
+            return await this.#s3.deleteObject(params).promise();
+        } catch (error) {
+            throw new notStoreExceptionDirectDeleteError(
+                {
+                    key,
+                },
+                error
+            );
+        }
     }
 
     async delete(filename) {

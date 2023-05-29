@@ -19,6 +19,7 @@ class notStoreProcessorImageExtractMetadata extends notStoreProcessor {
         return {
             id: "image.metadata.extract",
             title: "Получение метаданных изображения",
+            optionsDefault: this.getOptions(),
             optionsUI: "UIStoreProcessorOptionsImageMetadataExtract",
             metadataUI: "UIStoreProcessorMetadataImageMetadataExtract",
         };

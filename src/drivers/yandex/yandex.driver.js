@@ -12,6 +12,7 @@ class notStoreDriverYandex extends notStoreDriver {
             id: "yandex",
             title: `${MODULE_NAME}:driver_yandex_title`,
             ui: "notStoreUIDriverOptionsYandex",
+            actions: [],
         };
     }
 

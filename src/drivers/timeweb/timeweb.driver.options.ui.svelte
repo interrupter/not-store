@@ -41,8 +41,10 @@
     const onChange = ({ detail }) => {
         initValue();
         value[detail.field] = detail.value;
+        value = value;
         dispatch("change", {
             field: fieldname,
+            value,
         });
     };
 </script>
@@ -119,9 +121,9 @@
             />
             <UITextfield
                 bind:readonly
-                bind:value={value.s3ForcePathStyle}
+                bind:value={value.region}
                 on:change={onChange}
-                fieldname="s3ForcePathStyle"
+                fieldname="region"
             />
         </div>
         <div class="field">

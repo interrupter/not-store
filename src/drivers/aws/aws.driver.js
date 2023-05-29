@@ -12,6 +12,7 @@ class notStoreDriverAWS extends notStoreDriver {
             id: "aws",
             title: `${MODULE_NAME}:driver_aws_title`,
             ui: "notStoreUIDriverOptionsAWS",
+            actions: [],
         };
     }
 

@@ -83,24 +83,18 @@ class notStoreDriverTimeweb extends notStoreDriver {
     async add(file) {
         let tmpFilename;
         const metadata = {};
-        Log.log(file);
         try {
             Log.log("start stash");
             tmpFilename = await this.stashFile(file);
-            Log.log("stashed", tmpFilename);
-            Log.log("run pre processors");
             await this.runPreProcessors("add", tmpFilename, metadata);
-            Log.log("run action");
             await this.directUpload(
                 tmpFilename,
                 this.getPathInStore(tmpFilename)
             );
-            Log.log("run post processors");
             await this.runPostProcessors("add", tmpFilename, metadata);
-            Log.log("done", [tmpFilename, JSON.stringify(metadata, null, 4)]);
+            Log.debug("done", [tmpFilename, JSON.stringify(metadata, null, 4)]);
             return [tmpFilename, metadata];
         } catch (e) {
-            Log.error(e);
             if (e instanceof notError) {
                 notNode.Application.report(e);
             } else {
@@ -109,12 +103,10 @@ class notStoreDriverTimeweb extends notStoreDriver {
                 );
             }
         } finally {
-            Log.log("finally");
             if (
                 tmpFilename &&
                 (await notNode.Common.tryFileAsync(tmpFilename))
             ) {
-                Log.log("remove local file");
                 await this.removeLocalFile(tmpFilename);
             }
         }
@@ -180,11 +172,15 @@ class notStoreDriverTimeweb extends notStoreDriver {
         }
     }
 
-    directList(pathInStore) {
+    async directList(pathInStore) {
         if (!pathInStore) {
             pathInStore = this.getPathInStore();
         }
-        return this.#s3.GetList(pathInStore);
+        const params = {
+            Bucket: this.getOptionValueCheckENV("bucket"),
+            prefix: pathInStore,
+        };
+        return await this.#s3.listObjectsV2(params).promise();
     }
 
     async list(pathInStore) {

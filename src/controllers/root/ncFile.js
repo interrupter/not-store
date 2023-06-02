@@ -1,3 +1,4 @@
+import notFileCRUDActionUploadFile from '../common/actions/upload.file.action';
 import Validators from "../common/validators.js";
 
 import { Frame } from "not-bulma";
@@ -10,6 +11,10 @@ const MODEL_NAME = "file";
 const LABELS = {
     plural: "Файлы",
     single: "Файл",
+};
+
+const CUSTOM_ACTIONS = {
+    create: notFileCRUDActionUploadFile
 };
 
 class ncFile extends notCRUD {

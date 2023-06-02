@@ -1,6 +1,6 @@
 {
   "name": "not-store",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "file storage interface",
   "main": "index.js",
   "repository": "https://github.com/interrupter/not-store",
@@ -42,7 +42,7 @@
     "download": "^8.0.0",
     "easy-yandex-s3": "^2.0.0",
     "mkdirp": "*",
-    "is-stream": "3.*",
+    "is-stream": "2.*",
     "sharp": "^0.32.1",
     "streamifier": "^0.1.1",
     "valid-url": "^1.0.9"

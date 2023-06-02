@@ -1,5 +1,5 @@
 import { Frame } from "not-bulma";
-import { MODULE_NAME } from "../../const";
+import { MODULE_NAME } from "../../const.cjs";
 
 const { notCRUD } = Frame;
 const notFormRules = Frame.notFormRules;

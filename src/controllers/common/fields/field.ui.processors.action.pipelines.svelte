@@ -4,7 +4,7 @@
     import { UITitle } from "not-bulma/src/elements/various";
     import { UIBox } from "not-bulma/src/elements/block";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
-    import FUIProcessorsPipeline from "not-store/src/controllers/common/fields/field.ui.processors.pipeline.svelte";
+    import FUIProcessorsPipeline from "./field.ui.processors.pipeline.svelte";
     export let value = {
         pre: [],
         post: [],

@@ -1,4 +1,4 @@
-import UIFileUpload from './upload.file.ui./svelte';
+import UIFileUpload from './upload.file.ui.svelte';
 import CRUDGenericActionCreate from "not-bulma/src/frame/crud/actions/generic/create";
 
 class notFileCRUDActionCreate extends CRUDGenericActionCreate{

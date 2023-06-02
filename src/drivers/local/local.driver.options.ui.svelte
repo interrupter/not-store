@@ -1,7 +1,7 @@
 <script>
-    import { MODULE_NAME } from "../../const";
+    import { MODULE_NAME } from "../../const.cjs";
     import { Elements } from "not-bulma";
-    import DEFALT_OPTIONS from "./local.driver.options";
+    import DEFALT_OPTIONS from "./local.driver.options.cjs";
     const { UITitle } = Elements.Various;
     const UIBox = Elements.Blocks.UIBox;
 

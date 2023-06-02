@@ -9,7 +9,7 @@ import notStoreUIDriverOptionsAWS from "../../drivers/aws/aws.driver.options.ui.
 import notStoreUIDriverOptionsLocal from "../../drivers/local/local.driver.options.ui.svelte";
 import notStoreUIDriverOptionsTimeweb from "../../drivers/timeweb/timeweb.driver.options.ui.svelte";
 import notStoreUIDriverOptionsYandex from "../../drivers/yandex/yandex.driver.options.ui.svelte";
-import { MODULE_NAME } from "../../const.js";
+import { MODULE_NAME } from "../../const.cjs";
 
 import { UIStoreProcessorOptionsImageThumbsCreate } from "../../processors/uis.js";
 

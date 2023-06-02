@@ -1,7 +1,7 @@
 <script>
     import FUINamedNumbersList from "./field.ui.named.numbers.list.svelte";
-    import { MODULE_NAME } from "not-store/src/const.cjs";
-    import { SHARP_RESIZE_FIT_VARIANTS } from "not-store/src/processors/image.thumbs/create/sharp.const.cjs";
+    import { MODULE_NAME } from "../../../const.cjs";
+    import { SHARP_RESIZE_FIT_VARIANTS } from "./sharp.const.cjs";
     import notPath from "not-path";
 
     import Common from "not-bulma/src/frame/common";
@@ -17,7 +17,7 @@
     const { UITitle } = Elements.Various;
     const UIBox = Elements.Blocks.UIBox;
 
-    import DEFAULT_OPTIONS from "not-store/src/processors/image.thumbs/create/image.thumbs.create.options.cjs";
+    import DEFAULT_OPTIONS from "./image.thumbs.create.options.cjs";
 
     export let value = Common.copyObj(DEFAULT_OPTIONS);
 

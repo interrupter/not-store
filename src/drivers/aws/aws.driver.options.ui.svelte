@@ -1,8 +1,8 @@
 <script>
-    import { MODULE_NAME } from "../../const";
+    import { MODULE_NAME } from "../../const.cjs";
     import { Elements } from "not-bulma";
     const { UITitle } = Elements.Various;
-    import DEFALT_OPTIONS from "./aws.driver.options";
+    import DEFALT_OPTIONS from "./aws.driver.options.cjs";
 
     const UIBox = Elements.Blocks.UIBox;
 

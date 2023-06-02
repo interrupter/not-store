@@ -1,8 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
-    import FUIProcessorsActionPipelines from "not-store/src/controllers/common/fields/field.ui.processors.action.pipelines.svelte";
-    import FUIProcessorsControl from "./field.ui.processors.control.svelte";
+    import FUIProcessorsActionPipelines from "./field.ui.processors.action.pipelines.svelte";
 
     import { COMPONENTS } from "not-bulma/src/frame";
 

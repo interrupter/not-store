@@ -1,9 +1,9 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
-    import { MODULE_NAME, OPT_ACLs } from "../../const";
+    import { MODULE_NAME, OPT_ACLs } from "../../const.cjs";
     import { Elements } from "not-bulma";
-    import DEFALT_OPTIONS from "./timeweb.driver.options";
+    import DEFAULT_OPTIONS from "./timeweb.driver.options.cjs";
     import {
         UITextfield,
         UILabel,
@@ -33,7 +33,7 @@
 
     const initValue = () => {
         if (valueTypeIsNotOK()) {
-            value = { ...DEFALT_OPTIONS };
+            value = { ...DEFAULT_OPTIONS };
         }
         valueIsValid = true;
     };

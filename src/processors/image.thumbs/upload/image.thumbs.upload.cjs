@@ -1,4 +1,4 @@
-const notStoreProcessor = require("not-store/src/proto/processor.cjs");
+const notStoreProcessor = require("../../../proto/processor.cjs");
 
 class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
     static getDescription() {

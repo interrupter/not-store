@@ -1,7 +1,7 @@
 const path = require("node:path");
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const sharp = require("sharp");
-const DEFAULT_OPTIONS = require("not-store/src/processors/image.thumbs/create/image.thumbs.create.options.cjs");
+const DEFAULT_OPTIONS = require("./image.thumbs.create.options.cjs");
 
 class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
     static getOptions() {

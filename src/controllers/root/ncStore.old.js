@@ -6,7 +6,7 @@ const { notBreadcrumbs, notTable, notController, notCommon } = Frame;
 
 const { UIError } = Elements.Notifications;
 
-import Common from "not-store/src/controllers/common";
+import Common from "../common";
 import UIEdit from "../common/ui.store.edit.svelte";
 import UIDetails from "../common/ui.store.details.svelte";
 

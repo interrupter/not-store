@@ -1,6 +1,6 @@
 module.exports = {
-    aws:        require('not-store/src/drivers/aws/aws.driver.cjs'),
-    local:      require('not-store/src/drivers/local/local.driver.cjs'),
-    timeweb:    require('not-store/src/drivers/timeweb/timeweb.driver.cjs'),
-    yandex:     require('not-store/src/drivers/yandex/yandex.driver.cjs'),
+    aws: require("./aws/aws.driver.cjs"),
+    local: require("./local/local.driver.cjs"),
+    timeweb: require("./timeweb/timeweb.driver.cjs"),
+    yandex: require("./yandex/yandex.driver.cjs"),
 };

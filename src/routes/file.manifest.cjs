@@ -1,4 +1,4 @@
-const defaultManifest = require("not-store/src/standalone/file.manifest.js");
+const defaultManifest = require("../standalone/file.manifest.js");
 
 const FIELDS = [
     "_id",

@@ -12,7 +12,7 @@ const {
     notStoreExceptionDirectDeleteError,
     notStoreExceptionDeleteFromStoreError,
     notStoreExceptionListStoreError,
-} = require("not-store/src/exceptions.cjs");
+} = require("../../exceptions.cjs");
 
 const notStoreDriver = require("../../proto/driver.cjs");
 const DEFAULT_OPTIONS = require("./timeweb.driver.options.cjs");

@@ -1,4 +1,4 @@
-const { MODULE_NAME } = require("not-store/src/const.cjs");
+const { MODULE_NAME } = require("../const.cjs");
 const config = require("not-config").forModule(MODULE_NAME);
 
 class notStoreConfigReader {

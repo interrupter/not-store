@@ -1,4 +1,4 @@
-const { MODULE_NAME } = require("not-store/src/const.cjs.cjs");
+const { MODULE_NAME } = require("../const.cjs");
 const FIELDS = [
     "not-node//_id",
     ["storeID", "not-node//ID"],

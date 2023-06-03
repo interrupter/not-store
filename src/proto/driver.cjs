@@ -10,7 +10,7 @@ const isStream = require("is-stream");
 const isUrl = require("valid-url");
 const streamifier = require("streamifier");
 
-const notStoreProcessors = require("not-store/src/store.processors.cjs");
+const notStoreProcessors = require("../store.processors.cjs");
 
 const {
     OPT_MAX_INPUT_PATH_LENGTH,
@@ -18,14 +18,14 @@ const {
     PROCESSOR_TYPES,
     DEFAULT_FILENAME_SPLIT,
     OPT_ENV_CHECKS,
-} = require("not-store/src/const.cjs");
+} = require("../const.cjs");
 
 const {
     //notStoreExceptionProccesorOptionsWrongFormat,
     notStoreExceptionFilenameToReadableStreamError,
     notStoreExceptionLocalFileDeleteError,
     //notStoreExceptionProccesorRunError,
-} = require("not-store/src/exceptions.cjs");
+} = require("../exceptions.cjs");
 
 class notStoreDriver {
     #options;
@@ -437,7 +437,6 @@ class notStoreDriver {
         return this.#processors[action][processorType];
     }
 
-
     /**
      * Runs pre processors of action
      * @param {string}  action      name of action
@@ -470,11 +469,10 @@ class notStoreDriver {
         );
     }
 
-
     /**
-    *   standart testing action, to test store driver configuration
-    */
-    async test(){
+     *   standart testing action, to test store driver configuration
+     */
+    async test() {
         //some testing
     }
 }

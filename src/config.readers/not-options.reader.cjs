@@ -1,4 +1,4 @@
-const notStoreConfigReader = require("not-store/src/proto/config.reader.cjs");
+const notStoreConfigReader = require("../proto/config.reader.cjs");
 class notStoreConfigReaderNotOptions extends notStoreConfigReader {
     static async for(/*storeName*/) {
         return {

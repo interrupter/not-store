@@ -1,6 +1,6 @@
-const imageThumbs = require("not-store/src/processors/image.thumbs/index.cjs");
+const imageThumbs = require("./image.thumbs/index.cjs");
 
 module.exports = {
-    "image.metadata.extract": require("not-store/src/processors/image.metadata.extract.cjs"),
+    "image.metadata.extract": require("./image.metadata.extract.cjs"),
     ...imageThumbs,
 };

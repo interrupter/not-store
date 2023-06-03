@@ -6,9 +6,9 @@ const {
     notStoreExceptionProccesorRunError,
     notStoreExceptionProcessorAlreadyExists,
     notStoreExceptionProcessorIsNotExists,
-} = require("not-store/src/exceptions.cjs");
+} = require("./exceptions.cjs");
 
-const DEFAULT_PROCESSORS = require("not-store/src/processors/index.cjs");
+const DEFAULT_PROCESSORS = require("./processors/index.cjs");
 
 class notStoreProcessors {
     static #processors = {

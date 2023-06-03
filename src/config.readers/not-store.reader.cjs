@@ -1,11 +1,11 @@
 const notNode = require("not-node");
 
-const notStoreConfigReader = require("not-store/src/proto/config.reader.cjs");
+const notStoreConfigReader = require("../proto/config.reader.cjs");
 const {
     notStoreExceptionStoreIsNotActive,
     notStoreExceptionConfigReaderError,
     notStoreExceptionConfigIsNotExists,
-} = require("not-store/src/exceptions.cjs");
+} = require("../exceptions.cjs");
 
 class notStoreConfigReaderNotStoreMongoDB extends notStoreConfigReader {
     static #MODEL_NAME = "Store";

@@ -1,4 +1,4 @@
-import ncStore from "not-store/src/controllers/root/ncStore.js";
+import ncStore from "./ncStore.js";
 import ncFile from "./ncFile.js";
 
 import FUIFileMetadata from "../common/fields/field.ui.metadata.svelte";

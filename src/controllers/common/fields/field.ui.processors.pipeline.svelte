@@ -16,6 +16,7 @@
     export let pipeline = [];
     export let processors = [];
     export let action;
+    export let readonly = false;
 
     function actionAdd() {
         dispatch("add");
@@ -26,7 +27,6 @@
         notCommon.moveItem(pipeline, index, index - 1);
         pipeline = pipeline;
         dispatch("change", { field: fieldname, value: pipeline });
-        console.log("pipeline", pipeline);
     }
 
     function moveDown({ detail }) {
@@ -34,7 +34,6 @@
         notCommon.moveItem(pipeline, index, index + 1);
         pipeline = pipeline;
         dispatch("change", { field: fieldname, value: pipeline });
-        console.log("pipeline", pipeline);
     }
 
     function onChange({ detail }) {
@@ -42,14 +41,12 @@
         pipeline[index] = value;
         pipeline = pipeline;
         dispatch("change", { field: fieldname, value: pipeline });
-        console.log("pipeline", pipeline);
     }
 
     function removeItem({ detail }) {
         pipeline.splice(detail, 1);
         pipeline = pipeline;
         dispatch("change", { field: fieldname, value: pipeline });
-        console.log("pipeline", pipeline);
     }
 </script>
 
@@ -57,6 +54,7 @@
     <UITitle {title} {size} />
     {#each pipeline as processor, index (processor.id)}
         <FUIProcessorOptions
+            bind:readonly
             value={processor}
             {processors}
             {action}
@@ -67,5 +65,7 @@
             on:down={moveDown}
         />
     {/each}
-    <UIButton {icon} action={actionAdd} />
+    {#if !readonly}
+        <UIButton {icon} action={actionAdd} />
+    {/if}
 </div>

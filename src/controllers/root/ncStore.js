@@ -52,18 +52,15 @@ class ncStore extends notCRUD {
         this.setOptions("names", LABELS);
         this.setOptions("Validators", {});
         this.setOptions("params", params);
-        this.setOptions("update.masters", {
+        const masters = {
             driver: {
                 changeComponent: ["options"],
                 changeProcessorsProps: ["processors"],
             },
-        });
-        this.setOptions("create.masters", {
-            driver: {
-                changeComponent: ["options"],
-                changeProcessorsProps: ["processors"],
-            },
-        });
+        };
+        this.setOptions("details.masters", masters);
+        this.setOptions("update.masters", masters);
+        this.setOptions("create.masters", masters);
         this.setOptions("list", {
             interface: {
                 combined: true,
@@ -128,6 +125,16 @@ class ncStore extends notCRUD {
                         {
                             action: this.goTest.bind(this, value),
                             title: "Тест",
+                            size: "small",
+                        },
+                        {
+                            action: this.goFiles.bind(this, value),
+                            title: "Файлы",
+                            size: "small",
+                        },
+                        {
+                            action: this.goUpload.bind(this, value),
+                            title: "Загрузить",
                             size: "small",
                         },
                         {
@@ -199,10 +206,25 @@ class ncStore extends notCRUD {
     }
 
     async goTest(_id) {
-        try {
-            console.log("test store", ...arguments);
+        try {            
             const res = await this.getModel({ _id }).$test();
             this.log(res);
+        } catch (error) {
+            this.error(error);
+        }
+    }
+
+    async goFiles(_id) {
+        try {            
+            this.log('files of store', _id);
+        } catch (error) {
+            this.error(error);
+        }
+    }
+
+    async goUpload(_id) {
+        try {                        
+            this.log('upload to store', _id);
         } catch (error) {
             this.error(error);
         }

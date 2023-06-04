@@ -12,6 +12,7 @@
     export let action;
     export let actions = [];
     export let processors = [];
+    export let readonly = false;
 
     function add(to) {
         if (processors.length) {
@@ -53,6 +54,7 @@
         <UIColumns>
             <UIColumn classes="is-5">
                 <FUIProcessorsPipeline
+                    bind:readonly
                     bind:pipeline={value.pre}
                     title="pre"
                     on:add={addPre}
@@ -67,6 +69,7 @@
             </UIColumn>
             <UIColumn classes="is-5">
                 <FUIProcessorsPipeline
+                    bind:readonly
                     bind:pipeline={value.post}
                     title="post"
                     on:add={addPost}

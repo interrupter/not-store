@@ -22,6 +22,7 @@
         name = value.name;
         options = value.options;
         updateUI(name);
+        console.log(JSON.stringify(processors, null, 4));
     });
 
     function updateUI() {
@@ -48,7 +49,6 @@
         const proc = processors.find((item) => {
             return item.id === detail.value;
         });
-        console.log("processor change", proc);
         if (proc) {
             if (proc.optionsUI) {
                 optionsUI = proc.optionsUI;

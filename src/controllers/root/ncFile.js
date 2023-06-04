@@ -1,11 +1,11 @@
 import notFileCRUDActionUploadFile from '../common/actions/upload.file.action';
 import Validators from "../common/validators.js";
-
+import { MODULE_NAME } from "../../const.cjs";
 import { Frame } from "not-bulma";
 
 const { notCRUD } = Frame;
 
-const MODULE_NAME = "";
+
 const MODEL_NAME = "file";
 
 const LABELS = {

@@ -1,5 +1,5 @@
 <script>
-    import FUINamedNumbersList from "./field.ui.named.numbers.list.svelte";
+    import UINamedNumbersList from "not-bulma/src/elements/form/ui.named.numbers.list.svelte";
     import { MODULE_NAME } from "../../../const.cjs";
     import { SHARP_RESIZE_FIT_VARIANTS } from "./sharp.const.cjs";
     import notPath from "not-path";
@@ -60,8 +60,9 @@
             fieldname="saveOriginal"
         />
     </div>
-    <FUINamedNumbersList
+    <UINamedNumbersList
         bind:value={value.sizes}
+        bind:readonly
         label={`${MODULE_NAME}:field_store_processor_image.thumbs.create_options_sizes`}
     />
 </UIBox>

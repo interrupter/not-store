@@ -7,6 +7,7 @@
 
     export let fieldname = "processors";
     export let value;
+    export let readonly = false;
 
     export let actions = [];
     export let processors = [];
@@ -16,10 +17,6 @@
     });
 
     function checkProcessorsContent() {
-        console.log(
-            "processors content before check",
-            JSON.stringify(value, null, 4)
-        );
         if (
             typeof value === "undefined" ||
             typeof value !== "object" ||
@@ -34,19 +31,13 @@
             }
         });
         value = value;
-        console.log(
-            "processors content after check",
-            JSON.stringify(value, null, 4)
-        );
     }
 
     function addProcessor({ detail }) {
         const { action, processorName, place } = detail;
-        console.log(addProcessor, action, processorName, place);
     }
 
     function onChange() {
-        console.log("action pipelines changed");
         dispatch("change", {
             field: fieldname,
             value,
@@ -59,6 +50,7 @@
         <FUIProcessorsActionPipelines
             on:change={onChange}
             bind:value={value[action]}
+            bind:readonly
             {action}
             {actions}
             {processors}

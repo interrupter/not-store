@@ -7,18 +7,19 @@ const notNode = require("not-node");
 const path = require("node:path");
 
 const {
-    notStoreExceptionAddToStoreError,
+    notStoreExceptionUploadError,
     notStoreExceptionDirectUploadError,
     notStoreExceptionDirectDeleteError,
     notStoreExceptionDeleteFromStoreError,
     notStoreExceptionListStoreError,
-} = require("../../exceptions.cjs");
+} = require("../../exceptions/driver.exceptions.cjs");
 
 const notStoreDriver = require("../../proto/driver.cjs");
 const DEFAULT_OPTIONS = require("./timeweb.driver.options.cjs");
 
 class notStoreDriverTimeweb extends notStoreDriver {
     #s3;
+    #name
     /**
      * options object
      * properties values starting with `ENV$` will be processed as request to retrieve process.ENV[part_of_value_past_ENV$]
@@ -34,7 +35,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
      * @param {string} options.path        			sub path in bucket
      * @param {string} options.tmp					absolute path to local tmp folder
      * @param {boolean} options.groupFiles			file groupping in folders by first few letters of filename
-     * @param {object} processors		description of processing pipes for pre/post action execution
+     * @param {object} processors		description of processing pipes for pre/post action execution     
      * 	{
      * 		add:	//store action name
      * 			{
@@ -45,10 +46,16 @@ class notStoreDriverTimeweb extends notStoreDriver {
      * 				post:[]	//same story as in pre section
      * 			}
      * 	}
+     * @param {string} storeName		             name of this driver store
      */
-    constructor(options, processors) {
+    constructor(options, processors, storeName) {
         super(options, processors);
+        this.#name = storeName;
         this.#initS3Client();
+    }
+
+    get name(){
+        return this.#name;
     }
 
     static getDescription() {
@@ -79,27 +86,36 @@ class notStoreDriverTimeweb extends notStoreDriver {
         });
         this.#s3 = new S3(s3Options);
     }
+    
 
-    async add(file) {
+    /**
+     * adds file to storage
+     * @param		{String|Buffer|Stream}	file	file in some form or his URI
+     * @returns	    {Promise<Object>}	            file info object (info field in document)
+     */
+    async upload(file) {
         let tmpFilename;
-        const metadata = {};
+        const fileInfo = {};
         try {
-            Log.log("start stash");
-            tmpFilename = await this.stashFile(file);
-            await this.runPreProcessors("add", tmpFilename, metadata);
+            Log.debug("start stash");
+            const {name_tmp, uuid} = await this.stashFile(file);
+            tmpFilename = name_tmp;
+            fileInfo.uuid = uuid;
+            fileInfo.name_tmp = name_tmp;            
+            fileInfo.size = await this.getFileSize(name_tmp);
+            await this.runPreProcessors("add", name_tmp, fileInfo);
             await this.directUpload(
-                tmpFilename,
-                this.getPathInStore(tmpFilename)
+                name_tmp,
+                this.getPathInStore(uuid)
             );
-            await this.runPostProcessors("add", tmpFilename, metadata);
-            Log.debug("done", [tmpFilename, JSON.stringify(metadata, null, 4)]);
-            return [tmpFilename, metadata];
+            await this.runPostProcessors("add", name_tmp, fileInfo);
+            Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);            
         } catch (e) {
             if (e instanceof notError) {
                 notNode.Application.report(e);
             } else {
                 notNode.Application.report(
-                    new notStoreExceptionAddToStoreError(e)
+                    new notStoreExceptionUploadError(e)
                 );
             }
         } finally {
@@ -109,6 +125,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
             ) {
                 await this.removeLocalFile(tmpFilename);
             }
+            return fileInfo;
         }
     }
 
@@ -137,10 +154,10 @@ class notStoreDriverTimeweb extends notStoreDriver {
         );
     }
 
-    async directDelete(key) {
+    async directDelete(filename) {
         try {
             const params = {
-                Key: key,
+                Key: filename,
                 Bucket: this.getOptionValueCheckENV("bucket"),
             };
             return await this.#s3.deleteObject(params).promise();
@@ -154,13 +171,20 @@ class notStoreDriverTimeweb extends notStoreDriver {
         }
     }
 
-    async delete(filename) {
+    /**
+     * Removes all associated with file document instances and versions of file across all locations
+     * @param {object} fileDoc 
+     * @returns {Promise<Array<boolean|Object, Object>>} [result:boolean|Object, fileDoc:object] where result - result of directDelete of fileDoc.path
+     */
+    async delete(fileDoc) {
         try {
-            const metadata = {};
-            await this.runPreProcessors("delete", filename, metadata);
-            const result = await this.directDelete(filename);
-            await this.runPostProcessors("delete", filename, metadata);
-            return [result, metadata];
+            //deleting of versions preferably here
+            await this.runPreProcessors("delete", filename, fileDoc.metadata);
+            //deleting main file if presented
+            const result = fileDoc?.path ? await this.directDelete(fileDoc.path):false;
+            //after actions
+            await this.runPostProcessors("delete", filename, fileDoc.metadata);
+            return [result, fileDoc];
         } catch (e) {
             if (e instanceof notError) {
                 notNode.Application.report(e);

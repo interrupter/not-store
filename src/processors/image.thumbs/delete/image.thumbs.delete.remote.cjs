@@ -11,16 +11,16 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
         };
     }
 
-    static listOfFilesToDelete(metadata /*, preprocOptions*/) {
-        const variantsToDelete = { ...metadata.thumbs };
+    static listOfFilesToDelete(fileInfo /*, preprocOptions*/) {
+        const variantsToDelete = { ...fileInfo.thumbs };
 
         return Object.values(variantsToDelete).map((variant) =>
             path.join(variant.filename)
         );
     }
 
-    static async run(filename, metadata, options, driver) {
-        const filenames = this.listOfFilesToDelete(metadata, options);
+    static async run(filename, fileInfo, options, driver) {
+        const filenames = this.listOfFilesToDelete(fileInfo, options);
         if (filenames.length) {
             await Promise.all(filenames.map(driver.removeLocalFile));
         }

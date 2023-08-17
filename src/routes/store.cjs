@@ -14,8 +14,7 @@ const {
 } = notNode.Bootstrap.notBootstrapRoute({
     target: module,
     MODEL_NAME,
-    MODULE_NAME,
-    defaultAccessRule: true,
+    MODULE_NAME
 });
 
 const StoreGenericRoute = notNode.Generic.GenericRoute({

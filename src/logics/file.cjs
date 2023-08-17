@@ -9,78 +9,82 @@ const { notError } = require("not-error");
 const NAME = "File";
 exports.thisLogicName = NAME;
 
-async function uploadFile(bucket, file, info, owner) {
-    try {
-        const App = notNode.Application;
-        const data = await store.add(bucket, file);
-        const File = App.getModel("File");
 
-        let fileName = info?.name || data.metadata.name;
-        App.logger.debug("store.add.then", bucket, fileName, data);
-        let fileData = {
-            uuid: data.metadata.uuid,
-            bucket: bucket,
-            name: fileName,
-            extension: data.metadata.format || info?.mimetype,
-            metadata: data.metadata,
-            path: data.store,
-            size: 0,
-            width: data.metadata.width,
-            height: data.metadata.height,
-            session: owner.session,
-            userIp: owner.ip,
-            userId: owner.id,
-        };
-        App.logger.debug(fileData);
-        return File.add(fileData);
-    } catch (e) {
-        Log.error(e);
-        notNode.Application.report(e);
-    }
-}
-
-function createUploads(files, bucket, owner) {
-    let uploads = [];
-    let slimFiles = {};
-    if (files && Object.keys(files).length > 0) {
-        for (let t of Object.keys(files)) {
-            let fileField = files[t];
-            if (Array.isArray(fileField)) {
-                slimFiles[t] = [];
-                Object.keys(fileField).forEach((fileFieldKey) => {
-                    let oneFileFromField = fileField[fileFieldKey];
-                    let slimInfo = {
-                        name: oneFileFromField.name,
-                        size: oneFileFromField.size,
-                        format: oneFileFromField.format,
-                    };
-                    slimFiles[t].push(slimInfo);
-                    uploads.push(
-                        uploadFile(
-                            bucket,
-                            oneFileFromField.data,
-                            slimInfo,
-                            owner
-                        )
-                    );
-                });
-            } else {
-                let slimInfo = {
-                    name: fileField.name,
-                    size: fileField.size,
-                    format: fileField.format,
-                };
-                slimFiles[t] = slimInfo;
-                uploads.push(
-                    uploadFile(bucket, fileField.data, slimInfo, owner)
-                );
-            }
-        }
-    }
-    return uploads;
-}
 
 class File {
+    static async uploadFile(storeBucket, file, info, owner) {
+        try {
+            const App = notNode.Application;
+            const fileInfo = await storeBucket.add(file);
+            const File = App.getModel("File");
+            let fileName = info?.name || fileInfo?.name_tmp;
+            App.logger.debug("store.add.then", storeBucket.name, fileName, fileInfo);
+            let fileData = {
+                uuid: fileInfo.uuid,
+                bucket: storeBucket.name,
+                name: fileInfo.uuid,
+                extension: fileInfo?.metadata?.format || info?.mimetype,
+                path: fileInfo.path,
+                paths: fileInfo?.paths,
+                size: fileInfo?.size || 0,
+                //additional information
+                info: fileInfo || {},            
+                width: fileInfo?.metadata?.width || 0,
+                height: fileInfo?.metadata?.height || 0,
+                //ownership
+                session: owner.session,
+                userIp: owner.ip,
+                userId: owner.id,
+            };
+            App.logger.debug(fileData);
+            return File.add(fileData);
+        } catch (e) {
+            Log.error(e);
+            notNode.Application.report(e);
+        }
+    }
+    
+    static createUploads(files, storeBucket, owner) {
+        let uploads = [];
+        let slimFiles = {};
+        if (files && Object.keys(files).length > 0) {
+            for (let t of Object.keys(files)) {
+                let fileField = files[t];
+                if (Array.isArray(fileField)) {
+                    slimFiles[t] = [];
+                    Object.keys(fileField).forEach((fileFieldKey) => {
+                        let oneFileFromField = fileField[fileFieldKey];
+                        let slimInfo = {
+                            name: oneFileFromField.name,
+                            size: oneFileFromField.size,
+                            format: oneFileFromField.format,
+                        };
+                        slimFiles[t].push(slimInfo);
+                        uploads.push(
+                            this.uploadFile(
+                                storeBucket,
+                                oneFileFromField.data,
+                                slimInfo,
+                                owner
+                            )
+                        );
+                    });
+                } else {
+                    let slimInfo = {
+                        name: fileField.name,
+                        size: fileField.size,
+                        format: fileField.format,
+                    };
+                    slimFiles[t] = slimInfo;
+                    uploads.push(
+                        this.uploadFile(storeBucket, fileField.data, slimInfo, owner)
+                    );
+                }
+            }
+        }
+        return uploads;
+    }
+
     static async upload({
         bucket = "client",
         sessionId,
@@ -95,14 +99,12 @@ class File {
         Log.debug(files);
         if (config.get("sessionRequired")) {
             if (!sessionId) {
-                App.report(
-                    new notError("User session is undefined", { userIp })
-                );
-                return { status: "error" };
+                throw new notError("User session is undefined", { userIp });                
             }
         }
-        if (bucket && Object.keys(config.get("buckets")).indexOf(bucket) > -1) {
-            let uploads = createUploads(files, bucket, {
+        const storeBucket = await store.get(bucket);
+        if (storeBucket) {
+            let uploads = this.createUploads(files, storeBucket, {
                 session: sessionId,
                 ip: userIp,
                 id: ownerId,
@@ -117,19 +119,15 @@ class File {
                 );
                 Log.debug("store.add.then.return/redirect");
                 if (errors) {
-                    App.report(new notError("Uploads not saved", { results }));
-                    return { status: "error", result: results };
+                    throw new notError("Uploads not saved", { results });                    
                 } else {
-                    return { status: "ok", result: results };
+                    return results;
                 }
             } else {
-                return { status: "error" };
+                throw new notError("Uploads list is empty");
             }
         } else {
-            App.report(
-                new notError("store.add error, bucket is not exist", { bucket })
-            );
-            return { status: "error" };
+            throw new notError("store.add error, bucket is not exist", { bucket });
         }
     }
 
@@ -144,18 +142,14 @@ class File {
                 filter,
                 []
             );
-            return {
-                status: "ok",
-                result,
-            };
+            return result;
         } catch (e) {
-            App.report(new notError("store.list error", {}, e));
-            return { status: "error" };
+            throw new notError("store.list error", {}, e);
         }
     }
 
     static async delete({ fileId, sessionId = undefined, admin = false }) {
-        try {
+        
             if (!mongoose.Types.ObjectId.isValid(fileId)) {
                 throw new notError("delete error; fileId is not ObjectId", {
                     fileId,
@@ -169,9 +163,9 @@ class File {
                 if (admin) {
                     let result = File.getOneByIdAndRemove(fileId, undefined);
                     if (result) {
-                        return { status: "ok", result };
+                        return result;
                     } else {
-                        return { status: "failed" };
+                        throw new Error("delete error; db error");
                     }
                 } else if (
                     typeof sessionId !== "undefined" &&
@@ -193,13 +187,7 @@ class File {
                     });
                 }
             }
-        } catch (e) {
-            notNode.Application.logger.error(e);
-            notNode.Application.report(e);
-            return {
-                status: "error",
-            };
-        }
+        
     }
 }
 

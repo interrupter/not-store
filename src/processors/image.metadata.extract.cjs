@@ -1,3 +1,4 @@
+const {debug} = require('not-log')(module, 'Store');
 const sharp = require("sharp");
 const notStoreProcessor = require("../proto/processor.cjs");
 const METADATA_FORBIDDEN_FIELDS = ["exif", "xmp", "icc", "iptc"];
@@ -27,18 +28,20 @@ class notStoreProcessorImageExtractMetadata extends notStoreProcessor {
 
     static async run(
         filename, //current target file
-        metadata //file metadata object
+        fileInfo //file metadata object
         //        preprocOptions, //preprocessor options for this store
         //        driver //driver instance
     ) {
+        debug('extract metadata', filename);
         return new Promise((resolve, reject) => {
             sharp(filename).metadata((err, sharpMetadata) => {
+                debug(sharpMetadata);
                 if (err) {
                     reject(err);
                 } else {
                     this.clearMetadata(sharpMetadata);
-                    Object.assign(metadata, { ...sharpMetadata });
-                    resolve(metadata);
+                    Object.assign(fileInfo, { metadata:{...sharpMetadata} });
+                    resolve(fileInfo);
                 }
             });
         });

@@ -48,18 +48,6 @@
             fieldname="resize.fit"
         />
     </div>
-    <div class="field">
-        <UILabel
-            id="form-field-switch-saveOriginal"
-            label={`${MODULE_NAME}:field_store_processor_image.thumbs.create_options_saveOriginal`}
-        />
-        <UISwitch
-            bind:readonly
-            bind:value={value.saveOriginal}
-            on:change={onChange}
-            fieldname="saveOriginal"
-        />
-    </div>
     <UINamedNumbersList
         bind:value={value.sizes}
         bind:readonly

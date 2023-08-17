@@ -7,6 +7,5 @@ module.exports = {
     },
     resize: {
         fit: "outside",
-    },
-    saveOriginal: true,
+    }
 };

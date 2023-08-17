@@ -16,16 +16,16 @@ class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
         };
     }
 
-    static listOfFilesToDelete(metadata /*, options*/) {
-        const variantsToDelete = { ...metadata.thumbs };
+    static listOfFilesToDelete(fileInfo /*, options*/) {
+        const variantsToDelete = { ...fileInfo.thumbs };
         if (Object.hasOwn(variantsToDelete, "original")) {
             delete variantsToDelete.original;
         }
         return Object.values(variantsToDelete).map((variant) => variant.local);
     }
 
-    static async run(filename, metadata, options, driver) {
-        const filenames = this.listOfFilesToDelete(metadata, options);
+    static async run(filename, fileInfo, options, driver) {
+        const filenames = this.listOfFilesToDelete(fileInfo, options);
         if (filenames.length) {
             await Promise.all(filenames.map(driver.removeLocalFile));
         }

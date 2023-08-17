@@ -31,6 +31,7 @@ module.exports = {
 				'bucket',
 				'metadata',
 				'path',
+				'paths',
 				'userIp',
 				'userId',
 				'session',
@@ -60,6 +61,7 @@ module.exports = {
 				'bucket',
 				'metadata',
 				'path',
+				'paths',
 				'userIp',
 				'userId',
 				'session',
@@ -72,7 +74,7 @@ module.exports = {
 				root: true
 			}, {
 				auth: true,
-				role: 'admin'
+				role: 'root'
 			}],
 			postFix: '/:actionName'
 		},
@@ -89,6 +91,7 @@ module.exports = {
 				'bucket',
 				'metadata',
 				'path',
+				'paths',
 				'userIp',
 				'userId',
 				'session',
@@ -120,6 +123,7 @@ module.exports = {
 				'bucket',
 				'metadata',
 				'path',
+				'paths',
 				'userIp',
 				'userId',
 				'session',

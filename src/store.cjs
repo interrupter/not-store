@@ -39,14 +39,15 @@ class notStore {
 
     static async get(storeName) {
         const storeConfig = await this.#configReader.for(storeName);
-        return this.getDriverForConfig(storeConfig);
+        return this.getDriverForConfig(storeConfig, storeName);
     }
 
-    static getDriverForConfig(storeConfig) {
+    static getDriverForConfig(storeConfig, storeName) {
         if (Object.hasOwn(this.#drivers, storeConfig.driver)) {
             return new this.#drivers[storeConfig.driver](
                 storeConfig.options,
-                storeConfig.processors
+                storeConfig.processors,
+                storeName
             );
         }
         throw new notStoreExceptionDriverIsNotExists(storeConfig.driver);

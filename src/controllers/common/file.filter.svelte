@@ -3,12 +3,13 @@
     import { UISelect } from "not-bulma/src/elements/form";
     import { UIButton } from "not-bulma/src/elements/button";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
-    import UIUpload from "../../../standalone/upload.svelte";
 
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let bucket = "";
+    export let filter = {
+        bucket: "",
+    };
 
     let buckets = [];
 
@@ -40,34 +41,24 @@
                 notCommon.report(e);
             });
     });
-
-    function onFileSelect({ detail }) {
-        const data = {
-            bucket,
-            files: detail,
-        };
-        console.log("file selected", data);
-        dispatch("filesAdded", data);
-    }
 </script>
 
 <UIColumns>
     <UIColumn>
         <UISelect
             placeholder="Все хранилища"
-            bind:value={bucket}
+            bind:value={filter.bucket}
             bind:variants={buckets}
             on:change={({ detail }) => {
                 if (detail.value === "__CLEAR__") {
-                    bucket = "";
+                    filter.bucket = "";
                 } else {
-                    bucket = detail.value;
+                    filter.bucket = detail.value;
                 }
             }}
         />
     </UIColumn>
+    <UIColumn>
+        <UIButton action={setFilter} title="Применить" color="primary" />
+    </UIColumn>
 </UIColumns>
-
-{#if bucket}
-    <UIUpload bind:id={bucket} show={true} on:filesAdded={onFileSelect} />
-{/if}

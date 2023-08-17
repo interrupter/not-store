@@ -1,13 +1,13 @@
-const notStoreProcessor = require("../../../proto/processor.cjs");
+const notStoreProcessor = require("not-store/src/proto/processor.cjs");
 
-class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
+class notStoreProcessorImageUpload extends notStoreProcessor {
     static getDescription() {
         return {
-            id: "image.thumbs.upload",
-            title: "Загрузка миниатюр в хранилище",
+            id: "image.upload",
+            title: "Загрузка в хранилище",
             optionsDefault: this.getOptions(),
-            optionsUI: "UIStoreProcessorOptionsImageThumbsUpload",
-            metadataUI: "UIStoreProcessorMetadataImageThumbsUpload",
+            optionsUI: "UIStoreProcessorOptionsImageUpload",
+            metadataUI: "UIStoreProcessorMetadataImageUpload",
         };
     }
 
@@ -18,10 +18,7 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
         }
     }
 
-    static async run(filename, fileInfo, options, driver) {
-        const filenames = Object.values(fileInfo.thumbs).map(
-            (thumb) => thumb.local
-        );
+    static async run(filename, fileInfo, options, driver) {        
         if (filenames.length) {
             let cloudNames = await driver.directUploadMany(
                 filenames,

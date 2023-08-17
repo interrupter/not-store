@@ -5,16 +5,22 @@ import {
 const ALL = {};
 
 function exist(key) {
-	return Object.prototype.hasOwnProperty.call(ALL, key);
+	return Object.hasOwn(ALL, key);
 }
 
-function get(key) {
+function get(key, createIfNotExists = false) {
 	if (exist(key)) {
 		return ALL[key];
 	} else {
-		return false;
+		if(createIfNotExists){
+			return create(key);
+		}else{
+			return false;
+		}
 	}
 }
+
+
 
 function create(key) {
 	if (!exist(key)) {

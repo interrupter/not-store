@@ -14,21 +14,6 @@ class notStoreExceptionFilenameToReadableStreamError extends notError {
 module.exports.notStoreExceptionFilenameToReadableStreamError =
     notStoreExceptionFilenameToReadableStreamError;
 
-class notStoreExceptionDirectDeleteError extends notError {
-    constructor(details, e) {
-        super("notStoreExceptionDirectDeleteError", details, e);
-    }
-}
-module.exports.notStoreExceptionDirectDeleteError =
-    notStoreExceptionDirectDeleteError;
-
-class notStoreExceptionDirectUploadError extends notError {
-    constructor(details, e) {
-        super("notStoreExceptionDirectUploadError", details, e);
-    }
-}
-module.exports.notStoreExceptionDirectUploadError =
-    notStoreExceptionDirectUploadError;
 
 class notStoreExceptionProccesorRunError extends notError {
     constructor(pipe, filename, driverName, e) {
@@ -76,55 +61,6 @@ class notStoreExceptionProcessingPipeItemWrongFormat extends notError {
 module.exports.notStoreExceptionProcessingPipeItemWrongFormat =
     notStoreExceptionProcessingPipeItemWrongFormat;
 
-class notStoreExceptionLocalFileDeleteError extends notError {
-    constructor(filename, e) {
-        super(
-            "notStoreExceptionLocalFileDeleteError",
-            {
-                filename,
-            },
-            e
-        );
-    }
-}
-module.exports.notStoreExceptionLocalFileDeleteError =
-    notStoreExceptionLocalFileDeleteError;
-
-class notStoreExceptionAddToStoreError extends notError {
-    constructor(e) {
-        super("notStoreExceptionAddToStoreError", {}, e);
-    }
-}
-module.exports.notStoreExceptionAddToStoreError =
-    notStoreExceptionAddToStoreError;
-
-class notStoreExceptionDeleteFromStoreError extends notError {
-    constructor(filename, e) {
-        super(
-            "notStoreExceptionDeleteFromStoreError",
-            {
-                filename,
-            },
-            e
-        );
-    }
-}
-module.exports.notStoreExceptionDeleteFromStoreError =
-    notStoreExceptionDeleteFromStoreError;
-
-class notStoreExceptionListStoreError extends notError {
-    constructor(pathInStore, e) {
-        super(
-            "notStoreExceptionListStoreError",
-            {
-                pathInStore,
-            },
-            e
-        );
-    }
-}
-module.exports.notStoreExceptionListStoreError =
-    notStoreExceptionListStoreError;
 
 class notStoreExceptionPreproccesorOptionsWrongFormat extends notError {
     constructor(options) {

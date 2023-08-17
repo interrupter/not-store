@@ -36,20 +36,14 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
         }
     }
 
-    static async run(filename, metadata, options, driver) {
+    static async run(filename, fileInfo, options, driver) {
         const thumbs = driver.getVariantsPaths(
             filename,
             options.sizes,
             options.format
         );
-        await this.makeThumbs(filename, thumbs, options);
-        if (options.saveOriginal) {
-            thumbs.original = {
-                filename: path.basename(filename),
-                local: filename,
-            };
-        }
-        metadata.thumbs = thumbs;
+        await this.makeThumbs(filename, thumbs, options);        
+        fileInfo.thumbs = thumbs;
     }
 }
 

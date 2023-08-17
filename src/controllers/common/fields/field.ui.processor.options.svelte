@@ -17,6 +17,8 @@
     let options = {};
     let optionsUI;
 
+    const CLASSES = "is-small";
+
     onMount(() => {
         id = value.id;
         name = value.name;
@@ -70,7 +72,7 @@
                 console.log("move up", value);
                 dispatch("up", index);
             },
-            classes: "is-small",
+            classes: CLASSES,
         },
         {
             icon: "angle-down",
@@ -78,7 +80,7 @@
                 console.log("move down", value);
                 dispatch("down", index);
             },
-            classes: "is-small",
+            classes: CLASSES,
         },
         {
             icon: "minus",
@@ -87,7 +89,7 @@
                 dispatch("remove", index);
             },
             color: "danger",
-            classes: "is-small",
+            classes: CLASSES,
         },
     ];
 </script>
@@ -101,13 +103,13 @@
                 bind:value={name}
                 on:change={onProcessorChange}
                 fieldname="processor"
-                classes="is-small"
+                classes={CLASSES}
             />
         </div>
     </UIColumn>
     {#if !readonly}
         <UIColumn classes="is-4">
-            <UIButtons values={ACTIONS} right={true} classes="is-small" />
+            <UIButtons values={ACTIONS} right={true} classes={CLASSES} />
         </UIColumn>
     {/if}
 </UIColumns>

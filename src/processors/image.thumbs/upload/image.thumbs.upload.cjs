@@ -1,3 +1,5 @@
+// @ts-check
+
 const notStoreProcessor = require("../../../proto/processor.cjs");
 
 class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
@@ -25,7 +27,7 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
         if (filenames.length) {
             let cloudNames = await driver.directUploadMany(
                 filenames,
-                driver.getPathInStore(filenames[0])
+                driver.resolvePath(filenames[0])
             );
             this.updateFileInfo(fileInfo, cloudNames);
         }

@@ -1,30 +1,30 @@
 const notError = require("not-error/src/error.node.cjs");
 
-class notStoreExceptionFilenameIsTooShortToGeneratePrefix extends notError {
+class notStoreExceptionFilenameIsTooShortToGenerateGroupPrefix extends notError {
     constructor(filename, prefix_length, e) {
         super(
-            "notStoreExceptionFilenameIsTooShortToGeneratePrefix",
+            "notStoreExceptionFilenameIsTooShortToGenerateGroupPrefix",
             { filename, prefix_length },
             e
         );
-        this.message = "Filename is too short to generate prefix";
+        this.message = "Filename is too short to generate group prefix";
     }
 }
-module.exports.notStoreExceptionFilenameIsTooShortToGeneratePrefix =
-    notStoreExceptionFilenameIsTooShortToGeneratePrefix;
+module.exports.notStoreExceptionFilenameIsTooShortToGenerateGroupPrefix =
+    notStoreExceptionFilenameIsTooShortToGenerateGroupPrefix;
 
-class notStoreExceptionFilenameIsTooShortToGeneratePrefixedFilename extends notError {
+class notStoreExceptionFilenameIsTooShortToGenerateGroupPrefixedFilename extends notError {
     constructor(filename, prefix_length, e) {
         super(
-            "notStoreExceptionFilenameIsTooShortToGeneratePrefixedFilename",
+            "notStoreExceptionFilenameIsTooShortToGenerateGroupPrefixedFilename",
             { filename, prefix_length },
             e
         );
         this.message = "Filename is too short to generate prefixed file name";
     }
 }
-module.exports.notStoreExceptionFilenameIsTooShortToGeneratePrefixedFilename =
-    notStoreExceptionFilenameIsTooShortToGeneratePrefixedFilename;
+module.exports.notStoreExceptionFilenameIsTooShortToGenerateGroupPrefixedFilename =
+    notStoreExceptionFilenameIsTooShortToGenerateGroupPrefixedFilename;
 
 class notStoreExceptionDirectUploadError extends notError {
     constructor(details, e) {
@@ -64,6 +64,12 @@ module.exports.notStoreExceptionDirectDeleteError =
     notStoreExceptionDirectDeleteError;
 
 class notStoreExceptionListStoreError extends notError {
+    /**
+     * Creates an instance of notStoreExceptionListStoreError.
+     * @param {string}  pathInStore
+     * @param {Error}   e
+     * @memberof notStoreExceptionListStoreError
+     */
     constructor(pathInStore, e) {
         super(
             "notStoreExceptionListStoreError",
@@ -76,6 +82,20 @@ class notStoreExceptionListStoreError extends notError {
 }
 module.exports.notStoreExceptionListStoreError =
     notStoreExceptionListStoreError;
+
+class notStoreExceptionDirectListError extends notError {
+    /**
+     * Creates an instance of notStoreExceptionDirectListError.
+     * @param {string}  pathInStore
+     * @param {Error}   e
+     * @memberof notStoreExceptionDirectListError
+     */
+    constructor(details, e) {
+        super("notStoreExceptionDirectListError", details, e);
+    }
+}
+module.exports.notStoreExceptionDirectListError =
+    notStoreExceptionDirectListError;
 
 class notStoreDriverExceptionRemoveFile extends notError {
     constructor(filename, e) {

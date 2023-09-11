@@ -1,3 +1,5 @@
+// @ts-check
+
 const notStoreProcessor = require("../../../proto/processor.cjs");
 
 class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
@@ -27,7 +29,7 @@ class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
     static async run(filename, fileInfo, options, driver) {
         const filenames = this.listOfFilesToDelete(fileInfo, options);
         if (filenames.length) {
-            await Promise.all(filenames.map(driver.removeLocalFile));
+            await Promise.all(filenames.map(driver.removeFile));
         }
     }
 }

@@ -2,9 +2,11 @@ const {
     notStoreExceptionDriverAlreadyExists,
     notStoreExceptionDriverIsNotExists,
 } = require("./exceptions.cjs");
+//class to load configs from somewhere
 const DEFAULT_CONFIG_READER = require("./config.readers/not-store.reader.cjs");
-
+//drivers of storage medium
 const DEFAULT_DRIVERS = require("./drivers/index.cjs");
+//file pre/post processors
 const notStoreProcessors = require("./store.processors.cjs");
 /**
  *  notStore.get(store_config_name).add();
@@ -28,8 +30,8 @@ class notStore {
     }
 
     static listDrivers() {
-        return Object.keys(this.#drivers).map((id) =>
-            this.#drivers[id].getDescription()
+        return Object.values(this.#drivers).map((driver) =>
+            driver.getDescription()
         );
     }
 

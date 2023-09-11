@@ -15,6 +15,18 @@ class notStoreProcessors {
         ...DEFAULT_PROCESSORS,
     };
 
+    /**
+     * Returns processor class from lib by name
+     * @param {string} name     name of processor class in lib
+     * @returns {object}         notStoreProcessor child static class or throws
+     */
+    static getProcessor(name) {
+        if (Object.hasOwn(this.#processors, name)) {
+            return this.#processors[name];
+        }
+        throw new notStoreExceptionProcessorIsNotExists(name);
+    }
+
     static setProcessor(name, processor) {
         if (Object.hasOwn(this.#processors, name)) {
             throw new notStoreExceptionProcessorAlreadyExists(name);
@@ -23,8 +35,8 @@ class notStoreProcessors {
     }
 
     static list() {
-        return Object.keys(this.#processors).map((id) =>
-            this.#processors[id].getDescription()
+        return Object.values(this.#processors).map((proc) =>
+            proc.getDescription()
         );
     }
 
@@ -37,23 +49,21 @@ class notStoreProcessors {
         try {
             if (Array.isArray(list)) {
                 for (let item of list) {
+                    console.log(item);
                     const [processor, options] =
                         this.getProcessorAndOptions(item);
                     await processor.run(filename, metadata, options, driver);
                 }
             }
         } catch (e) {
-            Log.error(e);
             if (e instanceof notError) {
-                notNode.Application.report(e);
+                throw e;
             } else {
-                notNode.Application.report(
-                    new notStoreExceptionProccesorRunError(
-                        list,
-                        filename,
-                        driver.name,
-                        e
-                    )
+                throw new notStoreExceptionProccesorRunError(
+                    list,
+                    filename,
+                    driver.name,
+                    e
                 );
             }
         }
@@ -77,18 +87,6 @@ class notStoreProcessors {
      */
     static getDefaultProcessorOptions(name) {
         return this.getProcessor(name).getOptions();
-    }
-
-    /**
-     * Returns processor class from lib by name
-     * @param {string} name     name of processor class in lib
-     * @returns {object}         notStoreProcessor child static class or throws
-     */
-    static getProcessor(name) {
-        if (Object.hasOwn(this.#processors, name)) {
-            return this.#processors[name];
-        }
-        throw new notStoreExceptionProcessorIsNotExists(name);
     }
 }
 

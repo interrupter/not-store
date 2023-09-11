@@ -1,3 +1,5 @@
+// @ts-check
+
 module.exports = {
     sizes: {
         micro: 100,
@@ -7,5 +9,5 @@ module.exports = {
     },
     resize: {
         fit: "outside",
-    }
+    },
 };

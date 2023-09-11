@@ -17,3 +17,11 @@ class notStoreDriverStreamerExceptionReadableStream extends notError {
 }
 module.exports.notStoreDriverStreamerExceptionReadableStream =
     notStoreDriverStreamerExceptionReadableStream;
+
+class notStoreDriverStreamerExceptionFileNotExists extends notError {
+    constructor(filename) {
+        super("notStoreDriverStreamerExceptionFileNotExists", { filename });
+    }
+}
+module.exports.notStoreDriverStreamerExceptionFileNotExists =
+    notStoreDriverStreamerExceptionFileNotExists;

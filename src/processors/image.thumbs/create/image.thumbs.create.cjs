@@ -1,4 +1,5 @@
-const path = require("node:path");
+// @ts-check
+
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const sharp = require("sharp");
 const DEFAULT_OPTIONS = require("./image.thumbs.create.options.cjs");
@@ -22,7 +23,9 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
         let image = sharp(src, {
             failOnError: false,
         });
-        return image.resize(size, size, options.resize || {}).toFile(dest);
+        return image
+            .resize(size, size, (options && options?.resize) || {})
+            .toFile(dest);
     }
 
     static async makeThumbs(src, thumbs, options) {
@@ -37,12 +40,13 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
     }
 
     static async run(filename, fileInfo, options, driver) {
-        const thumbs = driver.getVariantsPaths(
+        const thumbs = driver.composeVariantsPaths(
             filename,
             options.sizes,
             options.format
         );
-        await this.makeThumbs(filename, thumbs, options);        
+
+        await this.makeThumbs(filename, thumbs, options);
         fileInfo.thumbs = thumbs;
     }
 }

@@ -1,3 +1,4 @@
+// @ts-check
 const path = require("path");
 
 const {
@@ -6,7 +7,7 @@ const {
 } = require("../const.cjs");
 
 const {
-    notStoreExceptionFilenameIsTooShortToGeneratePrefix,
+    notStoreExceptionFilenameIsTooShortToGenerateGroupPrefix,
 } = require("../exceptions/driver.exceptions.cjs");
 
 class notStoreDriverFilenameResolver {
@@ -15,15 +16,45 @@ class notStoreDriverFilenameResolver {
      * @param {string} 		fname 	filename without path
      * @returns {string}
      */
-    static prefixDir(fname) {
+    static composeGroupDir(fname) {
         const parsed = path.parse(fname);
         if (parsed.name.length < FIRST_DIR_NAME_LENGTH) {
-            throw new notStoreExceptionFilenameIsTooShortToGeneratePrefix(
+            throw new notStoreExceptionFilenameIsTooShortToGenerateGroupPrefix(
                 parsed.name,
                 FIRST_DIR_NAME_LENGTH
             );
         }
         return parsed.name.substring(0, FIRST_DIR_NAME_LENGTH);
+    }
+
+    /**
+     * /path/in/medium/to/store/ <-- store root, all *InStore function start here,
+     * if InStore suffix is absent then starting here
+     * / <-- at medium root, without store.path option
+     * **
+     * /path/in/medium/to/store/grouping/ <-- group root, all files named "grouping.*" goes there,
+     * if groupFiles options is true, where "grouping" is first few chars from start of filename
+     * **
+     * resolve* - to glue parts of paths and filenames
+     * compose* - to create parts of paths and filenames
+     * *
+     **/
+
+    /**
+     *
+     *
+     * @static
+     * @param {string} dirname
+     * @param {object}      options                storage system filenaming rules
+     * @param {string}      options.path           additional path from storage root
+     * @memberof notStoreDriverFilenameResolver
+     */
+    static resolvePath(dirname, options) {
+        if (options.path) {
+            return path.join(options.path, dirname);
+        } else {
+            return dirname;
+        }
     }
 
     /**
@@ -40,11 +71,11 @@ class notStoreDriverFilenameResolver {
      * @param {boolean}     options.groupFiles     if files shoould be grouped in subdirectories named as first few chars of their names
      * @returns {string}
      */
-    static pathInStore(filename, options) {
+    static composePathToFile(filename, options) {
         let pathInStore = "";
         //groouping files in folders named as first N chars of filename 1234567.ext -> 123/1234567.ext
         if (options.groupFiles) {
-            let end = notStoreDriverFilenameResolver.prefixDir(filename);
+            let end = notStoreDriverFilenameResolver.composeGroupDir(filename);
             if (options.path) {
                 pathInStore = path.join(options.path, end);
             } else {
@@ -65,7 +96,7 @@ class notStoreDriverFilenameResolver {
      *	@param		{string}	format	file format name will be added at the end after '.'
      *	@returns	{string}	filename
      */
-    static filename(uuid, postfix, format) {
+    static composeFilename(uuid, postfix, format) {
         return (
             uuid +
             (postfix ? DEFAULT_FILENAME_SPLIT + postfix : "") +
@@ -76,17 +107,26 @@ class notStoreDriverFilenameResolver {
     /**
      *	Returns filaname from root of the bucket for object by uuid, postfix and format
      *	@param		{string}	uuid		unique id of object
-     *	@param		{string}	postfix	postfix that will be added at end of uuid after '_'
-     *	@param		{string}	format	file format name will be added at the end after '.'
-     *  @param {object}      options                storage system filenaming rules
-     *  @param {string}      options.path           additional path from storage root
-     *  @param {boolean}     options.groupFiles     if files shoould be grouped in subdirectories named as first few chars of their names
+     *	@param		{string}	[postfix='']	postfix that will be added at end of uuid after '_'
+     *	@param		{string}	[format='']	file format name will be added at the end after '.'
+     *  @param {object}      [options]                storage system filenaming rules
+     *  @param {string}      [options].path           additional path from storage root
+     *  @param {boolean}     [options].groupFiles     if files shoould be grouped in subdirectories named as first few chars of their names
      *	@returns	{string}	full filename in bucket
      */
-    static fullFilenameInStore(uuid, postfix, format, options) {
+    static composeFullFilename(
+        uuid,
+        postfix = undefined,
+        format = undefined,
+        options = { path: "", groupFiles: false }
+    ) {
         return path.join(
-            notStoreDriverFilenameResolver.pathInStore(uuid, options),
-            notStoreDriverFilenameResolver.filename(uuid, postfix, format)
+            notStoreDriverFilenameResolver.composePathToFile(uuid, options),
+            notStoreDriverFilenameResolver.composeFilename(
+                uuid,
+                postfix,
+                format
+            )
         );
     }
 
@@ -94,11 +134,15 @@ class notStoreDriverFilenameResolver {
      * Returns filename for a specific processing options
      * @param {object} 		srcParts  			path.parse result object
      * @param {string} 		variantShortName 	name of variant
-     * @param {string|number|object} variant 	some file processing description
+     * @param {string|number|object} [variant] 	some file processing description
      * @returns {string}
      */
-    static variantFilename(srcParts, variantShortName /*, variant*/) {
-        return notStoreDriverFilenameResolver.filename(
+    static composeVariantFilename(
+        srcParts,
+        variantShortName,
+        variant = undefined
+    ) {
+        return notStoreDriverFilenameResolver.composeFilename(
             srcParts.name,
             variantShortName,
             srcParts.ext.replace(".", "")
@@ -109,13 +153,13 @@ class notStoreDriverFilenameResolver {
      * Returns filename path for a specific processing options
      * @param {object} 		srcParts  			path.parse result object
      * @param {string} 		variantShortName 	name of variant
-     * @param {string|number|object} variant 	some file processing description
+     * @param {string|number|object} [variant] 	some file processing description
      * @returns {string}
      */
-    static variantPath(srcParts, variantShortName, variant) {
+    static composeVariantPath(srcParts, variantShortName, variant) {
         return path.join(
             srcParts.dir,
-            notStoreDriverFilenameResolver.variantFilename(
+            notStoreDriverFilenameResolver.composeVariantFilename(
                 srcParts,
                 variantShortName,
                 variant
@@ -137,7 +181,7 @@ class notStoreDriverFilenameResolver {
      * @param {string} format 	file extension
      * @returns {object}
      */
-    static variantsPaths(src, variants, format) {
+    static composeVariantsPaths(src, variants, format = undefined) {
         let srcParts = path.parse(src),
             result = {};
         if (format) {
@@ -146,12 +190,12 @@ class notStoreDriverFilenameResolver {
         Object.keys(variants).forEach((variantShortName) => {
             result[variantShortName] = {
                 variant: variants[variantShortName],
-                local: notStoreDriverFilenameResolver.variantPath(
+                local: notStoreDriverFilenameResolver.composeVariantPath(
                     srcParts,
                     variantShortName,
                     variants[variantShortName]
                 ),
-                filename: notStoreDriverFilenameResolver.variantFilename(
+                filename: notStoreDriverFilenameResolver.composeVariantFilename(
                     srcParts,
                     variantShortName,
                     variants[variantShortName]
@@ -169,13 +213,18 @@ class notStoreDriverFilenameResolver {
      * @param {boolean} addOriginal 	add original file variant to result object
      * @returns
      */
-    static variantsFilenames(name, variants, format, addOriginal = true) {
+    static composeVariantsFilenames(
+        name,
+        variants,
+        format,
+        addOriginal = true
+    ) {
         let result = {};
         let srcParts = path.parse(name);
         const ext = `.${format}`;
         Object.keys(variants).forEach((variantShortName) => {
             result[variantShortName] =
-                notStoreDriverFilenameResolver.variantFilename(
+                notStoreDriverFilenameResolver.composeVariantFilename(
                     {
                         name: srcParts.name,
                         ext,

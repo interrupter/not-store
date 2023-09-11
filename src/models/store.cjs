@@ -1,3 +1,4 @@
+// @ts-check
 const { MODULE_NAME } = require("../const.cjs");
 const MODEL_NAME = "Store";
 

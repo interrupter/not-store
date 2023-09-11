@@ -1,3 +1,5 @@
+// @ts-check
+
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const path = require("node:path");
 
@@ -13,10 +15,7 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
 
     static listOfFilesToDelete(fileInfo /*, preprocOptions*/) {
         const variantsToDelete = { ...fileInfo.thumbs };
-
-        return Object.values(variantsToDelete).map((variant) =>
-            path.join(variant.filename)
-        );
+        return Object.values(variantsToDelete).map((variant) => variant.cloud);
     }
 
     static async run(filename, fileInfo, options, driver) {

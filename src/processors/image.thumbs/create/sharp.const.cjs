@@ -1,3 +1,5 @@
+// @ts-check
+
 const SHARP_RESIZE_FIT_VARIANTS = [
     "inside",
     "outside",

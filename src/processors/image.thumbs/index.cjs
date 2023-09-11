@@ -1,6 +1,11 @@
+const imgThumbsCreate = require("./create/image.thumbs.create.cjs");
+const imgThumbsUpload = require("./upload/image.thumbs.upload.cjs");
+const imgThumbsDeleteLocal = require("./delete/image.thumbs.delete.local.cjs");
+const imgThumbsDeleteRemote = require("./delete/image.thumbs.delete.remote.cjs");
+
 module.exports = {
-    "image.thumbs.create": require("./create/image.thumbs.create.cjs"),
-    "image.thumbs.upload": require("./upload/image.thumbs.upload.cjs"),
-    "image.thumbs.delete.local": require("./delete/image.thumbs.delete.local.cjs"),
-    "image.thumbs.delete.remote": require("./delete/image.thumbs.delete.remote.cjs"),
+    [imgThumbsCreate.getDescription().id]: imgThumbsCreate,
+    [imgThumbsUpload.getDescription().id]: imgThumbsUpload,
+    [imgThumbsDeleteLocal.getDescription().id]: imgThumbsDeleteLocal,
+    [imgThumbsDeleteRemote.getDescription().id]: imgThumbsDeleteRemote,
 };

@@ -1,4 +1,5 @@
-const notStoreProcessor = require("not-store/src/proto/processor.cjs");
+// @ts-check
+const notStoreProcessor = require("../../../../src/proto/processor.cjs");
 
 class notStoreProcessorImageUpload extends notStoreProcessor {
     static getDescription() {
@@ -11,22 +12,19 @@ class notStoreProcessorImageUpload extends notStoreProcessor {
         };
     }
 
-    static updateFileInfo(fileInfo, cloudNames) {
-        let variantsShortNames = Object.keys(fileInfo.thumbs);
-        for (let t = 0; t < cloudNames.length; t++) {
-            fileInfo.thumbs[variantsShortNames[t]].cloud = cloudNames[t];
-        }
+    static updateFileInfo(fileInfo, cloudName) {
+        fileInfo.cloud = cloudName;
     }
 
-    static async run(filename, fileInfo, options, driver) {        
-        if (filenames.length) {
-            let cloudNames = await driver.directUploadMany(
-                filenames,
-                driver.getPathInStore(filenames[0])
+    static async run(filename, fileInfo, options, driver) {
+        if (filename.length) {
+            let cloudName = await driver.directUpload(
+                filename,
+                driver.getPathInStore(filename)
             );
-            this.updateFileInfo(fileInfo, cloudNames);
+            this.updateFileInfo(fileInfo, cloudName);
         }
     }
 }
 
-module.exports = notStoreProcessorImageThumbsUpload;
+module.exports = notStoreProcessorImageUpload;

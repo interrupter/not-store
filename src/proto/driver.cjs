@@ -1,3 +1,5 @@
+// @ts-check
+
 const notNode = require("not-node");
 
 const fs = require("fs");
@@ -10,10 +12,20 @@ const notStoreDriverStreamer = require("./driver.streamer.cjs");
 
 const { OPT_ENV_CHECKS } = require("../const.cjs");
 
-const {
-    notStoreDriverExceptionRemoveFile,
-} = require("../exceptions/driver.exceptions.cjs");
+/**
+ *  @typedef {Object}   DriverDescription
+ *  @property {string}          id          driver unique id
+ *  @property {string}          title       human readable title
+ *  @property {string}          ui          UI component to render driver's options editor
+ *  @property {Array<string>}   actions     list of available actions of driver
+ *
+ */
 
+/**
+ *
+ *
+ * @class notStoreDriver
+ */
 class notStoreDriver {
     //standart helpers
     static processorsManager = notStoreDriverProcessors;
@@ -30,6 +42,11 @@ class notStoreDriver {
         this.#processors = new notStoreDriver.processorsManager(processors);
     }
 
+    /**
+     *
+     * @returns {DriverDescription}
+     * @memberof notStoreDriver
+     */
     static getDescription() {
         return {
             id: "id_in_store",
@@ -41,12 +58,25 @@ class notStoreDriver {
 
     /**
      * Returns options
+     * @readonly
      * @returns {object}	options
+     * @memberof notStoreDriver
      */
     get options() {
-        return this.#options;
+        const opts = {};
+        Object.keys(this.#options).forEach((optName) => {
+            opts[optName] = this.getOptionValueCheckENV(optName);
+        });
+        return opts;
     }
 
+    /**
+     *
+     *
+     * @readonly
+     * @returns {notStoreDriverProcessors}
+     * @memberof notStoreDriver
+     */
     get processors() {
         return this.#processors;
     }
@@ -55,11 +85,12 @@ class notStoreDriver {
      * Gets value of option of `name`, than checks if its `value` is in special format,
      * which is mean that we should check process.ENV[value] for real value that we need
      * @param {string} name 	name of options property
-     * @returns {*}	value from options or process.ENV
+     * @returns {any}	value from options or process.ENV
+     * @memberof notStoreDriver
      */
     getOptionValueCheckENV(name) {
         return notNode.Common.getValueFromEnv(
-            this.options,
+            this.#options,
             name,
             OPT_ENV_CHECKS
         );
@@ -70,8 +101,9 @@ class notStoreDriver {
      */
 
     /**
-     *	Returns UUID4 name for file
-     *	@returns	{string}	UUIDv4 name
+     * Returns UUID4 name for file
+     * @returns	{string}	UUIDv4 name
+     * @memberof notStoreDriver
      */
     uuid() {
         return uuidv4();
@@ -81,9 +113,10 @@ class notStoreDriver {
      * Returns first few characters from from filename
      * @param {string} 		fname 	filename without path
      * @returns {string}
+     * @memberof notStoreDriver
      */
-    resolvePrefixDir(fname) {
-        return notStoreDriver.filenameResolver.prefixDir(fname);
+    composeGroupDir(fname) {
+        return notStoreDriver.filenameResolver.composeGroupDir(fname);
     }
 
     /**
@@ -94,11 +127,12 @@ class notStoreDriver {
      * 1234567..jpg => store-1/123
      * if options.gorupFiles = false
      * 1234567..jpg => store-1
-     * @param {string}      filename               filename
-     * @returns {string}
+     * @param       {string}      fname               filename
+     * @returns     {string}
+     * @memberof    notStoreDriver
      */
-    resolvePathInStore(fname) {
-        return notStoreDriver.filenameResolver.pathInStore(fname, {
+    composeFilePath(fname) {
+        return notStoreDriver.filenameResolver.composePathToFile(fname, {
             path: this.getOptionValueCheckENV("path"),
             groupFiles: this.getOptionValueCheckENV("groupFiles"),
         });
@@ -106,40 +140,63 @@ class notStoreDriver {
 
     /**
      *	Returns filaname for object by uuid, postfix and format
-     *	@param		{string}	uuid		unique id of object
-     *	@param		{string}	postfix	postfix that will be added at end of uuid after '_'
-     *	@param		{string}	format	file format name will be added at the end after '.'
-     *	@returns	{string}	filename
+     * @param		{string}	uuid		unique id of object
+     * @param		{string}	postfix	postfix that will be added at end of uuid after '_'
+     * @param		{string}	format	file format name will be added at the end after '.'
+     * @returns	    {string}	filename
+     * @memberof    notStoreDriver
      */
-    resolveFilename(uuid, postfix, format) {
-        return notStoreDriver.filenameResolver.filename(uuid, postfix, format);
+    composeFilename(uuid, postfix, format) {
+        return notStoreDriver.filenameResolver.composeFilename(
+            uuid,
+            postfix,
+            format
+        );
+    }
+
+    /**
+     * Returns full path in store, if store uses prefix it will be added before relative path
+     *
+     * @param       {string} pathInStore
+     * @return      {string}
+     * @memberof    notStoreDriver
+     */
+    resolvePath(pathInStore) {
+        return notStoreDriver.filenameResolver.resolvePath(pathInStore, {
+            path: this.getOptionValueCheckENV("path"),
+        });
     }
 
     /**
      *	Returns filaname from root of the bucket for object by uuid, postfix and format
      *	@param		{string}	uuid		unique id of object
-     *	@param		{string}	postfix	postfix that will be added at end of uuid after '_'
-     *	@param		{string}	format	file format name will be added at the end after '.'
+     *	@param		{string}	[postfix]	postfix that will be added at end of uuid after '_'
+     *	@param		{string}	[format]	file format name will be added at the end after '.'
      *	@returns	{string}	full filename in bucket
+     * @memberof    notStoreDriver
      */
-    resolveFullFilenameInStore(uuid, postfix, format) {
-        return notStoreDriver.filenameResolver.fullFilenameInStore(
+    composeFullFilename(uuid, postfix, format) {
+        return notStoreDriver.filenameResolver.composeFullFilename(
             uuid,
             postfix,
             format,
-            this.options
+            {
+                path: this.getOptionValueCheckENV("path"),
+                groupFiles: this.getOptionValueCheckENV("groupFiles"),
+            }
         );
     }
 
     /**
      * Returns filename for a specific processing options
-     * @param {object} 		srcParts  			path.parse result object
-     * @param {string} 		variantShortName 	name of variant
-     * @param {string|number|object} variant 	some file processing description
-     * @returns {string}
+     * @param       {object} 		srcParts  			path.parse result object
+     * @param       {string} 		variantShortName 	name of variant
+     * @param       {string|number|object} variant 	some file processing description
+     * @memberof    notStoreDriver
+     * @returns     {string}
      */
-    resolveVariantFilename(srcParts, variantShortName, variant) {
-        return notStoreDriver.filenameResolver.variantFilename(
+    composeVariantFilename(srcParts, variantShortName, variant) {
+        return notStoreDriver.filenameResolver.composeVariantFilename(
             srcParts,
             variantShortName,
             variant
@@ -148,13 +205,14 @@ class notStoreDriver {
 
     /**
      * Returns filename path for a specific processing options
-     * @param {object} 		srcParts  			path.parse result object
-     * @param {string} 		variantShortName 	name of variant
-     * @param {string|number|object} variant 	some file processing description
-     * @returns {string}
+     * @param       {object} 		srcParts  			path.parse result object
+     * @param       {string} 		variantShortName 	name of variant
+     * @param       {string|number|object} variant 	some file processing description
+     * @returns     {string}
+     * @memberof    notStoreDriver
      */
-    resolveVariantPath(srcParts, variantShortName, variant) {
-        return notStoreDriver.filenameResolver.variantPath(
+    composeVariantPath(srcParts, variantShortName, variant) {
+        return notStoreDriver.filenameResolver.composeVariantPath(
             srcParts,
             variantShortName,
             variant
@@ -170,13 +228,14 @@ class notStoreDriver {
      * 			filename:	[filename:string]
      * 		}
      * }
-     * @param {string} src 		full path to file directory/a/b/c/filename.ext
-     * @param {Object} variants {[shortName]:title}
-     * @param {string} format 	file extension
-     * @returns {object}
+     * @param       {string} src 		full path to file directory/a/b/c/filename.ext
+     * @param       {Object} variants thumbs variants
+     * @param       {string} format 	file extension
+     * @returns     {object}
+     * @memberof    notStoreDriver
      */
-    resolveVariantsPaths(src, variants, format) {
-        return notStoreDriver.filenameResolver.variantsPaths(
+    composeVariantsPaths(src, variants, format = undefined) {
+        return notStoreDriver.filenameResolver.composeVariantsPaths(
             src,
             variants,
             format
@@ -185,14 +244,15 @@ class notStoreDriver {
 
     /**
      * Returns object {[variantShortName:string]:[filename.ext:string]}
-     * @param {string} 	name 			original filename without extension
-     * @param {object} 	variants 		{[name]:<optionsOfProcessing: object>}
-     * @param {string} 	format 			extension of file
-     * @param {boolean} addOriginal 	add original file variant to result object
-     * @returns
+     * @param       {string} 	name 			original filename without extension
+     * @param       {object} 	variants 		{[name]:<optionsOfProcessing: object>}
+     * @param       {string} 	format 			extension of file
+     * @param       {boolean} addOriginal 	add original file variant to result object
+     * @returns     {Object}                {[variantShortName:string]:[filename.ext:string]} example {small:'small.jpg', big: 'big.jpg'}
+     * @memberof    notStoreDriver
      */
-    resolveVariantsFilenames(name, variants, format, addOriginal = true) {
-        return notStoreDriver.filenameResolver.variantsFilenames(
+    composeVariantsFilenames(name, variants, format, addOriginal = true) {
+        return notStoreDriver.filenameResolver.composeVariantsFilenames(
             name,
             variants,
             format,
@@ -202,8 +262,9 @@ class notStoreDriver {
 
     /**
      *	Downloads file and saves to tmp folder
-     *	@param		{String|Buffer|Stream}	file	file in some form or his URI
+     *	@param		{String|Buffer|import('stream').Stream}	file	file in some form or his URI
      *	@returns	{Promise}	of image metadata extracted with sharp with extra fields: uuid, tmpName
+     * @memberof    notStoreDriver
      */
     async stashFile(file) {
         const uuid = this.uuid();
@@ -216,8 +277,9 @@ class notStoreDriver {
 
     /**
      * returns promise of a number of bytes in a target file
-     * @param {string}      path    full path to file
-     * @returns {Promise<number>}    file size in bytes
+     * @param       {string}      path    full path to file
+     * @returns     {Promise<number>}    file size in bytes
+     * @memberof    notStoreDriver
      */
     async getFileSize(path) {
         const stats = await fs.promises.stat(path);
@@ -226,8 +288,9 @@ class notStoreDriver {
 
     /**
      *	Removes local file by full filename
-     *	@param	{String}	filename	filename with path
-     *	@returns{Promise}
+     *	@param	    {String}	filename	filename with path
+     *	@returns    {Promise}
+     * @memberof    notStoreDriver
      */
     async removeFile(filename) {
         try {
@@ -239,10 +302,16 @@ class notStoreDriver {
     }
 
     /**
-     *   standart testing action, to test store driver configuration
+     * Standart testing routine, to test store driver configuration
+     * @memberof    notStoreDriver
+     * @returns     {Promise}
      */
     async test() {
         //some testing
+    }
+
+    report(err) {
+        notNode.Application && notNode.Application.report(err);
     }
 }
 

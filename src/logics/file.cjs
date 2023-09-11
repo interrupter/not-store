@@ -1,3 +1,5 @@
+// @ts-check
+
 const notNode = require("not-node");
 const Log = require("not-log")(module, "logics");
 const config = require("not-config").readerForModule("store");
@@ -9,8 +11,6 @@ const { notError } = require("not-error");
 const NAME = "File";
 exports.thisLogicName = NAME;
 
-
-
 class File {
     static async uploadFile(storeBucket, file, info, owner) {
         try {
@@ -18,7 +18,12 @@ class File {
             const fileInfo = await storeBucket.add(file);
             const File = App.getModel("File");
             let fileName = info?.name || fileInfo?.name_tmp;
-            App.logger.debug("store.add.then", storeBucket.name, fileName, fileInfo);
+            App.logger.debug(
+                "store.add.then",
+                storeBucket.name,
+                fileName,
+                fileInfo
+            );
             let fileData = {
                 uuid: fileInfo.uuid,
                 bucket: storeBucket.name,
@@ -28,7 +33,7 @@ class File {
                 paths: fileInfo?.paths,
                 size: fileInfo?.size || 0,
                 //additional information
-                info: fileInfo || {},            
+                info: fileInfo || {},
                 width: fileInfo?.metadata?.width || 0,
                 height: fileInfo?.metadata?.height || 0,
                 //ownership
@@ -43,7 +48,7 @@ class File {
             notNode.Application.report(e);
         }
     }
-    
+
     static createUploads(files, storeBucket, owner) {
         let uploads = [];
         let slimFiles = {};
@@ -77,7 +82,12 @@ class File {
                     };
                     slimFiles[t] = slimInfo;
                     uploads.push(
-                        this.uploadFile(storeBucket, fileField.data, slimInfo, owner)
+                        this.uploadFile(
+                            storeBucket,
+                            fileField.data,
+                            slimInfo,
+                            owner
+                        )
                     );
                 }
             }
@@ -99,7 +109,7 @@ class File {
         Log.debug(files);
         if (config.get("sessionRequired")) {
             if (!sessionId) {
-                throw new notError("User session is undefined", { userIp });                
+                throw new notError("User session is undefined", { userIp });
             }
         }
         const storeBucket = await store.get(bucket);
@@ -119,7 +129,7 @@ class File {
                 );
                 Log.debug("store.add.then.return/redirect");
                 if (errors) {
-                    throw new notError("Uploads not saved", { results });                    
+                    throw new notError("Uploads not saved", { results });
                 } else {
                     return results;
                 }
@@ -127,7 +137,9 @@ class File {
                 throw new notError("Uploads list is empty");
             }
         } else {
-            throw new notError("store.add error, bucket is not exist", { bucket });
+            throw new notError("store.add error, bucket is not exist", {
+                bucket,
+            });
         }
     }
 
@@ -149,45 +161,43 @@ class File {
     }
 
     static async delete({ fileId, sessionId = undefined, admin = false }) {
-        
-            if (!mongoose.Types.ObjectId.isValid(fileId)) {
-                throw new notError("delete error; fileId is not ObjectId", {
+        if (!mongoose.Types.ObjectId.isValid(fileId)) {
+            throw new notError("delete error; fileId is not ObjectId", {
+                fileId,
+                sid: sessionId,
+                admin,
+            });
+        } else {
+            const App = notNode.Application;
+            let File = App.getModel("File");
+
+            if (admin) {
+                let result = File.getOneByIdAndRemove(fileId, undefined);
+                if (result) {
+                    return result;
+                } else {
+                    throw new Error("delete error; db error");
+                }
+            } else if (
+                typeof sessionId !== "undefined" &&
+                sessionId !== null &&
+                sessionId &&
+                sessionId.length > 10
+            ) {
+                let result = File.getOneByIdAndRemove(fileId, sessionId);
+                if (result) {
+                    return { status: "ok" };
+                } else {
+                    return { status: "failed" };
+                }
+            } else {
+                throw new notError("delete error; no user session id", {
                     fileId,
                     sid: sessionId,
                     admin,
                 });
-            } else {
-                const App = notNode.Application;
-                let File = App.getModel("File");
-
-                if (admin) {
-                    let result = File.getOneByIdAndRemove(fileId, undefined);
-                    if (result) {
-                        return result;
-                    } else {
-                        throw new Error("delete error; db error");
-                    }
-                } else if (
-                    typeof sessionId !== "undefined" &&
-                    sessionId !== null &&
-                    sessionId &&
-                    sessionId.length > 10
-                ) {
-                    let result = File.getOneByIdAndRemove(fileId, sessionId);
-                    if (result) {
-                        return { status: "ok" };
-                    } else {
-                        return { status: "failed" };
-                    }
-                } else {
-                    throw new notError("delete error; no user session id", {
-                        fileId,
-                        sid: sessionId,
-                        admin,
-                    });
-                }
             }
-        
+        }
     }
 }
 

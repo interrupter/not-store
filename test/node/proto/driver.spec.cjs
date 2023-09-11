@@ -12,6 +12,9 @@ const {
     notStoreExceptionFilenameIsTooShortToGeneratePrefix,
 } = require("../../../src/exceptions/driver.exceptions.cjs");
 
+const {
+    notStoreDriverStreamerExceptionNotStreamableSource,
+} = require("../../../src/exceptions/driver.streamer.exception.cjs");
 const UUID = "cfeb519f-57bd-4f55-a72c-4847b6b839d0";
 const path = require("node:path");
 
@@ -79,16 +82,17 @@ describe("Proto/Driver", function () {
                 some: 1,
                 other: "ENV$NODE_ENV",
             };
+            console.log(process.env.NODE_ENV);
             const store = new notStoreDriver(options);
             const res = store.getOptionValueCheckENV("other");
             expect(res).to.be.equal(testValue);
         });
     });
 
-    describe("resolvePrefixDir", () => {
+    describe("composeGroupDir", () => {
         it("file name is longer than prefix", () => {
             const fname = "12341235324523AAFASDF.jpg";
-            expect(new notStoreDriver().resolvePrefixDir(fname)).to.be.equal(
+            expect(new notStoreDriver().composeGroupDir(fname)).to.be.equal(
                 "123"
             );
         });
@@ -96,19 +100,19 @@ describe("Proto/Driver", function () {
         it("file name is shorter than prefix", () => {
             const fname = "12.jpg";
             expect(() => {
-                new notStoreDriver().resolvePrefixDir(fname);
+                new notStoreDriver().composeGroupDir(fname);
             }).to.be.throw(notStoreExceptionFilenameIsTooShortToGeneratePrefix);
         });
     });
 
-    describe("resolvePathInStore", () => {
+    describe("composeFilePath", () => {
         it("options.path is set, options.groupFiles = true", () => {
             const store = new notStoreDriver({
                 path: "store-1",
                 groupFiles: true,
             });
             const filename = "1234567890.jpg";
-            const pathInStore = store.resolvePathInStore(filename);
+            const pathInStore = store.composeFilePath(filename);
             expect(pathInStore).to.be.equal("store-1/123");
         });
 
@@ -117,7 +121,7 @@ describe("Proto/Driver", function () {
                 groupFiles: true,
             });
             const filename = "1234567890.jpg";
-            const pathInStore = store.resolvePathInStore(filename);
+            const pathInStore = store.composeFilePath(filename);
             expect(pathInStore).to.be.equal("123");
         });
 
@@ -127,7 +131,7 @@ describe("Proto/Driver", function () {
                 groupFiles: false,
             });
             const filename = "1234567890.jpg";
-            const pathInStore = store.resolvePathInStore(filename);
+            const pathInStore = store.composeFilePath(filename);
             expect(pathInStore).to.be.equal("store-1");
         });
         it("options.path not set, options.groupFiles = false", () => {
@@ -135,7 +139,7 @@ describe("Proto/Driver", function () {
                 groupFiles: false,
             });
             const filename = "1234567890.jpg";
-            const pathInStore = store.resolvePathInStore(filename);
+            const pathInStore = store.composeFilePath(filename);
             expect(pathInStore).to.be.equal("");
         });
     });
@@ -149,12 +153,12 @@ describe("Proto/Driver", function () {
         });
     });
 
-    describe("resolveFilename", () => {
+    describe("composeFilename", () => {
         it("undefined postfix, undefined format", () => {
             const uuid = UUID;
             const postfix = undefined;
             const format = undefined;
-            const filename = new notStoreDriver().resolveFilename(
+            const filename = new notStoreDriver().composeFilename(
                 uuid,
                 postfix,
                 format
@@ -166,7 +170,7 @@ describe("Proto/Driver", function () {
             const uuid = UUID;
             const postfix = "";
             const format = undefined;
-            const filename = new notStoreDriver().resolveFilename(
+            const filename = new notStoreDriver().composeFilename(
                 uuid,
                 postfix,
                 format
@@ -178,7 +182,7 @@ describe("Proto/Driver", function () {
             const uuid = UUID;
             const postfix = "";
             const format = "";
-            const filename = new notStoreDriver().resolveFilename(
+            const filename = new notStoreDriver().composeFilename(
                 uuid,
                 postfix,
                 format
@@ -190,7 +194,7 @@ describe("Proto/Driver", function () {
             const uuid = UUID;
             const postfix = "main";
             const format = "";
-            const filename = new notStoreDriver().resolveFilename(
+            const filename = new notStoreDriver().composeFilename(
                 uuid,
                 postfix,
                 format
@@ -202,7 +206,7 @@ describe("Proto/Driver", function () {
             const uuid = UUID;
             const postfix = "";
             const format = "jpg";
-            const filename = new notStoreDriver().resolveFilename(
+            const filename = new notStoreDriver().composeFilename(
                 uuid,
                 postfix,
                 format
@@ -214,7 +218,7 @@ describe("Proto/Driver", function () {
             const uuid = UUID;
             const postfix = "main";
             const format = "jpg";
-            const filename = new notStoreDriver().resolveFilename(
+            const filename = new notStoreDriver().composeFilename(
                 uuid,
                 postfix,
                 format
@@ -241,7 +245,7 @@ describe("Proto/Driver", function () {
         });
     });
 
-    describe("resolveFullFilenameInStore", () => {
+    describe("composeFullFilename", () => {
         it("options.path is set, options.groupFiles = false, postfix = undefined, format = undefined", () => {
             const uuid = UUID;
             const postfix = undefined;
@@ -250,11 +254,7 @@ describe("Proto/Driver", function () {
                 path: "store-1",
                 groupFiles: false,
             });
-            const filename = store.resolveFullFilenameInStore(
-                uuid,
-                postfix,
-                format
-            );
+            const filename = store.composeFullFilename(uuid, postfix, format);
             expect(filename).to.be.equal(`store-1/${uuid}`);
         });
 
@@ -266,20 +266,16 @@ describe("Proto/Driver", function () {
                 path: "store-1",
                 groupFiles: true,
             });
-            const filename = store.resolveFullFilenameInStore(
-                uuid,
-                postfix,
-                format
-            );
+            const filename = store.composeFullFilename(uuid, postfix, format);
             expect(filename).to.be.equal(`store-1/cfe/${uuid}`);
         });
     });
 
-    describe("resolveVariantFilename", () => {
+    describe("composeVariantFilename", () => {
         it("variant short name is not empty", () => {
             const filename = "/some/path/to/a/file.ext";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantFilename(
+            const variantFilename = new notStoreDriver().composeVariantFilename(
                 parts,
                 "main"
             );
@@ -289,7 +285,7 @@ describe("Proto/Driver", function () {
         it("variant short name is empty", () => {
             const filename = "/some/path/to/a/file.ext";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantFilename(
+            const variantFilename = new notStoreDriver().composeVariantFilename(
                 parts,
                 ""
             );
@@ -299,7 +295,7 @@ describe("Proto/Driver", function () {
         it("variant short name is empty, extensionless filename", () => {
             const filename = "/some/path/to/a/file";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantFilename(
+            const variantFilename = new notStoreDriver().composeVariantFilename(
                 parts,
                 ""
             );
@@ -307,11 +303,11 @@ describe("Proto/Driver", function () {
         });
     });
 
-    describe("resolveVariantPath", () => {
+    describe("composeVariantPath", () => {
         it("variant short name is not empty", () => {
             const filename = "/some/path/to/a/file.ext";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantPath(
+            const variantFilename = new notStoreDriver().composeVariantPath(
                 parts,
                 "main"
             );
@@ -323,7 +319,7 @@ describe("Proto/Driver", function () {
         it("variant short name is empty", () => {
             const filename = "/some/path/to/a/file.ext";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantPath(
+            const variantFilename = new notStoreDriver().composeVariantPath(
                 parts,
                 ""
             );
@@ -333,7 +329,7 @@ describe("Proto/Driver", function () {
         it("variant short name is empty, extensionless filename", () => {
             const filename = "/some/path/to/a/file";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantPath(
+            const variantFilename = new notStoreDriver().composeVariantPath(
                 parts,
                 ""
             );
@@ -343,7 +339,7 @@ describe("Proto/Driver", function () {
         it("variant short name is empty, no directory", () => {
             const filename = "file.ext";
             const parts = path.parse(filename);
-            const variantFilename = new notStoreDriver().resolveVariantPath(
+            const variantFilename = new notStoreDriver().composeVariantPath(
                 parts,
                 ""
             );
@@ -351,14 +347,14 @@ describe("Proto/Driver", function () {
         });
     });
 
-    describe("resolveVariantsPaths", () => {
+    describe("composeVariantsPaths", () => {
         it("format is empty", () => {
             const variants = {
                 small: { variant: true },
                 big: { variant: "dog" },
             };
             const filename = "/some/path/file.ext";
-            const result = new notStoreDriver().resolveVariantsPaths(
+            const result = new notStoreDriver().composeVariantsPaths(
                 filename,
                 variants
             );
@@ -383,7 +379,7 @@ describe("Proto/Driver", function () {
             };
             const filename = "/some/path/file.ext";
             const format = "png";
-            const result = new notStoreDriver().resolveVariantsPaths(
+            const result = new notStoreDriver().composeVariantsPaths(
                 filename,
                 variants,
                 format
@@ -403,7 +399,7 @@ describe("Proto/Driver", function () {
         });
     });
 
-    describe("resolveVariantsFilenames", () => {
+    describe("composeVariantsFilenames", () => {
         it("addOriginal = false", () => {
             const addOriginal = false;
             const uuid = UUID;
@@ -412,7 +408,7 @@ describe("Proto/Driver", function () {
                 big: { variant: "dog" },
             };
             const format = "png";
-            const result = new notStoreDriver().resolveVariantsFilenames(
+            const result = new notStoreDriver().composeVariantsFilenames(
                 uuid,
                 variants,
                 format,
@@ -431,7 +427,7 @@ describe("Proto/Driver", function () {
                 big: { variant: "dog" },
             };
             const format = "png";
-            const result = new notStoreDriver().resolveVariantsFilenames(
+            const result = new notStoreDriver().composeVariantsFilenames(
                 uuid,
                 variants,
                 format,
@@ -450,7 +446,7 @@ describe("Proto/Driver", function () {
                 big: { variant: "dog" },
             };
             const format = "png";
-            const result = new notStoreDriver().resolveVariantsFilenames(
+            const result = new notStoreDriver().composeVariantsFilenames(
                 uuid,
                 variants,
                 format
@@ -535,7 +531,7 @@ describe("Proto/Driver", function () {
             store
                 .stashFile(undefined)
                 .then((res) => {
-                    expect(res).to.be.undefined;
+                    expect(true).to.be.undefined;
                 })
                 .catch((e) => {
                     expect(e).to.be.instanceOf(

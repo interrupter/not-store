@@ -1,3 +1,5 @@
+// @ts-check
+
 const MODEL_NAME = "Store";
 const { MODULE_NAME } = require("../const.cjs");
 const notNode = require("not-node");
@@ -45,7 +47,7 @@ class StoreLogic extends StoreGenericLogic {
         return notStoreProcessors.list();
     }
 
-    static async test({targetId}) {
+    static async test({ targetId }) {
         const storeConfig = await getModel().getOne(targetId);
         const store = await notStore.getDriverForConfig(storeConfig.toObject());
         return await store.test();

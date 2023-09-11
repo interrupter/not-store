@@ -1,3 +1,5 @@
+// @ts-check
+
 const fs = require("fs");
 const Stream = require("stream");
 const http = require("http");
@@ -6,17 +8,23 @@ const isStream = require("is-stream");
 const isUrl = require("valid-url");
 const streamifier = require("streamifier");
 
+const tryFileAsync = require("not-node").Common.tryFileAsync;
+
 const { OPT_MAX_INPUT_PATH_LENGTH } = require("../const.cjs");
 
 const {
     notStoreDriverStreamerExceptionNotStreamableSource,
+    notStoreDriverStreamerExceptionFileNotExists,
 } = require("../exceptions/driver.streamer.exception.cjs");
 
+/**
+ * @typedef {ReadableStream|fs.ReadStream|http.IncomingMessage|Stream.Duplex} ReadingPipe
+ */
 class notStoreDriverStreamer {
     /**
      *	converts "anything" to readable stream
-     *	@param {String|Buffer|Stream} source	source of data
-     *	@returns	{ReadableStream} for data consumption
+     *	@param {String|Buffer|ReadableStream} source	source of data
+     *	@returns	{Promise<ReadingPipe>} for data consumption
      **/
     static async convertToReadableStream(source) {
         if (typeof source === "string") {
@@ -34,7 +42,7 @@ class notStoreDriverStreamer {
     /**
      * Buffer to Promise of readable stream
      * @param {Buffer} 		buffer 		buffer
-     * @returns {Promise<Stream>}		buffer content
+     * @returns {Promise<ReadingPipe>}		buffer content
      */
     static async readableStreamFromBuffer(buffer) {
         let stream = new Stream.Duplex();
@@ -46,14 +54,14 @@ class notStoreDriverStreamer {
     /**
      * String to promise of readable stream
      * @param 	{string} 	source 	string to convert
-     * @returns {Promise<Stream>}	promise of content
+     * @returns {Promise<ReadingPipe>}	promise of content
      */
     static async readableStreamFromString(source) {
         //line is too long === file in string
         if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
             //
             if (isUrl.isUri(encodeURI(source))) {
-                return notStoreDriverStreamer.readerStreamFromURL(source);
+                return notStoreDriverStreamer.readableStreamFromURL(source);
             } else {
                 //guess this is file path, but lets check it on existence
                 try {
@@ -63,7 +71,9 @@ class notStoreDriverStreamer {
                             source
                         );
                     }
-                } catch (e) {}
+                } catch (_) {
+                    _;
+                }
             }
         }
         //file as string
@@ -73,9 +83,9 @@ class notStoreDriverStreamer {
     /**
      * URL to Promise of readable stream
      * @param {string} 	source 		url of file
-     * @returns {Promise<Stream>}	readable stream
+     * @returns {Promise<ReadingPipe>}	readable stream
      */
-    static async readerStreamFromURL(source) {
+    static async readableStreamFromURL(source) {
         return new Promise((resolve, reject) => {
             try {
                 if (isUrl.isHttpsUri(source)) {
@@ -92,31 +102,39 @@ class notStoreDriverStreamer {
     }
 
     /**
-     * Filename to Promise of ReadStream
+     * Filename to Promise of readable stream
      * @param 		{string} 				source 		filename
-     * @returns 	{Promise<Stream>}					readable stream of file data
+     * @returns 	{Promise<ReadingPipe>}					readable stream of file data
      */
     static async readableStreamFromFilename(source) {
-        return fs.createReadStream(source);
+        if (await tryFileAsync(source)) {
+            return fs.createReadStream(source);
+        } else {
+            throw new notStoreDriverStreamerExceptionFileNotExists(source);
+        }
     }
 
     /**
      * String to Stream
      * @param {string} 	source 	file saved in string
-     * @returns {Promise<Stream>}	reading stream
+     * @returns {Promise<ReadingPipe>}	reading stream
      */
     static async readableStreamFromFileInString(source) {
         return streamifier.createReadStream(source);
     }
 
     /**
+     * @typedef {Object} FileInfoShort
+     * @property {string} uuid - The X Coordinate
+     * @property {string} name_tmp - The Y Coordinate
+     */
+    /**
      * Saves data in temporal file returns Promise of temp filename
-     * @param {Stream} streamIn 	        incoming stream of file data
+     * @param {ReadingPipe} streamIn 	        incoming stream of file data
      * @param {string} uuid 	            uuid as unique base for a filename
      * @param {string} name_tmp 	        path to tmp file
-     * @returns Promise<object>
-     * @returns Promise<object>.name_tmp	filename of saved temporal file
-     * @returns Promise<object>.uuid	    file uuid
+     * @returns {Promise<FileInfoShort>}
+     * @memberof notStoreDriverStreamer
      */
     static async streamFileOut(streamIn, uuid, name_tmp) {
         return new Promise((resolve, reject) => {

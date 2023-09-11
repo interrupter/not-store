@@ -1,3 +1,35 @@
+// @ts-check
+
+/**
+ * @typedef {object}    S3OptionsObject
+ * @property {string}    [ACL]
+ * @property {string}    [accessKeyId]
+ * @property {string}    [secretAccessKey]
+ * @property {string}    [apiVersion]
+ * @property {string}    [endpoint]
+ * @property {string}    [region]
+ * @property {boolean}   [s3ForcePathStyle]
+ */
+
+/**
+ * @typedef {object}    S3StoreOptionsObject
+ * @property {string}    [ACL]
+ * @property {string}    [accessKeyId]
+ * @property {string}    [secretAccessKey]
+ * @property {string}    [apiVersion]
+ * @property {string}    [endpoint]
+ * @property {string}    [region]
+ * @property {boolean}   [s3ForcePathStyle]
+ * @property {string}    [bucket]
+ * @property {string}    [path]
+ * @property {string}    [tmp]
+ * @property {boolean}   [groupFiles]
+ */
+
+/**
+ * @type {S3StoreOptionsObject}
+ * @constant
+ * */
 const DEFAULT_OPTIONS = {
     ////S3 cloud access options
     ACL: "private",
@@ -14,10 +46,10 @@ const DEFAULT_OPTIONS = {
     /**
      * if files should be group in sub dirs by their first few letters
      * full file path       original filename
-     * aaa/aa.ext               aaaaa.ext
-     * aaa/bc.ext               aaabc.ext
-     * aaa/gf.ext               aaagf.ext
-     * zxc/as.ext               zxcas.ext
+     * aaa/aaaaa.ext               aaaaa.ext
+     * aaa/aaabc.ext               aaabc.ext
+     * aaa/aaagf.ext               aaagf.ext
+     * zxc/zxcas.ext               zxcas.ext
      */
     groupFiles: false,
 };

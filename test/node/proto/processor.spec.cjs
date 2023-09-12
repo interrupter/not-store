@@ -12,6 +12,7 @@ describe("Proto/notStoreProcessor", function () {
                 "title",
                 "optionsUI",
                 "metadataUI",
+                "optionsDefault",
             ]);
         });
     });

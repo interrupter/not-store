@@ -40,7 +40,7 @@
   "license": "ISC",
   "dependencies": {
     "@shopify/draggable": "^1.0.0-beta.11",
-    "aws-sdk": "^2.1454.0",
+    "aws-sdk": "^2.1455.0",
     "download": "^8.0.0",
     "easy-yandex-s3": "^2.0.0",
     "is-stream": "2.*",
@@ -78,7 +78,7 @@
     "mongoose": "^7.5.1",
     "not-config": "^0.1.5",
     "not-log": "^0.0.20",
-    "not-node": "^6.2.26",
+    "not-node": "^6.2.27",
     "nyc": "^15.1.0",
     "postcss": "^8.4.29",
     "request": "^2.88.2",
@@ -89,7 +89,7 @@
     "svelte": ">=3.5.0",
     "svelte-dnd-action": "^0.9.29",
     "taffydb": "^2.7.3",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "nyc": {
     "include": [

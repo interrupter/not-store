@@ -53,10 +53,8 @@ describe("notStoreProcessorImageExtractMetadata", () => {
         it("file exists, image, sharp supported format", async () => {
             const FILE_NAME =
                 __dirname + "/../../browser/files/bone.tomahawk.jpg";
-            const info = await notStoreProcessorImageExtractMetadata.run(
-                FILE_NAME,
-                {}
-            );
+            const info = {};
+            await notStoreProcessorImageExtractMetadata.run(FILE_NAME, info);
             expect(info).to.have.any.keys(["metadata"]);
         });
 

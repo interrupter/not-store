@@ -34,6 +34,16 @@ const notStoreDriver = require("../../proto/driver.cjs");
  */
 
 /**
+ * @typedef {Object} S3ObjectUploadResult
+ * @property {string}  Bucket
+ * @property {string}  Key
+ * @property {string}  key
+ * @property {string}  ETag
+ * @property {string}  Location
+ * @property {string}  Local
+ */
+
+/**
  *
  *
  * @class notStoreDriverTimeweb
@@ -201,13 +211,25 @@ class notStoreDriverTimeweb extends notStoreDriver {
         }
     }
 
+    /**
+     * Uploads file from absolute path to location in store
+     * If store is in sub-dir of medium, then sub-dir will be
+     * used as root
+     *
+     * @param {string} fullFilenameFrom
+     * @param {string} fullFilenameInStoreTo
+     * @return {Promise<S3ObjectUploadResult>}
+     * @memberof notStoreDriverTimeweb
+     */
     async directUpload(fullFilenameFrom, fullFilenameInStoreTo) {
         const uploadParams = await this.getDirectUploadParams(
             fullFilenameFrom,
             fullFilenameInStoreTo
         );
         try {
-            return await this.#s3.upload(uploadParams).promise();
+            const result = await this.#s3.upload(uploadParams).promise();
+            result.Local = fullFilenameFrom;
+            return result;
         } catch (e) {
             throw new notStoreExceptionDirectUploadError(
                 {
@@ -225,7 +247,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
      *
      * @param {Array<string>}   fullFilenamesFrom       List of full qualified paths to files
      * @param {string}          [dirInStoreTo='']
-     * @return {Promise<Array<object>>}
+     * @return {Promise<Array<S3ObjectUploadResult>>}
      * @memberof notStoreDriverTimeweb
      */
     async directUploadMany(fullFilenamesFrom, dirInStoreTo = "") {
@@ -240,14 +262,50 @@ class notStoreDriverTimeweb extends notStoreDriver {
     }
 
     /**
+     * takes in array of results of uploads
+     * returns object{_LocalFullFilename_:{S3ObjectUploadResult}}
+     * [{Local:'local1', Location, ETag, Key, key, Bucket}]
+     * -->
+     * {local1:{Location, ETag, Key, key, Bucket}}
+     * @param {Array<S3ObjectUploadResult>} results
+     * @returns {Object}
+     */
+    transformDirectUploadResultsToObject(results) {
+        const res = {};
+        results.forEach((itm) => {
+            res[itm.Local] = { ...itm };
+            delete res[itm.Local].Local;
+        });
+        return res;
+    }
+
+    /**
+     * Takes in list of full filenames and optionaly path in store,
+     * if sub path in store not provided, then files will be saved in store (not medium) root
+     *
+     * @param {Array<string>}   fullFilenamesFrom       List of full qualified paths to files
+     * @param {string}          [dirInStoreTo='']
+     * @return {Promise<Object>}
+     * @memberof notStoreDriverTimeweb
+     */
+    async directUploadManyTransformed(fullFilenamesFrom, dirInStoreTo) {
+        return this.transformDirectUploadResultsToObject(
+            await this.directUploadMany(fullFilenamesFrom, dirInStoreTo)
+        );
+    }
+
+    /**
      *
      *
      * @param {string} filename
+     * @param {boolean} [inStorePath=true]
      * @return {S3ObjectDeleteParams}
      * @memberof notStoreDriverTimeweb
      */
-    composeDirectDeleteParams(filename) {
-        const fullFilenameInStore = this.resolvePath(filename);
+    composeDirectDeleteParams(filename, inStorePath = true) {
+        const fullFilenameInStore = inStorePath
+            ? this.resolvePath(filename)
+            : filename;
         return {
             Key: fullFilenameInStore,
             Bucket: this.getOptionValueCheckENV("bucket"),
@@ -258,12 +316,16 @@ class notStoreDriverTimeweb extends notStoreDriver {
      * Delete file directly
      *
      * @param {string} filename
+     * @param {boolean} [inStorePath=true]
      * @return {Promise<object>}
      * @memberof notStoreDriverTimeweb
      */
-    async directDelete(filename) {
+    async directDelete(filename, inStorePath = true) {
         try {
-            const params = this.composeDirectDeleteParams(filename);
+            const params = this.composeDirectDeleteParams(
+                filename,
+                inStorePath
+            );
             return await this.#s3.deleteObject(params).promise();
         } catch (e) {
             throw new notStoreExceptionDirectDeleteError(
@@ -273,6 +335,20 @@ class notStoreDriverTimeweb extends notStoreDriver {
                 e
             );
         }
+    }
+
+    /**
+     *
+     *
+     * @param {Array<string>} filenames     list of object keys
+     * @param {boolean} [inStorePath=true]  false - absolute medium path, true - relative to store root path
+     * @return {Promise<object>}
+     * @memberof notStoreDriverTimeweb
+     */
+    async directDeleteMany(filenames, inStorePath = true) {
+        return await Promise.all(
+            filenames.map((fname) => this.directDelete(fname, inStorePath))
+        );
     }
 
     /**
@@ -352,7 +428,6 @@ class notStoreDriverTimeweb extends notStoreDriver {
             await this.processors.runPost("list", pathInStore, metadata);
             return [result, metadata];
         } catch (e) {
-            console.error(e);
             let err = e;
             if (!(err instanceof notError)) {
                 err = new notStoreExceptionListStoreError(pathInStore, err);

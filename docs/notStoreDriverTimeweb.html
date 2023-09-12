@@ -1,3932 +1,5770 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Documentation Class: notStoreDriverTimeweb</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Documentation Class: notStoreDriverTimeweb</title>
 
-    <!--[if lt IE 9]>
+	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
 
-    <link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
 
 </head>
 
 <body>
 
-    <div class="navbar navbar-default navbar-fixed-top ">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="index.html">Documentation</a>
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse" id="topNavigation">
-                <ul class="nav navbar-nav">
-
-                    <li class="dropdown">
-                        <a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
-                                class="caret"></b></a>
-                        <ul class="dropdown-menu ">
-                            <li><a href="module.exports.html">module.exports</a></li>
-                            <li><a href="notStore.html">notStore</a></li>
-                            <li><a href="notStoreDriver.html">notStoreDriver</a></li>
-                            <li><a href="notStoreDriverProcessors.html">notStoreDriverProcessors</a></li>
-                            <li><a
-                                    href="notStoreDriverProcessors.notStoreDriverProcessors.html">notStoreDriverProcessors.notStoreDriverProcessors</a>
-                            </li>
-                            <li><a href="notStoreDriverTimeweb.html">notStoreDriverTimeweb</a></li>
-                            <li><a
-                                    href="notStoreDriverTimeweb.notStoreDriverTimeweb.html">notStoreDriverTimeweb.notStoreDriverTimeweb</a>
-                            </li>
-                            <li><a
-                                    href="notStoreExceptionListStoreError.notStoreExceptionListStoreError.html">notStoreExceptionListStoreError.notStoreExceptionListStoreError</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown">
-                        <a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-                                class="caret"></b></a>
-                        <ul class="dropdown-menu ">
-                            <li><a href="global.html#DEFAULT_FILENAME_SPLIT">DEFAULT_FILENAME_SPLIT</a></li>
-                            <li><a href="global.html#FIRST_DIR_NAME_LENGTH">FIRST_DIR_NAME_LENGTH</a></li>
-                            <li><a href="global.html#MODULE_NAME">MODULE_NAME</a></li>
-                            <li><a href="global.html#OPT_DEFAULT_ACL">OPT_DEFAULT_ACL</a></li>
-                            <li><a href="global.html#OPT_ENV_CHECKS">OPT_ENV_CHECKS</a></li>
-                            <li><a href="global.html#OPT_MAX_INPUT_PATH_LENGTH">OPT_MAX_INPUT_PATH_LENGTH</a></li>
-                            <li><a href="global.html#PROCESSOR_TYPES">PROCESSOR_TYPES</a></li>
-                            <li><a href="global.html#PROCESSOR_TYPE_POST">PROCESSOR_TYPE_POST</a></li>
-                            <li><a href="global.html#PROCESSOR_TYPE_PRE">PROCESSOR_TYPE_PRE</a></li>
-                        </ul>
-                    </li>
-
-                </ul>
-
-                <div class="col-sm-3 col-md-3">
-                    <form class="navbar-form" role="search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                            <div class="input-group-btn">
-                                <button class="btn btn-default" id="search-submit"><i
-                                        class="glyphicon glyphicon-search"></i></button>
-                            </div>
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Documentation</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module.exports.html">module.exports</a></li><li><a href="notStore.html">notStore</a></li><li><a href="notStoreDriver.html">notStoreDriver</a></li><li><a href="notStoreDriverProcessors.html">notStoreDriverProcessors</a></li><li><a href="notStoreDriverProcessors.notStoreDriverProcessors.html">notStoreDriverProcessors.notStoreDriverProcessors</a></li><li><a href="notStoreDriverTimeweb.html">notStoreDriverTimeweb</a></li><li><a href="notStoreDriverTimeweb.notStoreDriverTimeweb.html">notStoreDriverTimeweb.notStoreDriverTimeweb</a></li><li><a href="notStoreExceptionDirectListError.notStoreExceptionDirectListError.html">notStoreExceptionDirectListError.notStoreExceptionDirectListError</a></li><li><a href="notStoreExceptionListStoreError.notStoreExceptionListStoreError.html">notStoreExceptionListStoreError.notStoreExceptionListStoreError</a></li><li><a href="notStoreProcessor.html">notStoreProcessor</a></li><li><a href="notStoreProcessorImageExtractMetadata.html">notStoreProcessorImageExtractMetadata</a></li><li><a href="notStoreProcessorImageThumbsDeleteRemote.html">notStoreProcessorImageThumbsDeleteRemote</a></li><li><a href="notStoreProcessorImageThumbsUpload.html">notStoreProcessorImageThumbsUpload</a></li><li><a href="notStoreProcessorImageUpload.html">notStoreProcessorImageUpload</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#DEFAULT_FILENAME_SPLIT">DEFAULT_FILENAME_SPLIT</a></li><li><a href="global.html#DEFAULT_OPTIONS">DEFAULT_OPTIONS</a></li><li><a href="global.html#FIRST_DIR_NAME_LENGTH">FIRST_DIR_NAME_LENGTH</a></li><li><a href="global.html#MODULE_NAME">MODULE_NAME</a></li><li><a href="global.html#OPT_DEFAULT_ACL">OPT_DEFAULT_ACL</a></li><li><a href="global.html#OPT_ENV_CHECKS">OPT_ENV_CHECKS</a></li><li><a href="global.html#OPT_MAX_INPUT_PATH_LENGTH">OPT_MAX_INPUT_PATH_LENGTH</a></li><li><a href="global.html#PROCESSOR_TYPES">PROCESSOR_TYPES</a></li><li><a href="global.html#PROCESSOR_TYPE_POST">PROCESSOR_TYPE_POST</a></li><li><a href="global.html#PROCESSOR_TYPE_PRE">PROCESSOR_TYPE_PRE</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
                         </div>
-                    </form>
-                </div>
-
+                    </div>
+                </form>
             </div>
+        
+	</div>
 
-        </div>
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Class: notStoreDriverTimeweb</h1>
+<section>
+
+<header>
+    
+        <h2>
+        notStoreDriverTimeweb
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="notStoreDriverTimeweb"><span class="type-signature"></span>new notStoreDriverTimeweb()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
     </div>
 
+    
+        <h3 class="subsection-title">Extends</h3>
 
-    <div class="container" id="toc-content">
-        <div class="row">
+        
 
 
-            <div class="col-md-8">
+    <ul>
+        <li><a href="notStoreDriver.html">notStoreDriver</a></li>
+    </ul>
 
-                <div id="main">
 
+    
 
-                    <h1 class="page-title">Class: notStoreDriverTimeweb</h1>
-                    <section>
+    
 
-                        <header>
+    
+        <h3 class="subsection-title">Classes</h3>
 
-                            <h2>
-                                notStoreDriverTimeweb
-                            </h2>
+        <dl>
+            <dt><a href="notStoreDriverTimeweb.notStoreDriverTimeweb.html">notStoreDriverTimeweb</a></dt>
+            <dd></dd>
+        </dl>
+    
 
+    
 
-                        </header>
+    
 
+    
+        <h3 class="subsection-title">Members</h3>
 
-                        <article>
-                            <div class="container-overview">
+        <dl>
+            
+<hr>
+<dt class="name" id="name">
+    <h4 id="name"><span class="type-signature">&lt;readonly> </span>name<span class="type-signature"></span></h4>
 
+    
+</dt>
+<dd>
+    
 
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="notStoreDriverTimeweb"><span class="type-signature"></span>new
-                                        notStoreDriverTimeweb()</h4>
+    
 
+    
+<dl class="details">
+    
 
-                                </dt>
-                                <dd>
+	
 
+	
 
+	
 
+    
 
+    
 
+    
 
+    
 
+	
 
+	
 
+	
 
+	
 
-                                    <dl class="details">
+	
 
 
 
+	
 
+	
 
+	
 
+	
+</dl>
 
 
+    
+</dd>
 
+        
+            
+<hr>
+<dt class="name" id="options">
+    <h4 id="options"><span class="type-signature">&lt;readonly> </span>options<span class="type-signature"></span></h4>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                </dd>
-
-
-                            </div>
-
-
-                            <h3 class="subsection-title">Extends</h3>
-
-
-
-
-                            <ul>
-                                <li><a href="notStoreDriver.html">notStoreDriver</a></li>
-                            </ul>
-
-
-
-
-
-
-
-                            <h3 class="subsection-title">Classes</h3>
-
-                            <dl>
-                                <dt><a href="notStoreDriverTimeweb.notStoreDriverTimeweb.html">notStoreDriverTimeweb</a>
-                                </dt>
-                                <dd></dd>
-                            </dl>
-
-
-
-
-
-
-
-                            <h3 class="subsection-title">Members</h3>
-
-                            <dl>
-
-                                <hr>
-                                <dt class="name" id="name">
-                                    <h4 id="name"><span class="type-signature">&lt;readonly> </span>name<span
-                                            class="type-signature"></span></h4>
-
-
-                                </dt>
-                                <dd>
-
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt class="name" id="options">
-                                    <h4 id="options"><span class="type-signature">&lt;readonly> </span>options<span
-                                            class="type-signature"></span></h4>
-
-
-                                </dt>
-                                <dd>
-
-                                    <div class="description">
-                                        Returns options
-                                    </div>
-
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a href="notStoreDriver.html#options">notStoreDriver#options</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt class="name" id="processors">
-                                    <h4 id="processors"><span class="type-signature">&lt;readonly>
-                                        </span>processors<span class="type-signature"></span></h4>
-
-
-                                </dt>
-                                <dd>
-
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#processors">notStoreDriver#processors</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-                                </dd>
-
-                            </dl>
-
-
-
-                            <h3 class="subsection-title">Methods</h3>
-
-                            <dl>
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="delete"><span class="type-signature">&lt;async>
-                                        </span>delete(fileDoc)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Removes all associated with file document instances and versions of file across
-                                        all locations
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>fileDoc</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last"></td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        [result:boolean|Object, fileDoc:object] where result - result of directDelete of
-                                        fileDoc.path
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise.&lt;Array.&lt;(boolean|Object),
-                                                Object>></span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="directDelete"><span class="type-signature">&lt;async>
-                                        </span>directDelete(filename)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Delete file directly
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>filename</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last"></td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise.&lt;object></span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="directList"><span class="type-signature">&lt;async>
-                                        </span>directList(pathInStore)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>pathInStore</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">*</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last"></td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">*</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="getFileSize"><span class="type-signature">&lt;async>
-                                        </span>getFileSize(path)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        returns promise of a number of bytes in a target file
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>path</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">full path to file</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#getFileSize">notStoreDriver#getFileSize</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        file size in bytes
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise.&lt;number></span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="getOptionValueCheckENV"><span
-                                            class="type-signature"></span>getOptionValueCheckENV(name)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Gets value of option of `name`, than checks if its `value` is in special format,
-                                        which is mean that we should check process.ENV[value] for real value that we
-                                        need
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>name</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">name of options property</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#getOptionValueCheckENV">notStoreDriver#getOptionValueCheckENV</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        value from options or process.ENV
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">*</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="list"><span class="type-signature">&lt;async>
-                                        </span>list(pathInStore)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        List files in store's folder
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>pathInStore</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last"></td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise.&lt;Array.&lt;(boolean|Object),
-                                                Object>></span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="removeFile"><span class="type-signature">&lt;async>
-                                        </span>removeFile(filename)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Removes local file by full filename
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>filename</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">String</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">filename with path</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#removeFile">notStoreDriver#removeFile</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolveFilename"><span
-                                            class="type-signature"></span>resolveFilename(uuid, postfix, format)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns filaname for object by uuid, postfix and format
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>uuid</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">unique id of object</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>postfix</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">postfix that will be added at end of uuid
-                                                    after '_'</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>format</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">file format name will be added at the end
-                                                    after '.'</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolveFilename">notStoreDriver#resolveFilename</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        filename
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolveFullFilenameInStore"><span
-                                            class="type-signature"></span>resolveFullFilenameInStore(uuid, postfix,
-                                        format)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns filaname from root of the bucket for object by uuid, postfix and format
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>uuid</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">unique id of object</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>postfix</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">postfix that will be added at end of uuid
-                                                    after '_'</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>format</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">file format name will be added at the end
-                                                    after '.'</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolveFullFilenameInStore">notStoreDriver#resolveFullFilenameInStore</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        full filename in bucket
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolvePath"><span
-                                            class="type-signature"></span>resolvePath(fname)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns full path to file's directory in store
-                                        [path_to_store][prefix_directory_name?]
-                                        options.path = 'store-1'
-                                        if options.gorupFiles = true
-                                        1234567..jpg => store-1/123
-                                        if options.gorupFiles = false
-                                        1234567..jpg => store-1
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>fname</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">filename</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolvePath">notStoreDriver#resolvePath</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolvePrefixDir"><span
-                                            class="type-signature"></span>resolvePrefixDir(fname)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns first few characters from from filename
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>fname</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">filename without path</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolvePrefixDir">notStoreDriver#resolvePrefixDir</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolveVariantFilename"><span
-                                            class="type-signature"></span>resolveVariantFilename(srcParts,
-                                        variantShortName, variant)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns filename for a specific processing options
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>srcParts</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">path.parse result object</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>variantShortName</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">name of variant</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>variant</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-                                                    |
-
-                                                    <span class="param-type">number</span>
-                                                    |
-
-                                                    <span class="param-type">object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">some file processing description</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolveVariantFilename">notStoreDriver#resolveVariantFilename</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolveVariantPath"><span
-                                            class="type-signature"></span>resolveVariantPath(srcParts, variantShortName,
-                                        variant)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns filename path for a specific processing options
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>srcParts</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">path.parse result object</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>variantShortName</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">name of variant</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>variant</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-                                                    |
-
-                                                    <span class="param-type">number</span>
-                                                    |
-
-                                                    <span class="param-type">object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">some file processing description</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolveVariantPath">notStoreDriver#resolveVariantPath</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolveVariantsFilenames"><span
-                                            class="type-signature"></span>resolveVariantsFilenames(name, variants,
-                                        format, addOriginal)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns object {[variantShortName:string]:[filename.ext:string]}
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-                                                <th>Default</th>
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>name</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-                                                <td class="default">
-
-                                                </td>
-
-
-                                                <td class="description last">original filename without extension</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>variants</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-                                                <td class="default">
-
-                                                </td>
-
-
-                                                <td class="description last">{[name]:<optionsOfProcessing: object>}</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>format</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-                                                <td class="default">
-
-                                                </td>
-
-
-                                                <td class="description last">extension of file</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>addOriginal</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">boolean</span>
-
-
-
-
-                                                </td>
-
-
-
-
-                                                <td class="default">
-
-                                                    true
-
-                                                </td>
-
-
-                                                <td class="description last">add original file variant to result object
-                                                </td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolveVariantsFilenames">notStoreDriver#resolveVariantsFilenames</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        {[variantShortName:string]:[filename.ext:string]} example {small:'small.jpg',
-                                        big: 'big.jpg'}
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Object</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="resolveVariantsPaths"><span
-                                            class="type-signature"></span>resolveVariantsPaths(src, variants, format)
-                                    </h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns object with
-                                        {
-                                        [variantShortName:string]:{
-                                        variant: [variant:string|number|object],
-                                        local: [full_path_to_local_file:string],
-                                        filename: [filename:string]
-                                        }
-                                        }
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>src</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">full path to file
-                                                    directory/a/b/c/filename.ext</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>variants</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">Object</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">thumbs variants</td>
-                                            </tr>
-
-
-
-                                            <tr>
-
-                                                <td class="name"><code>format</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">string</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">file extension</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a
-                                                        href="notStoreDriver.html#resolveVariantsPaths">notStoreDriver#resolveVariantsPaths</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">object</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="stashFile"><span class="type-signature">&lt;async>
-                                        </span>stashFile(file)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Downloads file and saves to tmp folder
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>file</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">String</span>
-                                                    |
-
-                                                    <span class="param-type">Buffer</span>
-                                                    |
-
-                                                    <span class="param-type">ReadableStream</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">file in some form or his URI</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a href="notStoreDriver.html#stashFile">notStoreDriver#stashFile</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        of image metadata extracted with sharp with extra fields: uuid, tmpName
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="test"><span class="type-signature">&lt;async> </span>test()
-                                    </h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Standart testing routine, to test store driver configuration
-                                    </div>
-
-
-
-
-
-
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a href="notStoreDriver.html#test">notStoreDriver#test</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="upload"><span class="type-signature">&lt;async>
-                                        </span>upload(file)</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        adds file to storage
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <h5>Parameters:</h5>
-
-
-                                    <table class="params table table-striped">
-                                        <thead>
-                                            <tr>
-
-                                                <th>Name</th>
-
-
-                                                <th>Type</th>
-
-
-
-
-
-                                                <th class="last">Description</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-
-                                            <tr>
-
-                                                <td class="name"><code>file</code></td>
-
-
-                                                <td class="type">
-
-
-                                                    <span class="param-type">String</span>
-                                                    |
-
-                                                    <span class="param-type">Buffer</span>
-                                                    |
-
-                                                    <span class="param-type">ReadableStream</span>
-
-
-
-
-                                                </td>
-
-
-
-
-
-                                                <td class="description last">file in some form or his URI</td>
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        file info object (info field in document)
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">Promise.&lt;Object></span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id="uuid"><span class="type-signature"></span>uuid()</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-                                    <div class="description">
-                                        Returns UUID4 name for file
-                                    </div>
-
-
-
-
-
-
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-                                        <dt class="inherited-from method-doc-label method-doc-details-label">Inherited
-                                            From:</dt>
-                                        <dd class="inherited-from">
-                                            <ul class="dummy">
-                                                <li>
-                                                    <a href="notStoreDriver.html#uuid">notStoreDriver#uuid</a>
-                                                </li>
-                                            </ul>
-                                        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-                                    <div class="param-desc">
-                                        UUIDv4 name
-                                    </div>
-
-
-
-                                    <dl>
-                                        <dt>
-                                            Type
-                                        </dt>
-                                        <dd>
-
-                                            <span class="param-type">string</span>
-
-
-
-                                        </dd>
-                                    </dl>
-
-
-
-
-
-                                </dd>
-
-
-
-                                <hr>
-                                <dt>
-                                    <h4 class="name" id=".getDescription"><span class="type-signature">&lt;static>
-                                        </span>getDescription()</h4>
-
-
-                                </dt>
-                                <dd>
-
-
-
-
-
-
-
-
-
-
-
-                                    <dl class="details">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h5>Returns:</h5>
-
-
-
-
-
-
-
-
-                                </dd>
-
-                            </dl>
-
-
-
-
-
-                        </article>
-
-                    </section>
-
-
-
-
-                </div>
-            </div>
-
-            <div class="clearfix"></div>
-
-
-            <div class="col-md-3">
-                <div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-            </div>
-
-
-        </div>
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Returns options
     </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#options">notStoreDriver#options</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="processors">
+    <h4 id="processors"><span class="type-signature">&lt;readonly> </span>processors<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#processors">notStoreDriver#processors</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeDirectDeleteParams"><span class="type-signature"></span>composeDirectDeleteParams(filename [, inStorePath])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inStorePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#S3ObjectDeleteParams">S3ObjectDeleteParams</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeFilePath"><span class="type-signature"></span>composeFilePath(fname)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns full path to file's directory in store
+[path_to_store][prefix_directory_name?]
+options.path = 'store-1'
+if options.gorupFiles = true
+1234567..jpg => store-1/123
+if options.gorupFiles = false
+1234567..jpg => store-1
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">filename</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeFilePath">notStoreDriver#composeFilePath</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeFilename"><span class="type-signature"></span>composeFilename(uuid, postfix, format)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns filaname for object by uuid, postfix and format
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">unique id of object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>postfix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">postfix that will be added at end of uuid after '_'</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">file format name will be added at the end after '.'</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeFilename">notStoreDriver#composeFilename</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    filename
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeFullFilename"><span class="type-signature"></span>composeFullFilename(uuid [, postfix] [, format])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns filaname from root of the bucket for object by uuid, postfix and format
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">unique id of object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>postfix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">postfix that will be added at end of uuid after '_'</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">file format name will be added at the end after '.'</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeFullFilename">notStoreDriver#composeFullFilename</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    full filename in bucket
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeGroupDir"><span class="type-signature"></span>composeGroupDir(fname)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns first few characters from from filename
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">filename without path</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeGroupDir">notStoreDriver#composeGroupDir</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeVariantFilename"><span class="type-signature"></span>composeVariantFilename(srcParts, variantShortName, variant)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns filename for a specific processing options
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>srcParts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">path.parse result object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variantShortName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of variant</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variant</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+|
+
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">some file processing description</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeVariantFilename">notStoreDriver#composeVariantFilename</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeVariantPath"><span class="type-signature"></span>composeVariantPath(srcParts, variantShortName, variant)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns filename path for a specific processing options
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>srcParts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">path.parse result object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variantShortName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of variant</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variant</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+|
+
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">some file processing description</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeVariantPath">notStoreDriver#composeVariantPath</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeVariantsFilenames"><span class="type-signature"></span>composeVariantsFilenames(name, variants, format, addOriginal)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns object {[variantShortName:string]:[filename.ext:string]}
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">original filename without extension</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variants</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">{[name]:<optionsOfProcessing: object>}</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">extension of file</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>addOriginal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">add original file variant to result object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeVariantsFilenames">notStoreDriver#composeVariantsFilenames</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    {[variantShortName:string]:[filename.ext:string]} example {small:'small.jpg', big: 'big.jpg'}
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="composeVariantsPaths"><span class="type-signature"></span>composeVariantsPaths(src, variants, format)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns object with
+{
+		[variantShortName:string]:{
+			variant:	[variant:string|number|object],
+			local:		[full_path_to_local_file:string],
+			filename:	[filename:string]
+		}
+}
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>src</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">full path to file directory/a/b/c/filename.ext</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variants</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">thumbs variants</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">file extension</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#composeVariantsPaths">notStoreDriver#composeVariantsPaths</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="createS3Options"><span class="type-signature"></span>createS3Options()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns object with options to perform S3 API actions
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="delete"><span class="type-signature">&lt;async> </span>delete( [filePath] [, info])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Removes all associated with file document instances and versions of file across all locations
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>info</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    [result:boolean|Object, fileDoc:object] where result - result of directDelete of fileDoc.path
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;(Array.&lt;(boolean|Object), Object>|notError)></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="directDelete"><span class="type-signature">&lt;async> </span>directDelete(filename [, inStorePath])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Delete file directly
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inStorePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="directDeleteMany"><span class="type-signature">&lt;async> </span>directDeleteMany(filenames [, inStorePath])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filenames</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">list of object keys</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inStorePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">false - absolute medium path, true - relative to store root path</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="directList"><span class="type-signature">&lt;async> </span>directList(pathInStore, limit)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pathInStore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">path from root of bucket</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    1000
+                
+                </td>
+            
+
+            <td class="description last">keys number limit per request</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Array.&lt;Object>></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="directUpload"><span class="type-signature">&lt;async> </span>directUpload(fullFilenameFrom, fullFilenameInStoreTo)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Uploads file from absolute path to location in store
+If store is in sub-dir of medium, then sub-dir will be
+used as root
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fullFilenameFrom</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fullFilenameInStoreTo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="global.html#S3ObjectUploadResult">S3ObjectUploadResult</a>></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="directUploadMany"><span class="type-signature">&lt;async> </span>directUploadMany(fullFilenamesFrom [, dirInStoreTo])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Takes in list of full filenames and optionaly path in store,
+if sub path in store not provided, then files will be saved in store (not medium) root
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fullFilenamesFrom</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">List of full qualified paths to files</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dirInStoreTo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Array.&lt;<a href="global.html#S3ObjectUploadResult">S3ObjectUploadResult</a>>></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="directUploadManyTransformed"><span class="type-signature">&lt;async> </span>directUploadManyTransformed(fullFilenamesFrom [, dirInStoreTo])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Takes in list of full filenames and optionaly path in store,
+if sub path in store not provided, then files will be saved in store (not medium) root
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fullFilenamesFrom</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">List of full qualified paths to files</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dirInStoreTo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getDirectUploadParams"><span class="type-signature">&lt;async> </span>getDirectUploadParams(fullFilenameFrom, fullFilenameInStoreTo)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fullFilenameFrom</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fullFilenameInStoreTo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="global.html#S3ObjectUploadParams">S3ObjectUploadParams</a>></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getFileSize"><span class="type-signature">&lt;async> </span>getFileSize(path)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        returns promise of a number of bytes in a target file
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">full path to file</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#getFileSize">notStoreDriver#getFileSize</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    file size in bytes
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getOptionValueCheckENV"><span class="type-signature"></span>getOptionValueCheckENV(name)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gets value of option of `name`, than checks if its `value` is in special format,
+which is mean that we should check process.ENV[value] for real value that we need
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of options property</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#getOptionValueCheckENV">notStoreDriver#getOptionValueCheckENV</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    value from options or process.ENV
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="list"><span class="type-signature">&lt;async> </span>list(pathInStore [, metadata])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        List files in store's folder
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pathInStore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">path to directory in store relative to store root</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>metadata</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last">some starting metadata</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;(Array.&lt;(boolean|Object), Object>|notError)></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeFile"><span class="type-signature">&lt;async> </span>removeFile(filename)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Removes local file by full filename
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">filename with path</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#removeFile">notStoreDriver#removeFile</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="resolvePath"><span class="type-signature"></span>resolvePath(pathInStore)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns full path in store, if store uses prefix it will be added before relative path
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pathInStore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#resolvePath">notStoreDriver#resolvePath</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="stashFile"><span class="type-signature">&lt;async> </span>stashFile(file)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Downloads file and saves to tmp folder
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>file</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#stashFile">notStoreDriver#stashFile</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    of image metadata extracted with sharp with extra fields: uuid, tmpName
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="test"><span class="type-signature">&lt;async> </span>test()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Standart testing routine, to test store driver configuration
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#test">notStoreDriver#test</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="transformDirectUploadResultsToObject"><span class="type-signature"></span>transformDirectUploadResultsToObject(results)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        takes in array of results of uploads
+returns object{_LocalFullFilename_:{S3ObjectUploadResult}}
+[{Local:'local1', Location, ETag, Key, key, Bucket}]
+-->
+{local1:{Location, ETag, Key, key, Bucket}}
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>results</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="global.html#S3ObjectUploadResult">S3ObjectUploadResult</a>></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="upload"><span class="type-signature">&lt;async> </span>upload(file [, fileInfo])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        adds file to storage
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>file</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fileInfo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    file info object (info field in document)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="uuid"><span class="type-signature"></span>uuid()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns UUID4 name for file
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="notStoreDriver.html#uuid">notStoreDriver#uuid</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    UUIDv4 name
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".getDefaultOptions"><span class="type-signature">&lt;static> </span>getDefaultOptions()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Default options
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".getDescription"><span class="type-signature">&lt;static> </span>getDescription()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
 
 
     <div class="modal fade" id="searchResults">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Search results</h4>
-                </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
     </div>
 
 
-    <footer>
+<footer>
 
 
-        <span class="jsdoc-message">
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a>
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a>
+	
+		on 2023-09-12T22:29:14+03:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
 
-            on 2023-09-09T17:35:09+03:00
-
-            using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
-        </span>
-    </footer>
-
-    <script src="scripts/docstrap.lib.js"></script>
-    <script src="scripts/toc.js"></script>
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
 
     <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 
-    <script>
-        $(function () {
-            $("[id*='$']").each(function () {
-                var $this = $(this);
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
 
-                $this.attr("id", $this.attr("id").replace("$", "__"));
-            });
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
 
-            $(".tutorial-section pre, .readme-section pre, pre.prettyprint.source").each(function () {
-                var $this = $(this);
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
 
-                var example = $this.find("code");
-                exampleText = example.html();
-                var lang = /{@lang (.*?)}/.exec(exampleText);
-                if (lang && lang[1]) {
-                    exampleText = exampleText.replace(lang[0], "");
-                    example.html(exampleText);
-                    lang = lang[1];
-                } else {
-                    var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
-                    lang = langClassMatch ? langClassMatch[1] : "javascript";
-                }
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
 
-                if (lang) {
+		if ( lang ) {
 
-                    $this
-                        .addClass("sunlight-highlight-" + lang)
-                        .addClass("linenums")
-                        .html(example.html());
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
 
-                }
-            });
+		}
+	} );
 
-            Sunlight.highlightAll({
-                lineNumbers: false,
-                showMenu: true,
-                enableDoclinks: true
-            });
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
 
-            $.catchAnchorLinks({
-                navbarOffset: 10
-            });
-            $("#toc").toc({
-                anchorName: function (i, heading, prefix) {
-                    return $(heading).attr("id") || (prefix + i);
-                },
-                selectors: "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
-                showAndHide: false,
-                smoothScrolling: true
-            });
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
 
-            $("#main span[id^='toc']").addClass("toc-shim");
-            $('.dropdown-toggle').dropdown();
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
 
-            $("table").each(function () {
-                var $this = $(this);
-                $this.addClass('table');
-            });
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
 
-        });
-    </script>
-
-
-
-    <!--Navigation and Symbol Display-->
+} );
+</script>
 
 
-    <!--Google Analytics-->
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
 
 
 
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             SearcherDisplay.init();
         });
     </script>
 
 
 </body>
-
 </html>

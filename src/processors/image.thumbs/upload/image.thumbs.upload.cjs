@@ -1,8 +1,20 @@
 // @ts-check
 
 const notStoreProcessor = require("../../../proto/processor.cjs");
-
+/**
+ *
+ *
+ * @class notStoreProcessorImageThumbsUpload
+ * @extends {notStoreProcessor}
+ */
 class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
+    /**
+     *
+     *
+     * @static
+     * @return {import('../../../proto/processor.cjs').StoreProcessorDescription}
+     * @memberof notStoreProcessorImageThumbsUpload
+     */
     static getDescription() {
         return {
             id: "image.thumbs.upload",
@@ -13,21 +25,37 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
         };
     }
 
+    /**
+     * adds cloud locations of file into info.thumbs[_thumb_name_].cloud
+     *
+     * @static
+     * @param {object} fileInfo
+     * @param {object} cloudNames
+     * @memberof notStoreProcessorImageThumbsUpload
+     */
     static updateFileInfo(fileInfo, cloudNames) {
-        let variantsShortNames = Object.keys(fileInfo.thumbs);
-        for (let t = 0; t < cloudNames.length; t++) {
-            fileInfo.thumbs[variantsShortNames[t]].cloud = cloudNames[t];
-        }
+        Object.values(fileInfo.thumbs).forEach((thumb) => {
+            thumb.cloud = cloudNames[thumb.local];
+        });
     }
 
+    /**
+     *
+     *
+     * @static
+     * @param {string} filename
+     * @param {object} fileInfo
+     * @param {object} options
+     * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
+     * @memberof notStoreProcessorImageThumbsUpload
+     */
     static async run(filename, fileInfo, options, driver) {
         const filenames = Object.values(fileInfo.thumbs).map(
             (thumb) => thumb.local
         );
         if (filenames.length) {
-            let cloudNames = await driver.directUploadMany(
-                filenames,
-                driver.resolvePath(filenames[0])
+            const cloudNames = await driver.directUploadManyTransformed(
+                filenames
             );
             this.updateFileInfo(fileInfo, cloudNames);
         }

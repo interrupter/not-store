@@ -49,7 +49,7 @@ describe("notStoreDriverTimeweb", () => {
 
     describe("name", () => {
         it("getter method", () => {
-            const store = new notStoreDriverTimeweb({}, {}, STORE_NAME);
+            const store = new notStoreDriverTimeweb(TEST_STORE, {}, STORE_NAME);
             expect(store.name).to.be.equal(STORE_NAME);
         });
     });
@@ -137,6 +137,7 @@ describe("notStoreDriverTimeweb", () => {
             expect(result).to.have.all.keys([
                 "ETag",
                 "Location",
+                "Local",
                 "key",
                 "Key",
                 "Bucket",
@@ -182,6 +183,41 @@ describe("notStoreDriverTimeweb", () => {
         it("not empty list of existing files", async () => {
             const store = new notStoreDriverTimeweb(TEST_STORE, {}, STORE_NAME);
             await store.directUploadMany(FILES_TO_UPLOAD);
+        });
+    });
+
+    describe("transformDirectUploadResultsToObject", () => {
+        it("transformed, all keys except `Local` preserved", async () => {
+            const results = [
+                {
+                    Local: "local1",
+                    Location: "1",
+                    Key: "2",
+                    ETag: "3",
+                    Bucket: "4",
+                    key: "5",
+                },
+            ];
+            const store = new notStoreDriverTimeweb(TEST_STORE, {}, STORE_NAME);
+            const res = store.transformDirectUploadResultsToObject(results);
+            expect(res).to.have.all.keys(["local1"]);
+            expect(res.local1).to.have.all.keys([
+                "Location",
+                "key",
+                "Key",
+                "ETag",
+                "Bucket",
+            ]);
+        });
+    });
+
+    describe("directUploadManyTransformed", () => {
+        it("not empty list of existing files", async () => {
+            const store = new notStoreDriverTimeweb(TEST_STORE, {}, STORE_NAME);
+            const results = await store.directUploadManyTransformed(
+                FILES_TO_UPLOAD
+            );
+            expect(results).to.have.all.keys(FILES_TO_UPLOAD);
         });
     });
 
@@ -233,6 +269,7 @@ describe("notStoreDriverTimeweb", () => {
                 "ETag",
                 "Location",
                 "key",
+                "Local",
                 "Key",
                 "Bucket",
             ]);
@@ -317,7 +354,7 @@ describe("notStoreDriverTimeweb", () => {
                 {},
                 STORE_NAME
             );
-            const res = await store.delete(false);
+            const res = await store.delete();
             expect(Array.isArray(res)).to.be.true;
             expect(Array.isArray(res[0])).to.be.false;
         });

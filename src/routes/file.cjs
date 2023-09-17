@@ -1,11 +1,10 @@
 const Log = require("not-log")(module, "routes");
 const MODEL_NAME = "File";
-const {MODULE_NAME} = require('../const.cjs');
+const { MODULE_NAME } = require("../const.cjs");
 
 const notNode = require("not-node"),
-    {notAppIdentity} = notNode,    
+    { notAppIdentity } = notNode,
     notError = require("not-error").notError;
-
 
 const {
     //	say,
@@ -20,9 +19,8 @@ const {
     target: module,
     MODEL_NAME,
     MODULE_NAME,
-    defaultAccessRule: true
+    defaultAccessRule: true,
 });
-
 
 const FileGenericRoute = notNode.Generic.GenericRoute({
     before,
@@ -31,7 +29,7 @@ const FileGenericRoute = notNode.Generic.GenericRoute({
 });
 
 class FileRoute extends FileGenericRoute {
-    static async _list(req, res){
+    static async _list(req, res) {
         const App = notNode.Application;
         try {
             let File = App.getLogic("File"),
@@ -46,11 +44,11 @@ class FileRoute extends FileGenericRoute {
             Log.info("this is _list filter", req.query, filter);
             return await File.list({ skip, size, sorter, filter });
         } catch (e) {
-            throw new notError("store._list error", {}, e);            
+            throw new notError("store._list error", {}, e);
         }
     }
 
-    static async list(req, res){
+    static async list(req, res) {
         const App = notNode.Application;
         try {
             let File = App.getLogic("File"),
@@ -75,17 +73,17 @@ class FileRoute extends FileGenericRoute {
         }
     }
 
-    static async create(req,res){
+    static async create(req, res) {
         const App = notNode.Application;
-        const {sid, ip, uid} = notAppIdentity.extractAuthData(req);    
+        const { sid, ip, uid } = notAppIdentity.extractAuthData(req);
         if (req.files) {
             let query = {
-                bucket:     "client",
-                files:      req.files,
-                userIp:     ip,
-                ownerId:    uid,
-                sessionId:  sid,
-                admin:      false,
+                bucket: "client",
+                files: req.files,
+                userIp: ip,
+                ownerId: uid,
+                sessionId: sid,
+                admin: false,
             };
             return await App.getLogic("not-store//File").upload(query);
         } else {
@@ -93,9 +91,9 @@ class FileRoute extends FileGenericRoute {
         }
     }
 
-    static async _create(req,res){
+    static async _create(req, res) {
         const App = notNode.Application;
-        const {sid, ip, uid} = notAppIdentity.extractAuthData(req);    
+        const { sid, ip, uid } = notAppIdentity.extractAuthData(req);
         const bucket = req.params.bucket ? req.params.bucket : "server";
         if (req.files) {
             let query = {
@@ -109,7 +107,7 @@ class FileRoute extends FileGenericRoute {
             return await App.getLogic("not-store//File").upload(query);
         } else {
             throw new Error("Empty files list");
-        }    
+        }
     }
 
     static async _delete(req, res) {
@@ -125,14 +123,14 @@ class FileRoute extends FileGenericRoute {
             return result.code || 200;
         } catch (e) {
             throw new notError("File delete error", {
-                    params: req.params,
-                    sid: false,
-                    admin: true,
-                });
+                params: req.params,
+                sid: false,
+                admin: true,
+            });
         }
-    };
-    
-    static async delete (req, res) {
+    }
+
+    static async delete(req, res) {
         const App = notNode.Application;
         try {
             let fileId = req.params._id,
@@ -146,12 +144,12 @@ class FileRoute extends FileGenericRoute {
             return result.code || 200;
         } catch (e) {
             throw new notError("File delete error", {
-                    params: req.params,
-                    sid: false,
-                    admin: false,
-                });
+                params: req.params,
+                sid: false,
+                admin: false,
+            });
         }
-    };
-};
+    }
+}
 
 module.exports = FileRoute;

@@ -1,5 +1,5 @@
 // @ts-check
-const notStoreProcessor = require("../../../../src/proto/processor.cjs");
+const notStoreProcessor = require("../../../proto/processor.cjs");
 const path = require("node:path");
 /**
  *
@@ -35,6 +35,7 @@ class notStoreProcessorImageUpload extends notStoreProcessor {
      */
     static updateFileInfo(fileInfo, cloudName) {
         fileInfo.cloud = cloudName;
+        fileInfo.path = cloudName.Key;
     }
 
     /**

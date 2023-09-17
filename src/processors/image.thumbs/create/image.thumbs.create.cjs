@@ -15,7 +15,7 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
             title: "Создание миниатюр изображения",
             optionsDefault: this.getOptions(),
             optionsUI: "UIStoreProcessorOptionsImageThumbsCreate",
-            metadataUI: "UIStoreProcessorMetadataImageThumbsCreate",
+            //metadataUI: "UIStoreProcessorMetadataImageThumbsCreate",
         };
     }
 

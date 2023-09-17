@@ -113,7 +113,7 @@
         </UIColumn>
     {/if}
 </UIColumns>
-{#if optionsUI}
+{#if optionsUI && COMPONENTS.get(optionsUI)}
     <svelte:component
         this={COMPONENTS.get(optionsUI)}
         bind:value={options}

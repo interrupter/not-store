@@ -6,7 +6,7 @@ const config = require("not-config").readerForModule("store");
 
 const store = require("../../").notStore;
 const mongoose = require("mongoose");
-const { notError } = require("not-error");
+const notError = require("not-error/src/error.node.cjs");
 
 const NAME = "File";
 exports.thisLogicName = NAME;
@@ -15,7 +15,11 @@ class File {
     static async uploadFile(storeBucket, file, info, owner) {
         try {
             const App = notNode.Application;
-            const fileInfo = await storeBucket.add(file);
+            const uploadResult = await storeBucket.upload(file, {});
+            if(uploadResult instanceof notError){
+                throw uploadResult;
+            }
+            const [result, fileInfo] = uploadResult;
             const File = App.getModel("File");
             let fileName = info?.name || fileInfo?.name_tmp;
             App.logger.debug(
@@ -26,16 +30,12 @@ class File {
             );
             let fileData = {
                 uuid: fileInfo.uuid,
-                bucket: storeBucket.name,
                 name: fileInfo.uuid,
                 extension: fileInfo?.metadata?.format || info?.mimetype,
-                path: fileInfo.path,
-                paths: fileInfo?.paths,
-                size: fileInfo?.size || 0,
-                //additional information
+                store: storeBucket.name,
                 info: fileInfo || {},
-                width: fileInfo?.metadata?.width || 0,
-                height: fileInfo?.metadata?.height || 0,
+                path: fileInfo.path,
+                size: fileInfo?.size || 0,
                 //ownership
                 session: owner.session,
                 userIp: owner.ip,
@@ -49,62 +49,74 @@ class File {
         }
     }
 
-    static createUploads(files, storeBucket, owner) {
-        let uploads = [];
-        let slimFiles = {};
+    static #eachFile(func, files) {
         if (files && Object.keys(files).length > 0) {
             for (let t of Object.keys(files)) {
                 let fileField = files[t];
                 if (Array.isArray(fileField)) {
-                    slimFiles[t] = [];
                     Object.keys(fileField).forEach((fileFieldKey) => {
-                        let oneFileFromField = fileField[fileFieldKey];
-                        let slimInfo = {
-                            name: oneFileFromField.name,
-                            size: oneFileFromField.size,
-                            format: oneFileFromField.format,
-                        };
-                        slimFiles[t].push(slimInfo);
-                        uploads.push(
-                            this.uploadFile(
-                                storeBucket,
-                                oneFileFromField.data,
-                                slimInfo,
-                                owner
-                            )
-                        );
+                        func(fileField[fileFieldKey]);
                     });
                 } else {
-                    let slimInfo = {
-                        name: fileField.name,
-                        size: fileField.size,
-                        format: fileField.format,
-                    };
-                    slimFiles[t] = slimInfo;
-                    uploads.push(
-                        this.uploadFile(
-                            storeBucket,
-                            fileField.data,
-                            slimInfo,
-                            owner
-                        )
-                    );
+                    func(fileField);
                 }
             }
         }
+    }
+
+    static #packFileFieldToSlimFormatAndInitUpload(
+        oneFileFromField,
+        storeBucket,
+        owner
+    ) {
+        let slimInfo = {
+            name: oneFileFromField.name,
+            size: oneFileFromField.size,
+            format: oneFileFromField.format,
+        };
+        return this.uploadFile(
+            storeBucket,
+            oneFileFromField.data,
+            slimInfo,
+            owner
+        );
+    }
+
+    static #createUploads(files, storeBucket, owner) {
+        let uploads = [];
+        this.#eachFile((fileField) => {
+            uploads.push(
+                this.#packFileFieldToSlimFormatAndInitUpload(
+                    fileField,
+                    storeBucket,
+                    owner
+                )
+            );
+        }, files);
         return uploads;
     }
 
+    /**
+     *
+     *
+     * @static
+     * @param {object} LogicParams {
+     *         bucket = "client",
+     *         sessionId,
+     *         userIp,
+     *         ownerId,
+     *         files,
+     *     }
+     * @return {Promise<object>}
+     * @memberof File
+     */
     static async upload({
         bucket = "client",
         sessionId,
         userIp,
         ownerId,
         files,
-        /*  admin = false,
-			ownerModel = 'User'*/
     }) {
-        const App = notNode.Application;
         Log.debug("file.createNew");
         Log.debug(files);
         if (config.get("sessionRequired")) {
@@ -114,7 +126,7 @@ class File {
         }
         const storeBucket = await store.get(bucket);
         if (storeBucket) {
-            let uploads = this.createUploads(files, storeBucket, {
+            let uploads = this.#createUploads(files, storeBucket, {
                 session: sessionId,
                 ip: userIp,
                 id: ownerId,
@@ -154,6 +166,17 @@ class File {
                 filter,
                 []
             );
+            return result;
+        } catch (e) {
+            throw new notError("store.list error", {}, e);
+        }
+    }
+
+    static async listAndCount({ activeUserId, activeUser, query, ip, root }) {
+        const App = notNode.Application;
+        try {
+            let File = App.getModel("File");
+            let result = await File.listAndCount(query.skip, query.size, query.sorter, query.filter, query.search,[]);
             return result;
         } catch (e) {
             throw new notError("store.list error", {}, e);

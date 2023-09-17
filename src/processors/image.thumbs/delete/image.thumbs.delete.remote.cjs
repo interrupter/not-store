@@ -1,7 +1,6 @@
 // @ts-check
 
 const notStoreProcessor = require("../../../proto/processor.cjs");
-const path = require("node:path");
 
 /**
  *
@@ -22,7 +21,7 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
             id: "image.thumbs.delete.remote",
             title: "Удаление миниатюр из облака",
             optionsDefault: this.getOptions(),
-            optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteRemote",
+            //optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteRemote",
         };
     }
 
@@ -52,6 +51,7 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
      * @param {object} [preprocOptions={}]
      * @memberof notStoreProcessorImageThumbsDeleteRemote
      */
+    //eslint-disable-next-line   no-unused-vars
     static updateInfoAfterDelete(fileInfo, preprocOptions = {}) {
         Object.keys(fileInfo.thumbs).forEach((key) => {
             delete fileInfo.thumbs[key].cloud;

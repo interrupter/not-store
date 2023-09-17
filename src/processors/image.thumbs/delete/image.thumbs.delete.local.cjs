@@ -14,7 +14,7 @@ class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
             id: "image.thumbs.delete.local",
             title: "Удаление локальных миниатюр",
             optionsDefault: this.getOptions(),
-            optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteLocal",
+            //optionsUI: "UIStoreProcessorOptionsImageThumbsDeleteLocal",
         };
     }
 

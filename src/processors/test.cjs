@@ -6,6 +6,8 @@ class notStoreProcessorTest extends notStoreProcessor {
     static getDescription() {
         return {
             id: "test",
+            title: 'test',
+            optionsDefault:{}
         };
     }
 

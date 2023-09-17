@@ -1,6 +1,6 @@
 const expect = require("chai").expect;
 
-const notStoreProcessorImageUpload = require("../../../../../src/processors/image.thumbs/upload/image.upload.cjs");
+const notStoreProcessorImageUpload = require("../../../../../src/processors/image/upload/image.upload.cjs");
 
 const { createTestStore } = require("../../../test.store.cjs");
 

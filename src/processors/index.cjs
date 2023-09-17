@@ -1,7 +1,8 @@
 // @ts-check
 const imageThumbs = require("./image.thumbs/index.cjs");
+const image = require("./image/index.cjs");
 
-const notStoreProcessorImageExtractMetadata = require("./image.metadata.extract.cjs");
+const notStoreProcessorImageExtractMetadata = require("./image/image.metadata.extract.cjs");
 const notStoreProcessorTest = require("./test.cjs");
 
 module.exports = {
@@ -9,4 +10,5 @@ module.exports = {
     [notStoreProcessorImageExtractMetadata.getDescription().id]:
         notStoreProcessorImageExtractMetadata,
     ...imageThumbs,
+    ...image,
 };

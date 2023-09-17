@@ -1,7 +1,6 @@
 // @ts-check
-const { debug } = require("not-log")(module, "Store");
 const sharp = require("sharp");
-const notStoreProcessor = require("../proto/processor.cjs");
+const notStoreProcessor = require("../../proto/processor.cjs");
 const METADATA_FORBIDDEN_FIELDS = ["exif", "xmp", "icc", "iptc"];
 /**
  *
@@ -40,7 +39,7 @@ class notStoreProcessorImageExtractMetadata extends notStoreProcessor {
      *
      *
      * @static
-     * @return {import('../proto/processor.cjs').StoreProcessorDescription}
+     * @return {import('../../proto/processor.cjs').StoreProcessorDescription}
      * @memberof notStoreProcessorImageExtractMetadata
      */
     static getDescription() {

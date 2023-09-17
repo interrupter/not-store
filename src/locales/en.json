@@ -24,5 +24,6 @@
     "field_store_driver_timeweb_options_groupFiles": "Group files",
     "field_store_processor_image.thumbs.create_options_saveOriginal": "Save original",
     "field_store_processor_image.thumbs.create_options_resize.fit": "Resize Fit",
-    "field_store_processor_image.thumbs.create_options_sizes": "Thumbs sizes"
+    "field_store_processor_image.thumbs.create_options_sizes": "Thumbs sizes",
+    "processors_options_reset_button_label": "Reset"
 }

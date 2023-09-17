@@ -182,12 +182,12 @@ class notStoreDriverTimeweb extends notStoreDriver {
             fileInfo.name_tmp = name_tmp;
             fileInfo.size = await this.getFileSize(name_tmp);
             //file processing sequence pre-main-post
-            await this.processors.runPre("upload", name_tmp, fileInfo);
+            await this.processors.runPre("upload", name_tmp, fileInfo, this);
             const result = await this.directUpload(
                 name_tmp,
                 this.composeFullFilename(uuid)
             );
-            await this.processors.runPost("upload", name_tmp, fileInfo);
+            await this.processors.runPost("upload", name_tmp, fileInfo, this);
             //
             Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);
             return [result, fileInfo];
@@ -360,11 +360,11 @@ class notStoreDriverTimeweb extends notStoreDriver {
     async delete(filePath = "", info = {}) {
         try {
             //deleting of versions preferably here
-            await this.processors.runPre("delete", filePath, info);
+            await this.processors.runPre("delete", filePath, info, this);
             //deleting main file if presented
             const result = filePath ? await this.directDelete(filePath) : false;
             //after actions
-            await this.processors.runPost("delete", filePath, info);
+            await this.processors.runPost("delete", filePath, info, this);
             return [result, info];
         } catch (e) {
             let err = e;
@@ -423,9 +423,9 @@ class notStoreDriverTimeweb extends notStoreDriver {
      */
     async list(pathInStore, metadata = {}) {
         try {
-            await this.processors.runPre("list", pathInStore, metadata);
+            await this.processors.runPre("list", pathInStore, metadata, this);
             const result = await this.directList(pathInStore);
-            await this.processors.runPost("list", pathInStore, metadata);
+            await this.processors.runPost("list", pathInStore, metadata, this);
             return [result, metadata];
         } catch (e) {
             let err = e;

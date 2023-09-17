@@ -40,18 +40,35 @@ class notStoreProcessors {
         );
     }
 
+    /**
+     * @typedef {Object}    ProcessorItem
+     * @property    {number}    id
+     * @property    {string}    name
+     * @property    {object}    options          
+     */
+
+    /**
+     *
+     *
+     * @static
+     * @param {Array<ProcessorItem>}            list        list of processors objects with id,name,options
+     * @param {string}                          filename    target filename
+     * @param {object}                          metadata    metadata/file.info object
+     * @param {import('./proto/driver.cjs')}    driver      notStoreDriver child class instance
+     * @memberof notStoreProcessors
+     */
     static async run(
-        list, //processors list to run against file
-        filename, //current target file
-        metadata, //file metadata object
-        driver //store driver
+        list,       //processors list to run against file
+        filename,   //current target file
+        metadata,   //file metadata object
+        driver      //store driver
     ) {
         try {
             if (Array.isArray(list)) {
                 for (let item of list) {
-                    console.log(item);
-                    const [processor, options] =
-                        this.getProcessorAndOptions(item);
+                    console.log('store processor:', item);
+                    const [processor, options] = this.getProcessorAndOptions(item);
+                    console.log(options);
                     await processor.run(filename, metadata, options, driver);
                 }
             }

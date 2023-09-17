@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-const notStoreProcessorImageExtractMetadata = require("../../../src/processors/image.metadata.extract.cjs");
+const notStoreProcessorImageExtractMetadata = require("../../../src/processors/image/image.metadata.extract.cjs");
 
 describe("notStoreProcessorImageExtractMetadata", () => {
     describe("METADATA_FORBIDDEN_FIELDS", () => {

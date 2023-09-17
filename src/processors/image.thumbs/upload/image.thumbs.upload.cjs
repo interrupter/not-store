@@ -20,8 +20,8 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
             id: "image.thumbs.upload",
             title: "Загрузка миниатюр в хранилище",
             optionsDefault: this.getOptions(),
-            optionsUI: "UIStoreProcessorOptionsImageThumbsUpload",
-            metadataUI: "UIStoreProcessorMetadataImageThumbsUpload",
+            //optionsUI: "UIStoreProcessorOptionsImageThumbsUpload",
+            //metadataUI: "UIStoreProcessorMetadataImageThumbsUpload",
         };
     }
 

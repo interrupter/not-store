@@ -24,5 +24,6 @@
     "field_store_driver_timeweb_options_groupFiles": "Группировать файлы",
     "field_store_processor_image.thumbs.create_options_saveOriginal": "Сохранить оригинал",
     "field_store_processor_image.thumbs.create_options_resize.fit": "Размещение при масштабировании",
-    "field_store_processor_image.thumbs.create_options_sizes": "Размеры миниатюр"
+    "field_store_processor_image.thumbs.create_options_sizes": "Размеры миниатюр",
+    "processors_options_reset_button_label": "Сбросить"
 }

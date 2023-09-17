@@ -21,7 +21,7 @@ module.exports = class StoreCreateForm extends Form {
 
     /**
      * Extracts data
-     * @param {ExpressRequest} req expressjs request object
+     * @param {import('express/lib/request')} req expressjs request object
      * @return {Object}        forma data
      **/
     extract(req) {

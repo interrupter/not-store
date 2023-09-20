@@ -92,8 +92,8 @@ class notStoreDriverFilenameResolver {
     /**
      *	Returns filaname for object by uuid, postfix and format
      *	@param		{string}	uuid		unique id of object
-     *	@param		{string}	postfix	postfix that will be added at end of uuid after '_'
-     *	@param		{string}	format	file format name will be added at the end after '.'
+     *	@param		{string}	[postfix]	postfix that will be added at end of uuid after '_'
+     *	@param		{string}	[format]	file format name will be added at the end after '.'
      *	@returns	{string}	filename
      */
     static composeFilename(uuid, postfix, format) {

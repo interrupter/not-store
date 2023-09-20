@@ -183,10 +183,13 @@ class notStoreDriverTimeweb extends notStoreDriver {
             fileInfo.size = await this.getFileSize(name_tmp);
             //file processing sequence pre-main-post
             await this.processors.runPre("upload", name_tmp, fileInfo, this);
-            const result = await this.directUpload(
-                name_tmp,
-                this.composeFullFilename(uuid)
+            fileInfo.path = this.composeFilename(
+                uuid,
+                undefined,
+                fileInfo?.format
             );
+            const result = await this.directUpload(name_tmp, fileInfo.path);
+            fileInfo.cloud = result;
             await this.processors.runPost("upload", name_tmp, fileInfo, this);
             //
             Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);

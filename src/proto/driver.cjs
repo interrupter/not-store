@@ -133,7 +133,7 @@ class notStoreDriver {
      */
     composeFilePath(fname) {
         return notStoreDriver.filenameResolver.composePathToFile(fname, {
-            path: this.getOptionValueCheckENV("path"),
+            path: this.getOptionValueCheckENV("pathToStoreRoot"),
             groupFiles: this.getOptionValueCheckENV("groupFiles"),
         });
     }
@@ -141,8 +141,8 @@ class notStoreDriver {
     /**
      *	Returns filaname for object by uuid, postfix and format
      * @param		{string}	uuid		unique id of object
-     * @param		{string}	postfix	postfix that will be added at end of uuid after '_'
-     * @param		{string}	format	file format name will be added at the end after '.'
+     * @param		{string}	[postfix]	postfix that will be added at end of uuid after '_'
+     * @param		{string}	[format]	file format name will be added at the end after '.'
      * @returns	    {string}	filename
      * @memberof    notStoreDriver
      */
@@ -163,7 +163,7 @@ class notStoreDriver {
      */
     resolvePath(pathInStore) {
         return notStoreDriver.filenameResolver.resolvePath(pathInStore, {
-            path: this.getOptionValueCheckENV("path"),
+            path: this.getOptionValueCheckENV("pathToStoreRoot"),
         });
     }
 
@@ -181,7 +181,7 @@ class notStoreDriver {
             postfix,
             format,
             {
-                path: this.getOptionValueCheckENV("path"),
+                path: this.getOptionValueCheckENV("pathToStoreRoot"),
                 groupFiles: this.getOptionValueCheckENV("groupFiles"),
             }
         );

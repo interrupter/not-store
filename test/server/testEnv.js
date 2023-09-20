@@ -1,7 +1,7 @@
+const notNode = require("not-node");
 const path = require("path");
-const notStore = require("../../");
-
-const store = require("../../").notStore;
+const notStore = require("../../").notStore;
+const { ObjectId } = require("mongoose").Types;
 
 const FILE_COUNT = 4;
 
@@ -53,30 +53,13 @@ for (let t in AUTHS) {
     });
 }
 
-function initFileStore(notApp, config) {
-    notApp.log("Setting up test file stores...");
-
-    let storeConfig = config.get("modules:store");
-
-    storeConfig.common.tmp = path.resolve(
-        __dirname,
-        "../node",
-        storeConfig.common.tmp
-    );
-    notApp.log(storeConfig);
-    notApp.log(`Store temp dir ${storeConfig.common.tmp}`);
-    let store = new notStore.notStoreYandex(storeConfig.common);
-    notStore.notStore.addInterface("client", store);
-    let storeRoot = new notStore.notStoreYandex(storeConfig.common);
-    notStore.notStore.addInterface("root", storeRoot);
-}
-
 function shutDown() {
-    let File = notApp.getModel("not-store//File");
+    const File = notNode.Application.getModel("not-store//File");
     File.listAll()
         .then(async (list) => {
             for (let file of list) {
-                await store.delete(file.bucket, file.metadata);
+                const store = await notStore.get(file.store);
+                await store.delete(file.path, file.metadata);
             }
             process.exit(0);
         })
@@ -88,31 +71,51 @@ function shutDown() {
 
 module.exports = async (notApp, config) => {
     try {
+        const FileLogic = notNode.Application.getLogic("not-store//File");
         process.on("SIGTERM", shutDown);
         process.on("SIGINT", shutDown);
-        initFileStore(notApp, config);
         //creating few records for files
-        let routes = notApp.getModule("not-store").getRoute("file");
         let t = 0;
         for (let role in AUTHS) {
+            const store = await notStore.get(`test_store_${role}`);
+            const userId = new ObjectId();
             console.log(role, AUTHS[role]);
             for (let i = 0; i < FILE_COUNT; i++) {
                 t++;
                 t = t % FILES.length;
                 let filePath = FILES[t];
-                await routes.uploadFile(
-                    AUTHS[role],
-                    role === "root" ? "root" : "client",
+                const fpath = path.parse(filePath);
+                await FileLogic.uploadFile(
+                    store,
                     filePath,
                     {
-                        name: path.parse(filePath).name,
+                        name: fpath.name,
                         size: t,
-                        format: path.parse(filePath).ext.slice(1),
+                        format: fpath.ext.slice(1),
+                    },
+                    {
+                        session: `${t}_session`,
+                        ip: "127.0.0.1",
+                        id: userId,
                     }
                 );
             }
         }
+        const results = await FileLogic.listAndCount({
+            query: {
+                size: 100,
+                skip: 0,
+                filter: {},
+                sorter: { _id: -1 },
+                search: undefined,
+            },
+        });
+        results.list = results.list.map((item) =>
+            JSON.stringify(item.toObject(), null, 4)
+        );
+        console.log(results);
     } catch (e) {
+        console.error(e);
         notApp.report(e);
     }
 };

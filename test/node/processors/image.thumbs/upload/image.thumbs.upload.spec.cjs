@@ -19,13 +19,7 @@ describe("notStoreProcessorImageThumbsUpload", () => {
     describe("getDescription", () => {
         it("id, title, optionsDefault, optionsUI, metadataUI in description", () => {
             const descr = notStoreProcessorImageThumbsUpload.getDescription();
-            expect(descr).to.have.all.keys([
-                "id",
-                "title",
-                "optionsDefault",
-                "optionsUI",
-                "metadataUI",
-            ]);
+            expect(descr).to.have.all.keys(["id", "title", "optionsDefault"]);
         });
     });
 

@@ -153,12 +153,12 @@
         </div>
         <div class="field">
             <UILabel
-                id="form-field-textfield-path"
-                label={`${MODULE_NAME}:field_store_driver_timeweb_options_path`}
+                id="form-field-textfield-pathToStoreRoot"
+                label={`${MODULE_NAME}:field_store_driver_timeweb_options_pathToStoreRoot`}
             />
             <UITextfield
                 bind:readonly
-                bind:value={value.path}
+                bind:value={value.pathToStoreRoot}
                 on:change={onChange}
                 fieldname="path"
             />

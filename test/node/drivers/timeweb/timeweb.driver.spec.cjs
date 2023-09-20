@@ -17,7 +17,7 @@ const {
 } = require("../../../../src/exceptions/driver.streamer.exception.cjs");
 
 describe("notStoreDriverTimeweb", () => {
-    const STORE_NAME = "test_store";
+    const STORE_NAME = "test_store_root";
 
     const TEST_STORE = {
         accessKeyId: "ENV$TIMEWEB_BUCKET_ID",
@@ -27,7 +27,7 @@ describe("notStoreDriverTimeweb", () => {
         region: "ru-1",
         apiVersion: "latest",
         bucket: "ENV$TIMEWEB_BUCKET_NAME",
-        path: "ENV$TIMEWEB_BUCKET_PATH",
+        pathToStoreRoot: "ENV$TIMEWEB_BUCKET_PATH",
         tmp: "/var/tmp",
         groupFiles: false,
     };
@@ -66,7 +66,7 @@ describe("notStoreDriverTimeweb", () => {
                 "region",
                 "s3ForcePathStyle",
                 "bucket",
-                "path",
+                "pathToStoreRoot",
                 "tmp",
                 "groupFiles",
             ]);
@@ -83,7 +83,7 @@ describe("notStoreDriverTimeweb", () => {
             expect(options.secretAccessKey).to.be.equal(
                 process.env.TIMEWEB_BUCKET_KEY
             );
-            expect(store.getOptionValueCheckENV("path")).to.be.equal(
+            expect(store.getOptionValueCheckENV("pathToStoreRoot")).to.be.equal(
                 process.env.TIMEWEB_BUCKET_PATH
             );
             expect(store.getOptionValueCheckENV("bucket")).to.be.equal(
@@ -280,6 +280,8 @@ describe("notStoreDriverTimeweb", () => {
                 "pre",
                 "post",
                 "counter",
+                "path",
+                "cloud",
             ]);
             expect(info.pre).to.be.true;
             expect(info.post).to.be.true;

@@ -1,0 +1,152 @@
+{
+    "port": 7357,
+    "host": "test.local",
+    "cors": [
+        "*"
+    ],
+    "template": {
+        "engine": "pug",
+        "views": "views",
+        "partialsDir": "partials",
+        "partials": {}
+    },
+    "db": {
+        "mongoose": {
+            "uri": "",
+            "options": {
+                "useNewUrlParser": true,
+                "useUnifiedTopology": true,
+                "db": "test",
+                "host": "localhost",
+                "user": "",
+                "pass": "",
+                "autoIndex": false
+            }
+        },
+        "redis": {},
+        "ioredis": {
+            "enableOfflineQueue": false
+        }
+    },
+    "session": {
+        "driver": "redis",
+        "secret": "34097592384-fm195u023947623097udf928hn3j476-g2ni09u",
+        "cookie": {
+            "maxAge": 2628000000
+        },
+        "key": "SessionID"
+    },
+    "path": {
+        "static": "../browser",
+        "app": "/client",
+        "front": "../front/build"
+    },
+    "defaultUserRole": "user",
+    "modules": {
+        "store": {
+            "configReader": "not-config",
+            "stores": {
+                "test_store_guest": {
+                    "driver": "timeweb",
+                    "options": {
+                        "accessKeyId": "ENV$TIMEWEB_BUCKET_ID",
+                        "secretAccessKey": "ENV$TIMEWEB_BUCKET_KEY",
+                        "endpoint": "https://s3.timeweb.com",
+                        "s3ForcePathStyle": true,
+                        "region": "ru-1",
+                        "apiVersion": "latest",
+                        "bucket": "ENV$TIMEWEB_BUCKET_NAME",
+                        "pathToStoreRoot": "ENV$TIMEWEB_BUCKET_PATH_GUEST",
+                        "tmp": "/var/tmp",
+                        "groupFiles": false
+                    },
+                    "processors": {}
+                },
+                "test_store_user": {
+                    "driver": "timeweb",
+                    "options": {
+                        "accessKeyId": "ENV$TIMEWEB_BUCKET_ID",
+                        "secretAccessKey": "ENV$TIMEWEB_BUCKET_KEY",
+                        "endpoint": "https://s3.timeweb.com",
+                        "s3ForcePathStyle": true,
+                        "region": "ru-1",
+                        "apiVersion": "latest",
+                        "bucket": "ENV$TIMEWEB_BUCKET_NAME",
+                        "pathToStoreRoot": "ENV$TIMEWEB_BUCKET_PATH_USER",
+                        "tmp": "/var/tmp",
+                        "groupFiles": false
+                    },
+                    "processors": {}
+                },
+                "test_store_root": {
+                    "driver": "timeweb",
+                    "options": {
+                        "accessKeyId": "ENV$TIMEWEB_BUCKET_ID",
+                        "secretAccessKey": "ENV$TIMEWEB_BUCKET_KEY",
+                        "endpoint": "https://s3.timeweb.com",
+                        "s3ForcePathStyle": true,
+                        "region": "ru-1",
+                        "apiVersion": "latest",
+                        "bucket": "ENV$TIMEWEB_BUCKET_NAME",
+                        "pathToStoreRoot": "ENV$TIMEWEB_BUCKET_PATH_ROOT",
+                        "tmp": "/var/tmp",
+                        "groupFiles": false
+                    },
+                    "processors": {}
+                }
+            }
+        },
+        "user": {
+            "root": {
+                "username": "root",
+                "password": "qwertyuiop1234567890",
+                "email": "fake@mail.addr"
+            },
+            "errors": {
+                "noUserData": false,
+                "noUserWithId": false
+            },
+            "debug": {
+                "loaded": false
+            },
+            "tokenTTL": 3600,
+            "secret": "34097sdfg592sdfg384-fsdfgm195u023sdfgfgsdf47623097udf928hn3sdt wertj476-g2ni092313454u",
+            "roles": {
+                "primary": [
+                    "root",
+                    "user",
+                    "guest"
+                ],
+                "secondary": [
+                    "confirmed"
+                ]
+            },
+            "restrict": {
+                "registration": true
+            }
+        },
+        "filter": {
+            "size": 15,
+            "default": {
+                "filter": {},
+                "sorter": {
+                    "_id": 1
+                },
+                "pager": {
+                    "size": 15,
+                    "skip": 0,
+                    "page": 0
+                },
+                "search": ""
+            }
+        }
+    },
+    "middleware": {
+        "not-options": {},
+        "not-user": {}
+    },
+    "importModulesFromNPM": [
+        "not-options",
+        "not-user"
+    ]
+}

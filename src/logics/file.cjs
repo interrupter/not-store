@@ -1,4 +1,5 @@
 // @ts-check
+const path = require("node:path");
 
 const notNode = require("not-node");
 const Log = require("not-log")(module, "logics");
@@ -15,23 +16,32 @@ class File {
     static async uploadFile(storeBucket, file, info, owner) {
         try {
             const App = notNode.Application;
-            const uploadResult = await storeBucket.upload(file, {});
-            if(uploadResult instanceof notError){
+            const fileFormat =
+                info?.format ||
+                info?.mimetype ||
+                path.parse(info.name).ext.replace(".", "");
+            const uploadResult = await storeBucket.upload(file, {
+                format: fileFormat,
+            });
+            console.log("uploadResult", uploadResult);
+            if (uploadResult instanceof notError) {
                 throw uploadResult;
             }
-            const [result, fileInfo] = uploadResult;
+            const [, fileInfo] = uploadResult;
             const File = App.getModel("File");
             let fileName = info?.name || fileInfo?.name_tmp;
-            App.logger.debug(
-                "store.add.then",
-                storeBucket.name,
-                fileName,
-                fileInfo
+            const extension = fileInfo?.metadata?.format || fileFormat;
+            App.logger.info(
+                `add file(${fileName}) to store(${storeBucket.name}) `,
+                info,
+                fileInfo,
+                extension
             );
+
             let fileData = {
                 uuid: fileInfo.uuid,
                 name: fileInfo.uuid,
-                extension: fileInfo?.metadata?.format || info?.mimetype,
+                extension,
                 store: storeBucket.name,
                 info: fileInfo || {},
                 path: fileInfo.path,
@@ -176,7 +186,14 @@ class File {
         const App = notNode.Application;
         try {
             let File = App.getModel("File");
-            let result = await File.listAndCount(query.skip, query.size, query.sorter, query.filter, query.search,[]);
+            let result = await File.listAndCount(
+                query.skip,
+                query.size,
+                query.sorter,
+                query.filter,
+                query.search,
+                []
+            );
             return result;
         } catch (e) {
             throw new notError("store.list error", {}, e);

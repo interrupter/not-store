@@ -1,0 +1,16 @@
+{
+    "name": "test server",
+    "targets": {
+        "server": {
+            "roles": [
+                "root",
+                "user",
+                "guest"
+            ],
+            "modules": {
+                "not-options": {},
+                "not-user": {}
+            }
+        }
+    }
+}

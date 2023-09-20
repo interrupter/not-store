@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: exports</title>
+	<title>Documentation Class: notStoreProcessorImageDeleteRemote</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,13 +72,13 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: exports</h1>
+	<h1 class="page-title">Class: notStoreProcessorImageDeleteRemote</h1>
 <section>
 
 <header>
     
         <h2>
-        exports
+        notStoreProcessorImageDeleteRemote
         </h2>
         
     
@@ -91,7 +91,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="exports"><span class="type-signature"></span>new exports()</h4>
+    <h4 class="name" id="notStoreProcessorImageDeleteRemote"><span class="type-signature"></span>new notStoreProcessorImageDeleteRemote()</h4>
     
     
 </dt>
@@ -165,6 +165,17 @@
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="notStoreProcessor.html">notStoreProcessor</a></li>
+    </ul>
+
+
+    
 
     
 
@@ -183,7 +194,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="extract"><span class="type-signature"></span>extract(req)</h4>
+    <h4 class="name" id=".filenameToDelete"><span class="type-signature">&lt;static> </span>filenameToDelete(fileInfo [, preprocOptions])</h4>
     
     
 </dt>
@@ -191,7 +202,7 @@
 
     
     <div class="description">
-        Extracts data
+        returns Key from info.cloud = {Key, key, Location, ETag, Bucket}
     </div>
     
 
@@ -214,6 +225,8 @@
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -226,13 +239,13 @@
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>fileInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">ExpressRequest</span>
+<span class="param-type">object</span>
 
 
 
@@ -240,10 +253,52 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">expressjs request object</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>preprocOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -306,10 +361,6 @@
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    forma data
-</div>
-
 
 
 <dl>
@@ -318,7 +369,10 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
+|
+
+<span class="param-type">false</span>
 
 
 
@@ -335,7 +389,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="extract"><span class="type-signature"></span>extract(req)</h4>
+    <h4 class="name" id=".getDescription"><span class="type-signature">&lt;static> </span>getDescription()</h4>
     
     
 </dt>
@@ -343,8 +397,89 @@
 
     
     <div class="description">
-        Extracts data
+        Information about processor
     </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".run"><span class="type-signature">&lt;async, static> </span>run(filename, fileInfo, options, driver)</h4>
+    
+    
+</dt>
+<dd>
+
     
 
     
@@ -378,7 +513,79 @@
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fileInfo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>driver</code></td>
             
 
             <td class="type">
@@ -449,168 +656,20 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    forma data
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
 
-        </dl>
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-	<h1 class="page-title">Class: exports</h1>
-<section>
-
-<header>
-    
-        <h2>
-        exports
-        </h2>
         
-    
-</header>
-
-
-<article>
-    <div class="container-overview">
-    
-        
+            
 <hr>
 <dt>
-    <h4 class="name" id="exports"><span class="type-signature"></span>new exports()</h4>
+    <h4 class="name" id=".updateInfoAfterDelete"><span class="type-signature">&lt;static> </span>updateInfoAfterDelete(fileInfo [, preprocOptions])</h4>
     
     
 </dt>
 <dd>
 
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="extract"><span class="type-signature"></span>extract(req)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Extracts data
-    </div>
     
 
     
@@ -632,7 +691,11 @@
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -644,13 +707,13 @@
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>fileInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">ExpressRequest</span>
+<span class="param-type">object</span>
 
 
 
@@ -658,153 +721,59 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">expressjs request object</td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    forma data
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="extract"><span class="type-signature"></span>extract(req)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Extracts data
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>preprocOptions</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type">object</span>
+
+
+
+            
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -867,30 +836,6 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    forma data
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>

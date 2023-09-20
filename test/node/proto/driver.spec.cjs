@@ -108,7 +108,7 @@ describe("Proto/Driver", function () {
     describe("composeFilePath", () => {
         it("options.path is set, options.groupFiles = true", () => {
             const store = new notStoreDriver({
-                path: "store-1",
+                pathToStoreRoot: "store-1",
                 groupFiles: true,
             });
             const filename = "1234567890.jpg";
@@ -127,7 +127,7 @@ describe("Proto/Driver", function () {
 
         it("options.path set, options.groupFiles = false", () => {
             const store = new notStoreDriver({
-                path: "store-1",
+                pathToStoreRoot: "store-1",
                 groupFiles: false,
             });
             const filename = "1234567890.jpg";
@@ -251,7 +251,7 @@ describe("Proto/Driver", function () {
             const postfix = undefined;
             const format = undefined;
             const store = new notStoreDriver({
-                path: "store-1",
+                pathToStoreRoot: "store-1",
                 groupFiles: false,
             });
             const filename = store.composeFullFilename(uuid, postfix, format);
@@ -263,7 +263,7 @@ describe("Proto/Driver", function () {
             const postfix = undefined;
             const format = undefined;
             const store = new notStoreDriver({
-                path: "store-1",
+                pathToStoreRoot: "store-1",
                 groupFiles: true,
             });
             const filename = store.composeFullFilename(uuid, postfix, format);

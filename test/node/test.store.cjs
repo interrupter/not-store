@@ -1,19 +1,10 @@
 const notStoreDriverTimeweb = require("../../src/drivers/timeweb/timeweb.driver.cjs");
 
-const STORE_NAME = "test_store";
+const STORE_NAME = "test_store_root";
 
-const TEST_STORE = {
-    accessKeyId: "ENV$TIMEWEB_BUCKET_ID",
-    secretAccessKey: "ENV$TIMEWEB_BUCKET_KEY",
-    endpoint: "https://s3.timeweb.com",
-    s3ForcePathStyle: true,
-    region: "ru-1",
-    apiVersion: "latest",
-    bucket: "ENV$TIMEWEB_BUCKET_NAME",
-    path: "ENV$TIMEWEB_BUCKET_PATH",
-    tmp: "/var/tmp",
-    groupFiles: false,
-};
+const TEST_STORE = require("../server/config/common.json").modules.store.stores[
+    STORE_NAME
+].options;
 
 const FILES_TO_UPLOAD = ["alps_1.jpg", "alps_2.jpg", "alps_3.jpg"].map(
     (name) => __dirname + "/../browser/files/" + name

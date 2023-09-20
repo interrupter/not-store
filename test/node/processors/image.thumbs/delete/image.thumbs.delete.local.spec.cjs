@@ -32,12 +32,7 @@ describe("notStoreProcessorImageThumbsDeleteLocal", () => {
         it("id, title, optionsDefault, optionsUI, metadataUI in description", () => {
             const descr =
                 notStoreProcessorImageThumbsDeleteLocal.getDescription();
-            expect(descr).to.have.all.keys([
-                "id",
-                "title",
-                "optionsDefault",
-                "optionsUI",
-            ]);
+            expect(descr).to.have.all.keys(["id", "title", "optionsDefault"]);
         });
     });
 

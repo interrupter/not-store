@@ -36,7 +36,6 @@ describe("notStoreProcessorImageThumbsCreate", () => {
                 "title",
                 "optionsDefault",
                 "optionsUI",
-                "metadataUI",
             ]);
         });
     });

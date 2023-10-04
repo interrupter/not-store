@@ -44,6 +44,7 @@
     "defaultUserRole": "user",
     "modules": {
         "store": {
+            "sessionRequired": true,
             "configReader": "not-config",
             "stores": {
                 "test_store_guest": {

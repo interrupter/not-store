@@ -94,7 +94,7 @@ module.exports = async (notApp, config) => {
                         format: fpath.ext.slice(1),
                     },
                     {
-                        session: `${t}_session`,
+                        session: `${role}_session`,
                         ip: "127.0.0.1",
                         id: userId,
                     }

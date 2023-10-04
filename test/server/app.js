@@ -39,6 +39,37 @@ module.exports = () => {
                     master.getApp().importModuleFrom(modPath, "not-store");
                 },
             },
+            post: ({ master }) => {
+                master.getServer().use((req, res, next) => {
+                    console.log(req.originalUrl, req.query);
+                    //test environment hacks
+                    try {
+                        if (req.query) {
+                            console.log(
+                                "change user identity to",
+                                req.query.session,
+                                req.query.role
+                            );
+                            if (req.session) {
+                                req.session.id = req.query.session;
+                                req.session.role = [req.query.role];
+                            } else if (!req.session) {
+                                req.session = {
+                                    id: req.query.session,
+                                    role: req.query.role,
+                                    save() {
+                                        console.trace();
+                                    },
+                                };
+                            }
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+
+                    next();
+                });
+            },
         },
         async post({ master, config }) {
             await require("./testEnv")(master.getApp(), config);

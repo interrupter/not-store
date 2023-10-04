@@ -1,5 +1,6 @@
-	<!doctype html>
+<!doctype html>
 <html class="no-js" lang="">
+
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -13,45 +14,46 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
 	<script type="module" src="/fetch.xhr.js"></script>
 	<style>
-	.storage-area{
-		width: 30vw;
-		height: 20vh;
-		display: block;
-		margin: 2vw;
-		float: left;
-	}
+		.storage-area {
+			width: 30vw;
+			height: 20vh;
+			display: block;
+			margin: 2vw;
+			float: left;
+		}
 
-	.upload-area{
-		width: 30vw;
-		height: 20vh;
-		display: block;
-		margin: 2vw;
-		float: left;
-	}
+		.upload-area {
+			width: 30vw;
+			height: 20vh;
+			display: block;
+			margin: 2vw;
+			float: left;
+		}
 
-	.wide{
-		width: 90vw;
-	}
+		.wide {
+			width: 90vw;
+		}
 	</style>
 </head>
+
 <body>
 	<div class="storage-area"></div>
 	<div class="upload-area"></div>
 	<script src="/assets/store/notStore.js"></script>
 	<script>
 		let STORE;
-		function startTest(e){
+		function startTest(e) {
 			STORE = new notStore.notStore({
 				uploadEl: document.querySelector('.upload-area'),
 				storageEl: document.querySelector('.storage-area'),
-				upload:{
+				upload: {
 					show: true,
 					popup: true
 				},
 				test: {
 					session: 'guest_session'
 				},
-				bucket: 'client'
+				store: 'test_store_guest'
 			});
 		}
 		document.addEventListener('DOMContentLoaded', () => {

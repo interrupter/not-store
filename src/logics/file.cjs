@@ -1,3 +1,5 @@
+const { MODULE_NAME } = require("../const.cjs");
+
 // @ts-check
 const path = require("node:path");
 
@@ -6,11 +8,23 @@ const Log = require("not-log")(module, "logics");
 const config = require("not-config").readerForModule("store");
 
 const store = require("../../").notStore;
-const mongoose = require("mongoose");
+const {
+    HttpExceptionNotFound,
+    HttpExceptionBadRequest,
+} = require("not-node/src/exceptions/http");
+const {
+    notStoreFileLogicExceptionDeleteDBError,
+    notStoreFileLogicExceptionDeleteUserSessionIsNotValid,
+} = require("../exceptions/logic.file.exceptions.cjs");
+
 const notError = require("not-error/src/error.node.cjs");
 
-const NAME = "File";
-exports.thisLogicName = NAME;
+const MODEL_NAME = "File";
+exports.thisLogicName = MODEL_NAME;
+
+const getModel = () => {
+    return notNode.Application.getModel(`${MODULE_NAME}//${MODEL_NAME}`);
+};
 
 class File {
     static async uploadFile(storeBucket, file, info, owner) {
@@ -200,45 +214,78 @@ class File {
         }
     }
 
-    static async delete({ fileId, sessionId = undefined, admin = false }) {
-        if (!mongoose.Types.ObjectId.isValid(fileId)) {
-            throw new notError("delete error; fileId is not ObjectId", {
-                fileId,
-                sid: sessionId,
-                admin,
+    static async delete({ targetId, identity }) {
+        let docFile = await this.loadOneFile(targetId, identity);
+        const storage = await store.get(docFile.store);
+        if (!storage) {
+            throw new HttpExceptionNotFound({
+                params: { targetId, identity, tags: ["file.delete", "store"] },
             });
+        }
+        const objFile = docFile.toObject();
+        const result = await storage.delete(objFile.path, objFile.info);
+        if (Array.isArray(result)) {
+            const [, info] = result;
+            //updating document as closed
+            await docFile.close({ info });
+            return docFile.toObject();
+        } else if (result instanceof notError) {
+            throw result;
         } else {
-            const App = notNode.Application;
-            let File = App.getModel("File");
+            throw new HttpExceptionBadRequest({
+                params: {
+                    targetId,
+                    identity,
+                    tags: ["file.delete", "unknown"],
+                },
+            });
+        }
+    }
 
-            if (admin) {
-                let result = File.getOneByIdAndRemove(fileId, undefined);
-                if (result) {
-                    return result;
-                } else {
-                    throw new Error("delete error; db error");
-                }
-            } else if (
-                typeof sessionId !== "undefined" &&
-                sessionId !== null &&
-                sessionId &&
-                sessionId.length > 10
-            ) {
-                let result = File.getOneByIdAndRemove(fileId, sessionId);
-                if (result) {
-                    return { status: "ok" };
-                } else {
-                    return { status: "failed" };
-                }
+    static async loadOneFile(targetId, identity) {
+        try {
+            const File = getModel();
+            const sessionRequired = config.get("sessionRequired");
+            let result;
+            //if super users
+            if (identity.admin || identity.root) {
+                result = await File.findOneById(targetId);
+            }
+            //if authenticated users
+            else if (identity.auth) {
+                result = await File.findOneByIdAndOwnerId(
+                    targetId,
+                    identity.uid
+                );
+            }
+            //guest users
+            else if (sessionRequired) {
+                result = await File.findOneByIdAndSession(
+                    targetId,
+                    identity.sid
+                );
+            }
+            if (result) {
+                return result;
+            }
+            throw new HttpExceptionNotFound({
+                params: {
+                    targetId,
+                    identity,
+                    sessionRequired,
+                },
+            });
+        } catch (e) {
+            if (e instanceof HttpExceptionNotFound) {
+                throw e;
             } else {
-                throw new notError("delete error; no user session id", {
-                    fileId,
-                    sid: sessionId,
-                    admin,
+                throw new HttpExceptionNotFound({
+                    params: { targetId, identity },
+                    cause: e,
                 });
             }
         }
     }
 }
 
-exports[NAME] = File;
+exports[MODEL_NAME] = File;

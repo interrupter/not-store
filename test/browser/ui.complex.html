@@ -1,5 +1,6 @@
-	<!doctype html>
+<!doctype html>
 <html class="no-js" lang="">
+
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -13,32 +14,33 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
 	<script type="module" src="/fetch.xhr.js"></script>
 </head>
+
 <body>
 	<script>
-	function showFileSelectPopup(){
-		console.log('show select file popup');
-		if(!STORE['user_complex']){
-			STORE['user_complex'] = new notStore.notStore({
-				complexEl: document.body,
-				bucket: 'root',
-				test:{
-					role: 'root',
-					session: `root_session`,
-				},
-				selectMany: true,
-				complex: {
-					popup: true,
-					show: true
-				}
-			});
-		}else{
-			STORE['user_complex'].show().then(console.log).catch(console.error);
+		function showFileSelectPopup() {
+			console.log('show select file popup');
+			if (!STORE['user_complex']) {
+				STORE['user_complex'] = new notStore.notStore({
+					complexEl: document.body,
+					store: 'test_store_guest',
+					test: {
+						role: 'guest',
+						session: `guest_session`,
+					},
+					selectMany: true,
+					complex: {
+						popup: true,
+						show: true
+					}
+				});
+			} else {
+				STORE['user_complex'].show().then(console.log).catch(console.error);
+			}
 		}
-	}
 	</script>
 	<button type="button" id="popupTrigger" onclick="showFileSelectPopup()">Select</button>
 	<div id="results"></div>
-	<br/>
+	<br />
 	<script src="/assets/store/notStore.js"></script>
 	<script>
 		let roles = ['root', 'user', 'guest'];

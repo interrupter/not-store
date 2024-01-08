@@ -12,18 +12,20 @@ const tryFileAsync = require("not-node").Common.tryFileAsync;
 
 const { OPT_MAX_INPUT_PATH_LENGTH } = require("../const.cjs");
 
+const httpOptions = require('../http.options.js');
+
 const {
     notStoreDriverStreamerExceptionNotStreamableSource,
     notStoreDriverStreamerExceptionFileNotExists,
 } = require("../exceptions/driver.streamer.exception.cjs");
 
 /**
- * @typedef {ReadableStream|fs.ReadStream|http.IncomingMessage|Stream.Duplex} ReadingPipe
+ * @typedef {NodeJS.ReadableStream|fs.ReadStream|http.IncomingMessage|Stream.Duplex} ReadingPipe
  */
 class notStoreDriverStreamer {
     /**
      *	converts "anything" to readable stream
-     *	@param {String|Buffer|ReadableStream} source	source of data
+     *	@param {String|Buffer|NodeJS.ReadableStream} source	source of data
      *	@returns	{Promise<ReadingPipe>} for data consumption
      **/
     static async convertToReadableStream(source) {
@@ -88,17 +90,23 @@ class notStoreDriverStreamer {
     static async readableStreamFromURL(source) {
         return new Promise((resolve, reject) => {
             try {
+                const HTTP_OPTIONS = this.getHTTPOptions();
                 if (isUrl.isHttpsUri(source)) {
-                    https.get(source, resolve);
+                    https.get(source, HTTP_OPTIONS, resolve);
                 } else {
                     if (isUrl.isHttpUri(source)) {
-                        http.get(source, resolve);
+                        http.get(source, HTTP_OPTIONS, resolve);
                     }
                 }
             } catch (e) {
                 reject(e);
             }
         });
+    }
+
+
+    static getHTTPOptions(){
+        return httpOptions();
     }
 
     /**

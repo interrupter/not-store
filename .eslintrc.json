@@ -14,7 +14,7 @@
         "mongo": true,
         "mocha": true
     },
-    "plugins": ["svelte3"],
+    "plugins": ["svelte3", "perfectionist"],
     "overrides": [
         {
             "files": ["*.svelte"],
@@ -26,6 +26,13 @@
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": ["error", "unix"],
         "semi": ["error", "always"],
-        "no-useless-escape": [0]
+        "no-useless-escape": [0],
+        "perfectionist/sort-objects": [
+            "error",
+            {
+                "type": "natural",
+                "order": "asc"
+            }
+        ]
     }
 }

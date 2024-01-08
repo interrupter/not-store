@@ -1,9 +1,10 @@
-import notFileCRUDActionUploadFile from "../common/actions/upload.file.action";
+import notFileCRUDActionUploadFile from '../common/actions/upload.file.action';
 import Validators from "../common/validators.js";
 import { MODULE_NAME } from "../../const.cjs";
 import { Frame } from "not-bulma";
-import FileFilterUI from "../common/file.filter.svelte";
+import FileFilterUI from '../common/file.filter.svelte';
 const { notCRUD } = Frame;
+
 
 const MODEL_NAME = "file";
 
@@ -12,15 +13,16 @@ const LABELS = {
     single: "Файл",
 };
 
-const DEFAULT_OPTS = {
-    preview: {
-        width: 100,
-        height: 100,
-    },
+
+const DEFAULT_OPTS = {	
+	preview: {
+		width: 100,
+		height: 100
+	}
 };
 
 const CUSTOM_ACTIONS = {
-    create: notFileCRUDActionUploadFile,
+    create: notFileCRUDActionUploadFile
 };
 
 class ncFile extends notCRUD {
@@ -28,9 +30,9 @@ class ncFile extends notCRUD {
     static MODEL_NAME = MODEL_NAME;
 
     constructor(app, params) {
-        super(app, `${MODEL_NAME}`, { actions: CUSTOM_ACTIONS });
+        super(app, `${MODEL_NAME}`, {actions:CUSTOM_ACTIONS});
         this.setModuleName(MODULE_NAME);
-        this.setModelName(MODEL_NAME);
+        this.setModelName(MODEL_NAME);        
         this.setOptions("names", LABELS);
         this.setOptions("Validators", Validators);
         this.setOptions("params", params);
@@ -57,19 +59,19 @@ class ncFile extends notCRUD {
                 },
                 {
                     path: ":name",
-                    title: "Имя",
+                    title: `${MODULE_NAME}:field_name_label`,
                     searchable: true,
                     sortable: true,
                 },
                 {
                     path: ":extension",
-                    title: "Формат",
+                    title: `${MODULE_NAME}:field_extension_label`,
                     searchable: true,
                     sortable: true,
                 },
                 {
                     path: ":store",
-                    title: "Бакет",
+                    title: `${MODULE_NAME}:field_store_label`,
                     searchable: true,
                     sortable: true,
                 },
@@ -84,7 +86,7 @@ class ncFile extends notCRUD {
                             {
                                 title: item.name,
                                 url: value,
-                                urlFull: item.info.thumbs.small.cloud.Location,
+                                urlFull: item.info.thumbs.original.cloud.Location,
                                 cors: "anonymous",
                             },
                         ];
@@ -118,14 +120,18 @@ class ncFile extends notCRUD {
                 },
             ],
         });
-
+        
         this.start();
         return this;
     }
 
+   
+   
     getItemTitle(item) {
         return item.fileID + "#" + item.name;
     }
+
+   
 }
 
 export default ncFile;

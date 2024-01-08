@@ -133,7 +133,7 @@ class notStoreDriver {
      */
     composeFilePath(fname) {
         return notStoreDriver.filenameResolver.composePathToFile(fname, {
-            path: this.getOptionValueCheckENV("pathToStoreRoot"),
+            path: this.getOptionValueCheckENV("path"),
             groupFiles: this.getOptionValueCheckENV("groupFiles"),
         });
     }
@@ -141,8 +141,8 @@ class notStoreDriver {
     /**
      *	Returns filaname for object by uuid, postfix and format
      * @param		{string}	uuid		unique id of object
-     * @param		{string}	[postfix]	postfix that will be added at end of uuid after '_'
-     * @param		{string}	[format]	file format name will be added at the end after '.'
+     * @param		{string}	postfix	postfix that will be added at end of uuid after '_'
+     * @param		{string}	format	file format name will be added at the end after '.'
      * @returns	    {string}	filename
      * @memberof    notStoreDriver
      */
@@ -163,7 +163,7 @@ class notStoreDriver {
      */
     resolvePath(pathInStore) {
         return notStoreDriver.filenameResolver.resolvePath(pathInStore, {
-            path: this.getOptionValueCheckENV("pathToStoreRoot"),
+            path: this.getOptionValueCheckENV("path"),
         });
     }
 
@@ -181,7 +181,7 @@ class notStoreDriver {
             postfix,
             format,
             {
-                path: this.getOptionValueCheckENV("pathToStoreRoot"),
+                path: this.getOptionValueCheckENV("path"),
                 groupFiles: this.getOptionValueCheckENV("groupFiles"),
             }
         );
@@ -277,12 +277,13 @@ class notStoreDriver {
 
     /**
      * returns promise of a number of bytes in a target file
-     * @param       {string}      path    full path to file
+     * @param       {string}      filePath    full path to file
      * @returns     {Promise<number>}    file size in bytes
      * @memberof    notStoreDriver
      */
-    async getFileSize(path) {
-        const stats = await fs.promises.stat(path);
+    async getFileSize(filePath) {
+        const stats = await fs.promises.stat(filePath);
+        const file = await fs.promises.readFile(filePath, {encoding:'utf-8'});
         return stats.size;
     }
 

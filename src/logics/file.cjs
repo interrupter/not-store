@@ -1,61 +1,43 @@
-const { MODULE_NAME } = require("../const.cjs");
-
 // @ts-check
-const path = require("node:path");
-
+const {MODULE_NAME} = require('../const.cjs');
 const notNode = require("not-node");
 const Log = require("not-log")(module, "logics");
 const config = require("not-config").readerForModule("store");
 
 const store = require("../../").notStore;
-const {
-    HttpExceptionNotFound,
-    HttpExceptionBadRequest,
-} = require("not-node/src/exceptions/http");
-const {
-    notStoreFileLogicExceptionDeleteDBError,
-    notStoreFileLogicExceptionDeleteUserSessionIsNotValid,
-} = require("../exceptions/logic.file.exceptions.cjs");
-
+const mongoose = require("mongoose");
 const notError = require("not-error/src/error.node.cjs");
 
-const MODEL_NAME = "File";
-exports.thisLogicName = MODEL_NAME;
+const NAME = "File";
+exports.thisLogicName = NAME;
 
-const getModel = () => {
-    return notNode.Application.getModel(`${MODULE_NAME}//${MODEL_NAME}`);
-};
+const getModel = ()=>notNode.Application.getModel(`${MODULE_NAME}//${NAME}`);
 
 class File {
+    static async get({identity, targetId}){
+        return await getModel().getOne(targetId, [{ path: 'userId', select: '_id userID username' }]);
+    }
+
     static async uploadFile(storeBucket, file, info, owner) {
         try {
             const App = notNode.Application;
-            const fileFormat =
-                info?.format ||
-                info?.mimetype ||
-                path.parse(info.name).ext.replace(".", "");
-            const uploadResult = await storeBucket.upload(file, {
-                format: fileFormat,
-            });
-            console.log("uploadResult", uploadResult);
-            if (uploadResult instanceof notError) {
+            const uploadResult = await storeBucket.upload(file, {});
+            if(uploadResult instanceof notError){
                 throw uploadResult;
             }
-            const [, fileInfo] = uploadResult;
+            const [result, fileInfo] = uploadResult;
             const File = App.getModel("File");
             let fileName = info?.name || fileInfo?.name_tmp;
-            const extension = fileInfo?.metadata?.format || fileFormat;
-            App.logger.info(
-                `add file(${fileName}) to store(${storeBucket.name}) `,
-                info,
-                fileInfo,
-                extension
+            App.logger.debug(
+                "store.add.then",
+                storeBucket.name,
+                fileName,
+                fileInfo
             );
-
             let fileData = {
                 uuid: fileInfo.uuid,
                 name: fileInfo.uuid,
-                extension,
+                extension: fileInfo?.metadata?.format || info?.mimetype,
                 store: storeBucket.name,
                 info: fileInfo || {},
                 path: fileInfo.path,
@@ -200,92 +182,52 @@ class File {
         const App = notNode.Application;
         try {
             let File = App.getModel("File");
-            let result = await File.listAndCount(
-                query.skip,
-                query.size,
-                query.sorter,
-                query.filter,
-                query.search,
-                []
-            );
+            let result = await File.listAndCount(query.skip, query.size, query.sorter, query.filter, query.search,[]);
             return result;
         } catch (e) {
             throw new notError("store.list error", {}, e);
         }
     }
 
-    static async delete({ targetId, identity }) {
-        let docFile = await this.loadOneFile(targetId, identity);
-        const storage = await store.get(docFile.store);
-        if (!storage) {
-            throw new HttpExceptionNotFound({
-                params: { targetId, identity, tags: ["file.delete", "store"] },
+    static async delete({ fileId, sessionId = undefined, admin = false }) {
+        if (!mongoose.Types.ObjectId.isValid(fileId)) {
+            throw new notError("delete error; fileId is not ObjectId", {
+                fileId,
+                sid: sessionId,
+                admin,
             });
-        }
-        const objFile = docFile.toObject();
-        const result = await storage.delete(objFile.path, objFile.info);
-        if (Array.isArray(result)) {
-            const [, info] = result;
-            //updating document as closed
-            await docFile.close({ info });
-            return docFile.toObject();
-        } else if (result instanceof notError) {
-            throw result;
         } else {
-            throw new HttpExceptionBadRequest({
-                params: {
-                    targetId,
-                    identity,
-                    tags: ["file.delete", "unknown"],
-                },
-            });
-        }
-    }
+            const App = notNode.Application;
+            let File = App.getModel("File");
 
-    static async loadOneFile(targetId, identity) {
-        try {
-            const File = getModel();
-            const sessionRequired = config.get("sessionRequired");
-            let result;
-            //if super users
-            if (identity.admin || identity.root) {
-                result = await File.findOneById(targetId);
-            }
-            //if authenticated users
-            else if (identity.auth) {
-                result = await File.findOneByIdAndOwnerId(
-                    targetId,
-                    identity.uid
-                );
-            }
-            //guest users
-            else if (sessionRequired) {
-                result = await File.findOneByIdAndSession(
-                    targetId,
-                    identity.sid
-                );
-            }
-            if (result) {
-                return result;
-            }
-            throw new HttpExceptionNotFound({
-                params: {
-                    targetId,
-                    identity,
-                    sessionRequired,
-                },
-            });
-        } catch (e) {
-            if (e instanceof HttpExceptionNotFound) {
-                throw e;
+            if (admin) {
+                let result = File.getOneByIdAndRemove(fileId, undefined);
+                if (result) {
+                    return result;
+                } else {
+                    throw new Error("delete error; db error");
+                }
+            } else if (
+                typeof sessionId !== "undefined" &&
+                sessionId !== null &&
+                sessionId &&
+                sessionId.length > 10
+            ) {
+                let result = File.getOneByIdAndRemove(fileId, sessionId);
+                if (result) {
+                    return { status: "ok" };
+                } else {
+                    return { status: "failed" };
+                }
             } else {
-                throw new HttpExceptionNotFound({
-                    params: { targetId, identity },
-                    cause: e,
+                throw new notError("delete error; no user session id", {
+                    fileId,
+                    sid: sessionId,
+                    admin,
                 });
             }
         }
     }
 }
 
-exports[MODEL_NAME] = File;
+exports[NAME] = File;

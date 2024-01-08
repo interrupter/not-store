@@ -14,7 +14,8 @@ const {
 } = notNode.Bootstrap.notBootstrapRoute({
     target: module,
     MODEL_NAME,
-    MODULE_NAME
+    MODULE_NAME,
+    defaultAccessRule: true
 });
 
 const StoreGenericRoute = notNode.Generic.GenericRoute({
@@ -24,6 +25,7 @@ const StoreGenericRoute = notNode.Generic.GenericRoute({
 });
 
 class StoreRoute extends StoreGenericRoute {
+    
     static async _listDrivers(/*req, res, next, prepared*/) {
         return await getLogic().listDrivers();
     }

@@ -21,7 +21,7 @@
  * @property {string}    [region]
  * @property {boolean}   [s3ForcePathStyle]
  * @property {string}    [bucket]
- * @property {string}    [pathToStoreRoot]
+ * @property {string}    [path]
  * @property {string}    [tmp]
  * @property {boolean}   [groupFiles]
  */
@@ -41,7 +41,7 @@ const DEFAULT_OPTIONS = {
     s3ForcePathStyle: true,
     ////store options
     bucket: "", //
-    pathToStoreRoot: "/", //sub path in bucket
+    path: "/", //sub path in bucket
     tmp: "/var/server/tmp", //path to local tmp folder
     /**
      * if files should be group in sub dirs by their first few letters

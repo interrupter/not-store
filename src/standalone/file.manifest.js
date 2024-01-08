@@ -1,13 +1,3 @@
-const safeListItemFields = [
-    "_id",
-    "fielID",
-    "name",
-    "extension",
-    "store",
-    "info",
-    "size",
-];
-
 module.exports = {
     model: "file",
     url: "/api/:modelName",
@@ -17,7 +7,7 @@ module.exports = {
             method: "PUT",
             isArray: false,
             data: ["record"],
-            postFix: "/:store?",
+            postFix: "/:bucket?",
             rules: [
                 {
                     auth: true,
@@ -29,6 +19,7 @@ module.exports = {
                 },
                 {
                     auth: false,
+                    root: false,
                 },
             ],
         },
@@ -36,7 +27,23 @@ module.exports = {
             method: "GET",
             isArray: true,
             data: ["pager", "sorter", "filter", "search"],
-            fields: safeListItemFields,
+            fields: [
+                "_id",
+                "uuid",
+                "fileID",
+                "name",
+                "extension",
+                "store",
+                "info",
+                "path",                
+                "size",
+                "userIp",
+                "userId",
+                "session",
+                "createdAt",
+                "updatedAt"
+                
+            ],
             rules: [
                 {
                     auth: true,
@@ -45,45 +52,32 @@ module.exports = {
                 {
                     auth: true,
                     root: false,
-                    return: [
-                        "createdAt",
-                        "updatedAt",
-                        "size",
-                        "uuid",
-                        "extension",
-                        "fileID",
-                        "userId",
-                        "userIp",
-                        "sesison",
-                        "info",
-                        "store",
-                        "name",
-                        "path",
-                        "_id",
-                    ],
                 },
                 {
                     auth: false,
-                    return: [
-                        "createdAt",
-                        "updatedAt",
-                        "size",
-                        "uuid",
-                        "extension",
-                        "fileID",
-                        "info",
-                        "store",
-                        "name",
-                        "path",
-                        "_id",
-                    ],
+                    root: false,
                 },
             ],
         },
         listAndCount: {
             method: "get",
             data: ["pager", "sorter", "filter", "search"],
-            fields: safeListItemFields,
+            fields: [
+                "_id",
+                "uuid",
+                "fileID",
+                "name",
+                "extension",
+                "store",
+                "info",
+                "path",                
+                "size",
+                "userIp",
+                "userId",
+                "session",
+                "createdAt",
+                "updatedAt"
+            ],
             rules: [
                 {
                     auth: true,
@@ -101,7 +95,22 @@ module.exports = {
             isArray: false,
             postFix: "/:record[_id]",
             data: ["filter", "record"],
-            fields: safeListItemFields,
+            fields: [
+                "_id",
+                "uuid",
+                "fileID",
+                "name",
+                "extension",
+                "store",
+                "info",
+                "path",                
+                "size",
+                "userIp",
+                "userId",
+                "session",
+                "createdAt",
+                "updatedAt"
+            ],
             rules: [
                 {
                     auth: true,
@@ -122,7 +131,22 @@ module.exports = {
             isArray: false,
             postFix: "/:record[_id]",
             data: ["filter", "record"],
-            fields: safeListItemFields,
+            fields: [
+                "_id",
+                "uuid",
+                "fileID",
+                "name",
+                "extension",
+                "store",
+                "info",
+                "path",                
+                "size",
+                "userIp",
+                "userId",
+                "session",
+                "createdAt",
+                "updatedAt"
+            ],
             rules: [
                 {
                     auth: true,

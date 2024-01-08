@@ -206,7 +206,7 @@ class ncStore extends notCRUD {
     }
 
     async goTest(_id) {
-        try {
+        try {            
             const res = await this.getModel({ _id }).$test();
             this.log(res);
         } catch (error) {
@@ -215,16 +215,16 @@ class ncStore extends notCRUD {
     }
 
     async goFiles(_id) {
-        try {
-            this.log("files of store", _id);
+        try {            
+            this.log('files of store', _id);
         } catch (error) {
             this.error(error);
         }
     }
 
     async goUpload(_id) {
-        try {
-            this.log("upload to store", _id);
+        try {                        
+            this.log('upload to store', _id);
         } catch (error) {
             this.error(error);
         }

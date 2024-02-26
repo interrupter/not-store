@@ -21,7 +21,7 @@ module.exports = class FileCreateForm extends Form {
 
     /**
      * Extracts data
-     * @param {ExpressRequest} req expressjs request object
+     * @param {import('not-node/src/types').notNodeExpressRequest} req expressjs request object
      * @return {Object}        forma data
      **/
     extract(req) {

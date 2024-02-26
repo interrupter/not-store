@@ -22,19 +22,17 @@ class notStoreDriverProcessors {
     /**
      *
      * @param {string} 	type 	`pre` or `post`
-     * @param {string} 	action 			name of action pipeline dedicated for
-     * @param {string} 	filename 		name of current file
-     * @param {object} 	metadata 		file pipeline metadata
+     * @param {string} 	action 			name of action pipeline dedicated for     
+     * @param {object} 	file 		file document
      * @param {object} 	driver 		    driver instance
      * @returns {Promise}
      * @memberof notStoreDriverProcessors
      */
-    async run(type, action, filename, metadata, driver) {
+    async run(type, action, file, driver) {
         if (this.isSet(type, action)) {
             await notStoreProcessors.run(
                 this.get(type, action), //processors list to run against file
-                filename, //current target file
-                metadata, //file metadata object
+                file, //file  object
                 driver
             );
         }
@@ -69,38 +67,34 @@ class notStoreDriverProcessors {
 
     /**
      * Runs pre processors of action
-     * @param {string}  action      name of action
-     * @param {string}  filename    current target file name
-     * @param {object}  metadata    object with different information about file
-     * @param {object} 	driver 		    driver instance
+     * @param {string}  action      name of action     
+     * @param {object}  file        object with different information about file
+     * @param {object} 	driver 		driver instance
      * @returns {Promise<any>}
      * @memberof notStoreDriverProcessors
      */
-    async runPre(action, filename, metadata, driver) {
+    async runPre(action, file, driver) {
         return this.run(
             PROCESSOR_TYPES.PROCESSOR_TYPE_PRE,
             action,
-            filename,
-            metadata,
+            file,
             driver
         );
     }
 
     /**
      * Runs post processors of action
-     * @param {string}  action      name of action
-     * @param {string}  filename    current target file name
-     * @param {object}  metadata    object with different information about file
-     * @param {object} 	driver 		    driver instance
+     * @param {string}  action      name of action     
+     * @param {object}  file        object with different information about file
+     * @param {object} 	driver 		driver instance
      * @returns {Promise<any>}
      * @memberof notStoreDriverProcessors
      */
-    async runPost(action, filename, metadata, driver) {
+    async runPost(action, file, driver) {
         return this.run(
             PROCESSOR_TYPES.PROCESSOR_TYPE_POST,
             action,
-            filename,
-            metadata,
+            file,
             driver
         );
     }

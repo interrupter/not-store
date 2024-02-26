@@ -53,27 +53,31 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
      */
     //eslint-disable-next-line   no-unused-vars
     static updateInfoAfterDelete(fileInfo, preprocOptions = {}) {
-        Object.keys(fileInfo.thumbs).forEach((key) => {
-            delete fileInfo.thumbs[key].cloud;
-        });
+        /*Object.keys(fileInfo[]).forEach((key) => {
+            delete fileInfo[][key].cloud;
+        });*/
     }
 
     /**
      *
      *
-     * @static
-     * @param {string} filename
-     * @param {object} fileInfo
+     * @static     
+     * @param {object} file
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
      * @memberof notStoreProcessorImageThumbsDeleteRemote
      */
-    static async run(filename, fileInfo, options, driver) {
-        const filenames = this.listOfFilesToDelete(fileInfo, options);
+    static async run(file, options, driver) {
+        if(file.parent){
+            return;
+        }
+        /*
+        const filenames = this.listOfFilesToDelete(file.info, options);
         if (filenames.length) {
             await driver.directDeleteMany(filenames, false);
-            this.updateInfoAfterDelete(fileInfo, options);
+            this.updateInfoAfterDelete(file.info, options);
         }
+        */
     }
 }
 

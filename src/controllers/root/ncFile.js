@@ -76,22 +76,14 @@ class ncFile extends notCRUD {
                     sortable: true,
                 },
                 {
-                    path: ":info.thumbs.micro.cloud.Location",
-                    title: "Превью",
+                    path: ":variant",
+                    title: `${MODULE_NAME}:field_variant_label`,
                     searchable: true,
                     sortable: true,
-                    type: "image",
-                    preprocessor: (value, item) => {
-                        return [
-                            {
-                                title: item.name,
-                                url: value,
-                                urlFull: item.info.thumbs.original.cloud.Location,
-                                cors: "anonymous",
-                            },
-                        ];
-                    },
-                },
+                    preprocessor: (value)=>{
+                        return typeof value === 'undefined'?'':value;
+                    }
+                },                
                 {
                     path: ":_id",
                     title: "Действия",

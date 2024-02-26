@@ -262,7 +262,7 @@ class notStoreDriver {
 
     /**
      *	Downloads file and saves to tmp folder
-     *	@param		{String|Buffer|import('stream').Stream}	file	file in some form or his URI
+     *	@param		{String|Buffer|import('stream').Readable}	file	file in some form or his URI
      *	@returns	{Promise}	of image metadata extracted with sharp with extra fields: uuid, tmpName
      * @memberof    notStoreDriver
      */

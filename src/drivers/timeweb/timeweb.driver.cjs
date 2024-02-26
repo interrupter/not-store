@@ -1,11 +1,12 @@
 // @ts-check
 
 const Log = require("not-log")(module, "Timeweb driver");
-const { MODULE_NAME } = require("../../const.cjs");
+const { MODULE_NAME, OPT_INFO_PARENT } = require("../../const.cjs");
 const S3 = require("aws-sdk/clients/s3");
 
 const notError = require("not-error/src/error.node.cjs");
 const notNode = require("not-node");
+const {partCopyObjExcept} = notNode.Common;
 const path = require("node:path");
 
 const {
@@ -166,7 +167,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
 
     /**
      * adds file to storage
-     * @param		{String|Buffer|import('node:stream').Stream}	file	file in some form or his URI
+     * @param		{String|Buffer|import('node:stream').Readable}	file	file in some form or his URI
      * @param {object} [fileInfo={}]
      * @returns	    {Promise<Object>}	            file info object (info field in document)
      */
@@ -182,18 +183,25 @@ class notStoreDriverTimeweb extends notStoreDriver {
             fileInfo.name_tmp = name_tmp;
             fileInfo.size = await this.getFileSize(name_tmp);
             //file processing sequence pre-main-post
-            await this.processors.runPre("upload", name_tmp, fileInfo, this);
+            await this.processors.runPre("upload", {
+                parent: fileInfo[OPT_INFO_PARENT],
+                path: name_tmp, 
+                info: fileInfo
+            }, this);
             const result = await this.directUpload(
                 name_tmp,
                 this.composeFullFilename(uuid)
             );
-            fileInfo.thumbs.original = {
-                cloud: result
-            };
-            await this.processors.runPost("upload", name_tmp, fileInfo, this);
+            fileInfo.cloud = partCopyObjExcept(result, ['name_tmp']);
+            await this.processors.runPost("upload", {
+                parent: fileInfo[OPT_INFO_PARENT], 
+                cloud: result, 
+                path: name_tmp, 
+                info: fileInfo
+            }, this);
             //
-            Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);
-            return [result, fileInfo];
+            Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);            
+            return fileInfo;
         } catch (e) {
             let err = e;
             //if error is our specialized version - reporting
@@ -318,22 +326,22 @@ class notStoreDriverTimeweb extends notStoreDriver {
     /**
      * Delete file directly
      *
-     * @param {string} filename
+     * @param {object} file
      * @param {boolean} [inStorePath=true]
      * @return {Promise<object>}
      * @memberof notStoreDriverTimeweb
      */
-    async directDelete(filename, inStorePath = true) {
+    async directDelete(file, inStorePath = true) {
         try {
             const params = this.composeDirectDeleteParams(
-                filename,
+                file.cloud.Key,
                 inStorePath
             );
             return await this.#s3.deleteObject(params).promise();
         } catch (e) {
             throw new notStoreExceptionDirectDeleteError(
                 {
-                    filename,
+                    filename:file.cloud.Key,
                 },
                 e
             );
@@ -343,36 +351,35 @@ class notStoreDriverTimeweb extends notStoreDriver {
     /**
      *
      *
-     * @param {Array<string>} filenames     list of object keys
+     * @param {Array<Object>} files     list of object keys
      * @param {boolean} [inStorePath=true]  false - absolute medium path, true - relative to store root path
      * @return {Promise<object>}
      * @memberof notStoreDriverTimeweb
      */
-    async directDeleteMany(filenames, inStorePath = true) {
+    async directDeleteMany(files, inStorePath = true) {
         return await Promise.all(
-            filenames.map((fname) => this.directDelete(fname, inStorePath))
+            files.map((file) => this.directDelete(file, inStorePath))
         );
     }
 
     /**
      * Removes all associated with file document instances and versions of file across all locations
-     * @param {string} [filePath='']
-     * @param {object} [info={}]
+     * @param {object}  file
      * @returns {Promise<Array<boolean|Object, Object>|notError>} [result:boolean|Object, fileDoc:object] where result - result of directDelete of fileDoc.path
      */
-    async delete(filePath = "", info = {}) {
+    async delete(file) {
         try {
             //deleting of versions preferably here
-            await this.processors.runPre("delete", filePath, info, this);
-            //deleting main file if presented
-            const result = filePath ? await this.directDelete(filePath) : false;
+            await this.processors.runPre("delete", file, this);
+            //deleting main file, if presented
+            const result = file ? await this.directDelete(file) : false;
             //after actions
-            await this.processors.runPost("delete", filePath, info, this);
-            return [result, info];
+            await this.processors.runPost("delete", file, this);
+            return [result, file.info];
         } catch (e) {
             let err = e;
             if (!(e instanceof notError)) {
-                err = new notStoreExceptionDeleteFromStoreError(filePath, e);
+                err = new notStoreExceptionDeleteFromStoreError(file.uuid, e);
             }
             this.report(err);
             return err;
@@ -420,16 +427,16 @@ class notStoreDriverTimeweb extends notStoreDriver {
      * List files in store's folder
      *
      * @param {string} pathInStore      path to directory in store relative to store root
-     * @param {{}} [metadata={}]        some starting metadata
+     * @param {{}} [info={}]        some starting metadata
      * @return {Promise<Array<boolean|Object, Object>|notError>}
      * @memberof notStoreDriverTimeweb
      */
-    async list(pathInStore, metadata = {}) {
+    async list(pathInStore, info = {}) {
         try {
-            await this.processors.runPre("list", pathInStore, metadata, this);
+            await this.processors.runPre("list", {path: pathInStore, info}, this);
             const result = await this.directList(pathInStore);
-            await this.processors.runPost("list", pathInStore, metadata, this);
-            return [result, metadata];
+            await this.processors.runPost("list", {path: pathInStore, info, result}, this);
+            return [result, info];
         } catch (e) {
             let err = e;
             if (!(err instanceof notError)) {

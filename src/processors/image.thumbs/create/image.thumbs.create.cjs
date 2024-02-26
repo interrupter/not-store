@@ -1,8 +1,10 @@
 // @ts-check
-
+const fs = require("fs");
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const sharp = require("sharp");
 const DEFAULT_OPTIONS = require("./image.thumbs.create.options.cjs");
+const {OPT_INFO_CHILDREN} = require('../../../const.cjs');
+const {resolve} = require('path');
 
 class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
     static getOptions() {
@@ -23,9 +25,10 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
         let image = sharp(src, {
             failOnError: false,
         });
+        console.log(src, resolve(dest), size);
         return image
             .resize(size, size, (options && options?.resize) || {})
-            .toFile(dest);
+            .toFile(dest).catch((e)=>{ console.error(dest,e);});
     }
 
     static async makeThumbs(src, thumbs, options) {
@@ -36,18 +39,22 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
                 parseInt(thumbs[size].variant),
                 options
             );
+            let stat = await fs.promises.lstat(resolve(thumbs[size].local));
+            console.log(size, stat);
         }
     }
 
-    static async run(filename, fileInfo, options, driver) {
+    static async run(file, options, driver) {
+        if(file.parent){
+            return;
+        }
         const thumbs = driver.composeVariantsPaths(
-            filename,
+            file.path,
             options.sizes,
             options.format
         );
-
-        await this.makeThumbs(filename, thumbs, options);
-        fileInfo.thumbs = thumbs;
+        await this.makeThumbs(file.path, thumbs, options);
+        file.info[OPT_INFO_CHILDREN] = thumbs;
     }
 }
 

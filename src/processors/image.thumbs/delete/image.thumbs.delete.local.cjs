@@ -1,6 +1,7 @@
 // @ts-check
 
 const notStoreProcessor = require("../../../proto/processor.cjs");
+const {OPT_INFO_CHILDREN} = require('../../../const.cjs');
 
 class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
     static getOptions() {
@@ -19,15 +20,15 @@ class notStoreProcessorImageThumbsDeleteLocal extends notStoreProcessor {
     }
 
     static listOfFilesToDelete(fileInfo /*, options*/) {
-        const variantsToDelete = { ...fileInfo.thumbs };
-        if (Object.hasOwn(variantsToDelete, "original")) {
-            delete variantsToDelete.original;
-        }
+        const variantsToDelete ={ ...fileInfo[OPT_INFO_CHILDREN]};
         return Object.values(variantsToDelete).map((variant) => variant.local);
     }
 
-    static async run(filename, fileInfo, options, driver) {
-        const filenames = this.listOfFilesToDelete(fileInfo, options);
+    static async run(file, options, driver) {
+        if(file.parent){
+            return;
+        }
+        const filenames = this.listOfFilesToDelete(file.info);
         if (filenames.length) {
             await Promise.all(filenames.map(driver.removeFile));
         }

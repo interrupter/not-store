@@ -55,26 +55,24 @@ class notStoreProcessorImageExtractMetadata extends notStoreProcessor {
     /**
      *
      *
-     * @static
-     * @param {string} filename
-     * @param {object} fileInfo
+     * @static     
+     * @param {object} file
      * @return {Promise<undefined>}
      * @memberof notStoreProcessorImageExtractMetadata
      */
     static async run(
-        filename, //current target file
-        fileInfo //file metadata object
+        file //file metadata object
         //        preprocOptions, //preprocessor options for this store
         //        driver //driver instance
     ) {
         await new Promise((resolve, reject) => {
-            sharp(filename).metadata((err, sharpMetadata) => {
+            sharp(file.path).metadata((err, sharpMetadata) => {
                 if (err) {
                     reject(err);
                 } else {
                     this.clearMetadata(sharpMetadata);
-                    Object.assign(fileInfo, { metadata: { ...sharpMetadata } });
-                    resolve(fileInfo);
+                    Object.assign(file.info, { metadata: { ...sharpMetadata } });
+                    resolve(file.info);
                 }
             });
         });

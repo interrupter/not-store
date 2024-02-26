@@ -59,7 +59,27 @@ const OPT_ENV_CHECKS = {
     drop: true,
 };
 
+const OPT_INFO_CHILDREN = '_children';
+const OPT_INFO_VARIANT = '_variant';
+const OPT_INFO_PARENT = '_parent';
+const OPT_INFO_NAME_TMP = 'name_tmp';
+const OPT_INFO_UUID = 'uuid';
+const OPT_INFO_CLOUD = 'cloud';
+
+const INFO_EXCEPT_LIST = [
+    OPT_INFO_CHILDREN,
+    OPT_INFO_VARIANT,
+    OPT_INFO_PARENT,
+    OPT_INFO_NAME_TMP, 
+    OPT_INFO_UUID,
+    OPT_INFO_CLOUD
+];
+
 module.exports = {
+    OPT_INFO_CHILDREN,
+    OPT_INFO_PARENT,
+    OPT_INFO_VARIANT,
+    INFO_EXCEPT_LIST,
     OPT_ACLs,
     OPT_ENV_CHECKS,
     PROCESSOR_TYPES,

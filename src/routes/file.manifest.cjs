@@ -4,6 +4,9 @@ const defaultManifest = require("../standalone/file.manifest.js");
 
 const FIELDS = [
     "_id",
+    ["parent", `${MODULE_NAME}//parentFile`],
+    ["variant", `${MODULE_NAME}//variant`],
+    ["cloud", `${MODULE_NAME}//cloud`],
     `${MODULE_NAME}//bucket`,
     `${MODULE_NAME}//info`,
     `not-node//width`,

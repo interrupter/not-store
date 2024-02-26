@@ -42,11 +42,11 @@ class notStoreExceptionUploadError extends notError {
 module.exports.notStoreExceptionUploadError = notStoreExceptionUploadError;
 
 class notStoreExceptionDeleteFromStoreError extends notError {
-    constructor(filename, e) {
+    constructor(uuid, e) {
         super(
             "notStoreExceptionDeleteFromStoreError",
             {
-                filename,
+                uuid,
             },
             e
         );

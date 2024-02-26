@@ -52,15 +52,13 @@ class notStoreProcessors {
      *
      * @static
      * @param {Array<ProcessorItem>}            list        list of processors objects with id,name,options
-     * @param {string}                          filename    target filename
-     * @param {object}                          metadata    metadata/file.info object
+     * @param {object}                          file        file object
      * @param {import('./proto/driver.cjs')}    driver      notStoreDriver child class instance
      * @memberof notStoreProcessors
      */
     static async run(
         list,       //processors list to run against file
-        filename,   //current target file
-        metadata,   //file metadata object
+        file,   //file metadata object
         driver      //store driver
     ) {
         try {
@@ -69,7 +67,7 @@ class notStoreProcessors {
                     console.log('store processor:', item);
                     const [processor, options] = this.getProcessorAndOptions(item);
                     console.log(options);
-                    await processor.run(filename, metadata, options, driver);
+                    await processor.run(file, options, driver);
                 }
             }
         } catch (e) {
@@ -78,7 +76,7 @@ class notStoreProcessors {
             } else {
                 throw new notStoreExceptionProccesorRunError(
                     list,
-                    filename,
+                    file?.toObject(),
                     driver.name,
                     e
                 );

@@ -7,6 +7,7 @@ const https = require("https");
 const isStream = require("is-stream");
 const isUrl = require("valid-url");
 const streamifier = require("streamifier");
+const {resolve} = require('path');
 
 const tryFileAsync = require("not-node").Common.tryFileAsync;
 
@@ -67,14 +68,15 @@ class notStoreDriverStreamer {
             } else {
                 //guess this is file path, but lets check it on existence
                 try {
-                    let stat = await fs.promises.lstat(source);
+                    console.log('readableStreamFromString',resolve(source));
+                    let stat = await fs.promises.lstat(resolve(source));
                     if (stat.isFile()) {
                         return notStoreDriverStreamer.readableStreamFromFilename(
                             source
                         );
                     }
-                } catch (_) {
-                    _;
+                } catch (e) {
+                    console.error('readableStreamFromString', e);
                 }
             }
         }

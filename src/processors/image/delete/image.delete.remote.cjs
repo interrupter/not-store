@@ -29,15 +29,15 @@ class notStoreProcessorImageDeleteRemote extends notStoreProcessor {
      * returns Key from info.cloud = {Key, key, Location, ETag, Bucket}
      *
      * @static
-     * @param {object} fileInfo
+     * @param {object} cloud
      * @param {object} [preprocOptions]
      * @return {string|false}
      * @memberof notStoreProcessorImageDeleteRemote
      */
     //eslint-disable-next-line   no-unused-vars
-    static filenameToDelete(fileInfo, preprocOptions = {}) {
-        if (!fileInfo.cloud || !fileInfo.cloud.Key) return false;
-        return fileInfo.cloud.Key;
+    static filenameToDelete(cloud, preprocOptions = {}) {
+        if (!cloud || !cloud.Key) return false;
+        return cloud.Key;
     }
 
     /**
@@ -56,18 +56,17 @@ class notStoreProcessorImageDeleteRemote extends notStoreProcessor {
     /**
      *
      *
-     * @static
-     * @param {string} filename
-     * @param {object} fileInfo
+     * @static     
+     * @param {object} file
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
      * @memberof notStoreProcessorImageDeleteRemote
      */
-    static async run(filename, fileInfo, options, driver) {
-        const cloudFilename = this.filenameToDelete(fileInfo, options);
-        if (cloudFilename && filename.length) {
+    static async run(file, options, driver) {
+        const cloudFilename = this.filenameToDelete(file.cloud, options);
+        if (cloudFilename) {
             await driver.directDelete(cloudFilename, false);
-            this.updateInfoAfterDelete(fileInfo, options);
+            this.updateInfoAfterDelete(file.info, options);
         }
     }
 }

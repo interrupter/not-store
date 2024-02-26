@@ -42,22 +42,21 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
     /**
      *
      *
-     * @static
-     * @param {string} filename
-     * @param {object} fileInfo
+     * @static     
+     * @param {object} file
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
      * @memberof notStoreProcessorImageThumbsUpload
      */
-    static async run(filename, fileInfo, options, driver) {
-        const filenames = Object.values(fileInfo.thumbs).map(
+    static async run(file, options, driver) {
+        const filenames = Object.values(file.info.thumbs).map(
             (thumb) => thumb.local
         );
         if (filenames.length) {
             const cloudNames = await driver.directUploadManyTransformed(
                 filenames
             );
-            this.updateFileInfo(fileInfo, cloudNames);
+            this.updateFileInfo(file.info, cloudNames);
         }
     }
 }

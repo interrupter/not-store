@@ -1,9 +1,9 @@
-const { notError } = require("not-error");
+const notError = require("not-error/src/error.node.cjs");
 const notNode = require("not-node");
 const Log = require("not-log")(module, "notStoreProcessors");
 
 const {
-    notStoreExceptionProccesorRunError,
+    notStoreExceptionProcessorRunError,
     notStoreExceptionProcessorAlreadyExists,
     notStoreExceptionProcessorIsNotExists,
 } = require("./exceptions.cjs");
@@ -64,9 +64,9 @@ class notStoreProcessors {
         try {
             if (Array.isArray(list)) {
                 for (let item of list) {
-                    console.log('store processor:', item);
+                    Log && Log.debug('store processor:', item);
                     const [processor, options] = this.getProcessorAndOptions(item);
-                    console.log(options);
+                    Log && Log.debug(options);
                     await processor.run(file, options, driver);
                 }
             }
@@ -74,7 +74,7 @@ class notStoreProcessors {
             if (e instanceof notError) {
                 throw e;
             } else {
-                throw new notStoreExceptionProccesorRunError(
+                throw new notStoreExceptionProcessorRunError(
                     list,
                     file?.toObject(),
                     driver.name,

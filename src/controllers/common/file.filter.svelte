@@ -1,20 +1,31 @@
 <script>
     import { notCommon } from "not-bulma";
-    import { UISelect } from "not-bulma/src/elements/form";
+    import { UISelect, UITextfield } from "not-bulma/src/elements/form";
     import { UIButton } from "not-bulma/src/elements/button";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
 
     import { createEventDispatcher, onMount } from "svelte";
+    import { object_without_properties } from "svelte/internal";
     const dispatch = createEventDispatcher();
 
     export let filter = {
-        bucket: "",
+        store: "",
+        name: "",
+        extension: "",
     };
 
     let buckets = [];
+    let search = "";
 
     function setFilter() {
-        dispatch("change", filter);
+        let copyFilter = {};
+        Object.keys(filter).forEach((key) => {
+            if (typeof filter[key] === "string" && filter[key].length === 0) {
+                return;
+            }
+            copyFilter[key] = filter[key];
+        });
+        dispatch("change", copyFilter);
     }
 
     onMount(() => {
@@ -45,18 +56,36 @@
 
 <UIColumns>
     <UIColumn>
+        <UITextfield
+            bind:value={search}
+            placeholder="Поиск"
+            on:change={({ detail }) => {
+                const search = detail.value.trim();
+                dispatch("searchChange", search);
+            }}
+        />
+    </UIColumn>
+</UIColumns>
+<UIColumns>
+    <UIColumn>
         <UISelect
             placeholder="Все хранилища"
-            bind:value={filter.bucket}
+            bind:value={filter.store}
             bind:variants={buckets}
             on:change={({ detail }) => {
                 if (detail.value === "__CLEAR__") {
-                    filter.bucket = "";
+                    filter.store = "";
                 } else {
-                    filter.bucket = detail.value;
+                    filter.store = detail.value;
                 }
             }}
         />
+    </UIColumn>
+    <UIColumn>
+        <UITextfield placeholder="Название" bind:value={filter.name} />
+    </UIColumn>
+    <UIColumn>
+        <UITextfield placeholder="Тип" bind:value={filter.extension} />
     </UIColumn>
     <UIColumn>
         <UIButton action={setFilter} title="Применить" color="primary" />

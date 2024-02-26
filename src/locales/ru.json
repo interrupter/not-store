@@ -33,5 +33,7 @@
     "field_store_processor_image.thumbs.create_options_saveOriginal": "Сохранить оригинал",
     "field_store_processor_image.thumbs.create_options_resize.fit": "Размещение при масштабировании",
     "field_store_processor_image.thumbs.create_options_sizes": "Размеры миниатюр",
+    "field_store_processor_image.thumbs.create_options_preview": "Размер превью",
+    "field_store_processor_image.parent.preview_options_variant": "Вариант размера",
     "processors_options_reset_button_label": "Сбросить"
 }

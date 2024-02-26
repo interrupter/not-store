@@ -9,7 +9,8 @@ const {
     INFO_EXCEPT_LIST,
     OPT_INFO_CHILDREN,
     OPT_INFO_VARIANT,
-    OPT_INFO_PARENT
+    OPT_INFO_PARENT,
+    OPT_INFO_PREVIEW
 } = require('../../const.cjs');
 
 module.exports = class uploadAction {    
@@ -233,7 +234,8 @@ module.exports = class uploadAction {
                 data: itm.local,
                 info: {
                     [OPT_INFO_VARIANT]: variant,
-                    [OPT_INFO_PARENT]: parent._id
+                    [OPT_INFO_PARENT]: parent._id,
+                    [OPT_INFO_PREVIEW]: itm[OPT_INFO_PREVIEW]
                 }
             };
         });

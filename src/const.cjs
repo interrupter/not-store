@@ -65,6 +65,7 @@ const OPT_INFO_PARENT = '_parent';
 const OPT_INFO_NAME_TMP = 'name_tmp';
 const OPT_INFO_UUID = 'uuid';
 const OPT_INFO_CLOUD = 'cloud';
+const OPT_INFO_PREVIEW = '_preview';
 
 const INFO_EXCEPT_LIST = [
     OPT_INFO_CHILDREN,
@@ -72,13 +73,15 @@ const INFO_EXCEPT_LIST = [
     OPT_INFO_PARENT,
     OPT_INFO_NAME_TMP, 
     OPT_INFO_UUID,
-    OPT_INFO_CLOUD
+    OPT_INFO_CLOUD,
+    OPT_INFO_PREVIEW,
 ];
 
 module.exports = {
     OPT_INFO_CHILDREN,
     OPT_INFO_PARENT,
     OPT_INFO_VARIANT,
+    OPT_INFO_PREVIEW,
     INFO_EXCEPT_LIST,
     OPT_ACLs,
     OPT_ENV_CHECKS,

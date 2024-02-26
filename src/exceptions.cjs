@@ -15,10 +15,10 @@ module.exports.notStoreExceptionFilenameToReadableStreamError =
     notStoreExceptionFilenameToReadableStreamError;
 
 
-class notStoreExceptionProccesorRunError extends notError {
+class notStoreExceptionProcessorRunError extends notError {
     constructor(pipe, filename, driverName, e) {
         super(
-            "notStoreExceptionProccesorRunError",
+            "notStoreExceptionProcessorRunError",
             {
                 pipe,
                 filename,
@@ -28,8 +28,8 @@ class notStoreExceptionProccesorRunError extends notError {
         );
     }
 }
-module.exports.notStoreExceptionProccesorRunError =
-    notStoreExceptionProccesorRunError;
+module.exports.notStoreExceptionProcessorRunError =
+notStoreExceptionProcessorRunError;
 
 class notStoreExceptionProcessingPipeItemWrongOptionsFormat extends notError {
     constructor(processor) {
@@ -62,10 +62,10 @@ module.exports.notStoreExceptionProcessingPipeItemWrongFormat =
     notStoreExceptionProcessingPipeItemWrongFormat;
 
 
-class notStoreExceptionPreproccesorOptionsWrongFormat extends notError {
+class notStoreExceptionProcesorOptionsWrongFormat extends notError {
     constructor(options) {
         super(
-            "notStoreExceptionPreproccesorOptionsWrongFormat",
+            "notStoreExceptionProcesorOptionsWrongFormat",
             {
                 options,
             },
@@ -73,8 +73,8 @@ class notStoreExceptionPreproccesorOptionsWrongFormat extends notError {
         );
     }
 }
-module.exports.notStoreExceptionPreproccesorOptionsWrongFormat =
-    notStoreExceptionPreproccesorOptionsWrongFormat;
+module.exports.notStoreExceptionProcesorOptionsWrongFormat =
+notStoreExceptionProcesorOptionsWrongFormat;
 
 class notStoreExceptionStoreIsNotActive extends notError {
     constructor(name, driver) {
@@ -119,10 +119,10 @@ class notStoreExceptionProcessorIsNotExists extends notError {
 module.exports.notStoreExceptionProcessorIsNotExists =
     notStoreExceptionProcessorIsNotExists;
 
-class notStoreExceptionPreprocessorAlreadyExists extends notError {
+class notStoreExceptionProcessorAlreadyExists extends notError {
     constructor(preprocessor) {
         super(
-            "notStoreExceptionPreprocessorAlreadyExists",
+            "notStoreExceptionProcessorAlreadyExists",
             {
                 preprocessor,
             },
@@ -130,8 +130,8 @@ class notStoreExceptionPreprocessorAlreadyExists extends notError {
         );
     }
 }
-module.exports.notStoreExceptionPreprocessorAlreadyExists =
-    notStoreExceptionPreprocessorAlreadyExists;
+module.exports.notStoreExceptionProcessorAlreadyExists =
+notStoreExceptionProcessorAlreadyExists;
 
 class notStoreExceptionDriverIsNotExists extends notError {
     constructor(driver) {

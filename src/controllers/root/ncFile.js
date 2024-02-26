@@ -83,6 +83,26 @@ class ncFile extends notCRUD {
                     preprocessor: (value)=>{
                         return typeof value === 'undefined'?'':value;
                     }
+                },
+                {
+                    path: ":info.previewURL",
+                    title: "Превью",                    
+                    type: "image",
+                    preprocessor: (value, item) => {
+                        if(item.info.previewURL){
+                            return [
+                                {
+                                    title: item.name,
+                                    url: item.cloud.Location,
+                                    urlFull: item.info.previewURL,
+                                    cors: "anonymous",
+                                },
+                            ];
+                        }else{
+                            return [];
+                        }
+                        
+                    },
                 },                
                 {
                     path: ":_id",

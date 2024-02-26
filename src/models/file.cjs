@@ -54,6 +54,36 @@ exports.schemaOptions = {
 };
 
 exports.thisStatics = {
+    async setPreviewURL(targetId, previewURL){
+        try{
+            let query = {
+                _id:targetId,
+                __latest: true,
+                __closed: false,
+            };
+            let rec = await this.findOne(query);
+            rec.info.previewURL = previewURL;
+            rec.markModified('info.previewURL');
+            await rec.save();
+        }catch(e){
+            log.error(e);
+        }
+    },
+    async unsetPreviewURL(targetId){
+        try{
+            let query = {
+                _id:targetId,
+                __latest: true,
+                __closed: false,
+            };
+            let rec = await this.findOne(query);
+            rec.info.previewURL = '';
+            rec.markModified('info.previewURL');
+            await rec.save();
+        }catch(e){
+            log.error(e);
+        }
+    },
     async getOneByIdAndRemove(_id, sessionId) {
         try {
             let query = {
@@ -64,7 +94,7 @@ exports.thisStatics = {
             if (sessionId) {
                 query["session"] = sessionId;
             }
-            let rec = await this.findOne(query).populate('children');
+            let rec = await this.findOne(query);
             if (!rec) {
                 return false;
             }

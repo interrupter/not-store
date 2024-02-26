@@ -56,6 +56,9 @@ class notStoreProcessorImageUpload extends notStoreProcessor {
             );
             this.updateFileInfo(file.info, cloudName);
         }
+        if(file.parent ){
+            
+        }
     }
 }
 

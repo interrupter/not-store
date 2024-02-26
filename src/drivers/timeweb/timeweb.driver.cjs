@@ -1,7 +1,7 @@
 // @ts-check
 
 const Log = require("not-log")(module, "Timeweb driver");
-const { MODULE_NAME, OPT_INFO_PARENT } = require("../../const.cjs");
+const { MODULE_NAME, OPT_INFO_PARENT, OPT_INFO_VARIANT } = require("../../const.cjs");
 const S3 = require("aws-sdk/clients/s3");
 
 const notError = require("not-error/src/error.node.cjs");
@@ -194,10 +194,11 @@ class notStoreDriverTimeweb extends notStoreDriver {
             );
             fileInfo.cloud = partCopyObjExcept(result, ['name_tmp']);
             await this.processors.runPost("upload", {
-                parent: fileInfo[OPT_INFO_PARENT], 
-                cloud: result, 
-                path: name_tmp, 
-                info: fileInfo
+                variant:    fileInfo[OPT_INFO_VARIANT],  
+                parent:     fileInfo[OPT_INFO_PARENT], 
+                cloud:      result, 
+                path:       name_tmp, 
+                info:       fileInfo
             }, this);
             //
             Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);            

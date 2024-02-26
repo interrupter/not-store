@@ -9,6 +9,7 @@ module.exports = {
     model: {
         type: String,
         searchable: true,
+        sortable: true,
         required: true,
     },
 };

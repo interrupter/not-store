@@ -54,6 +54,41 @@ exports.schemaOptions = {
 };
 
 exports.thisStatics = {
+    async setVariantURL(targetId, variant, URL){
+        try{
+            let query = {
+                _id:targetId,
+                __latest: true,
+                __closed: false,
+            };
+            let rec = await this.findOne(query);
+            if(!rec.info?.variantURL){
+                rec.info.variantURL = {};
+            }
+            rec.info.variantURL[variant] = URL;
+            rec.markModified('info.variantURL');
+            await rec.save();
+        }catch(e){
+            log.error(e);
+        }
+    },
+    async unsetVariantURL(targetId, variant){
+        try{
+            let query = {
+                _id:        targetId,
+                __latest:   true,
+                __closed:   false,
+            };
+            let rec = await this.findOne(query);
+            if(rec?.info?.variantURL[variant]){
+                rec.info.variantURL[variant] = '';
+                rec.markModified('info.variantURL');
+                await rec.save();
+            }
+        }catch(e){
+            log.error(e);
+        }
+    },
     async setPreviewURL(targetId, previewURL){
         try{
             let query = {

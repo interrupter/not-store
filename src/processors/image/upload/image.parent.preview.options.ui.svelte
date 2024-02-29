@@ -7,7 +7,12 @@
     import { onMount, createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
     import { Elements } from "not-bulma";
-    import { UITextfield, UILabel } from "not-bulma/src/elements/form";
+    import {
+        UISwitch,
+        UITextfield,
+        UILabel,
+    } from "not-bulma/src/elements/form";
+
     const { UIButton } = Elements.Buttons;
     const { UITitle } = Elements.Various;
     const UIBox = Elements.Blocks.UIBox;
@@ -37,19 +42,32 @@
 </script>
 
 <UIBox>
-    <div class="field">
-        {#if Object.hasOwn(value, "variant")}
+    {#if Object.hasOwn(value, "variant")}
+        <div class="field">
             <UILabel
                 id="form-field-textfield-variant"
                 label={`${MODULE_NAME}:field_store_processor_image.parent.preview_options_variant`}
             />
             <UITextfield
                 bind:readonly
+                bind:disabled={value.all}
                 bind:value={value.variant}
                 on:change={onChange}
                 fieldname="variant"
             />
-        {/if}
-    </div>
+        </div>
+    {/if}
+    {#if Object.hasOwn(value, "all")}
+        <div class="field">
+            <UISwitch
+                label="Все"
+                bind:readonly
+                bind:value={value.all}
+                on:change={onChange}
+                fieldname="all"
+            />
+        </div>
+    {/if}
+
     <div class="field"><UIButton {...RESET_OPTIONS_BUTTON} /></div>
 </UIBox>

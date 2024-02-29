@@ -2,6 +2,7 @@
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const getApp = require('not-node/src/getApp');
 const DEFAULT_OPTIONS = require("./image.parent.preview.options.cjs");
+
 /**
  * После загрузки изображения, если это вторичное изображение, 
  * и variant === установленному в настройках для процессора,
@@ -37,8 +38,8 @@ class notStoreProcessorImageParentPreview extends notStoreProcessor {
      * @memberof notStoreProcessorImageUpload
      */
     static async run(file, options, driver) {
-        if(file.parent && file.variant === options.variant){
-            await getApp().getModel('File').setPreviewURL(file.parent, file.cloud.Location);
+        if(file.parent && (options.all || file.variant === options.variant)){
+            await getApp().getModel('File').setVariantURL(file.parent, file.variant, file.cloud.Location);
         }
     }
 }

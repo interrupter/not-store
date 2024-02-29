@@ -1,5 +1,6 @@
 // @ts-check
 
 module.exports = {   
-    variant: 'micro',    
+    variant: 'micro',
+    all: true
 };

@@ -1,8 +1,10 @@
 const notError = require("not-error/src/error.node.cjs");
 
 class notStoreDriverStreamerExceptionNotStreamableSource extends notError {
-    constructor() {
-        super("notStoreDriverStreamerExceptionNotStreamableSource", {});
+    constructor(params) {
+        super("notStoreDriverStreamerExceptionNotStreamableSource", {
+            ...params,
+        });
         this.message = "source is not streamable";
     }
 }

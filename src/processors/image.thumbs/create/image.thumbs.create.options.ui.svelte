@@ -12,7 +12,6 @@
         UITextfield,
         UILabel,
         UISelect,
-        UISwitch,
     } from "not-bulma/src/elements/form";
     const { UIButton } = Elements.Buttons;
     const { UITitle } = Elements.Various;

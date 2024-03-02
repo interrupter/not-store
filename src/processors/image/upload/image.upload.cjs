@@ -18,10 +18,10 @@ class notStoreProcessorImageUpload extends notStoreProcessor {
     static getDescription() {
         return {
             id: "image.upload",
-            metadataUI: "UIStoreProcessorMetadataImageUpload",
+            title: "Загрузка в хранилище",
             optionsDefault: this.getOptions(),
             optionsUI: "UIStoreProcessorOptionsImageUpload",
-            title: "Загрузка в хранилище",
+            metadataUI: "UIStoreProcessorMetadataImageUpload",
         };
     }
 
@@ -55,6 +55,9 @@ class notStoreProcessorImageUpload extends notStoreProcessor {
                 path.basename(file.path)
             );
             this.updateFileInfo(file.info, cloudName);
+        }
+        if(file.parent ){
+            
         }
     }
 }

@@ -54,6 +54,25 @@ exports.schemaOptions = {
 };
 
 exports.thisStatics = {
+    //
+    async deleteAllInStore(storeName, filter = {}){
+        try{
+            const list = await this.listAll({
+                store: storeName, 
+                ...filter
+            });
+            return await Promise.all(list.map(file=> this.closeOneAndRemoveFile(file)));
+        }catch(e){
+            log.error(e);
+        }
+    },
+    async deleteAllOriginalInStore(storeName, filter = {}){
+        try{
+            return await this.deleteAllInStore(storeName, {...filter, parent: {$exists: false}});
+        }catch(e){
+            log.error(e);
+        }
+    },
     async setVariantURL(targetId, variant, URL){
         try{
             let query = {
@@ -155,7 +174,36 @@ exports.thisStatics = {
             return rec;
         } catch (e) {
             log.error(e);
-            return false;
+            return e;
+        }
+    },
+    async closeOneAndRemoveFile(rec, childrenToo = false) {
+        try {            
+            const storage = await store.get(rec.store);
+            if (!storage) {
+                return false;
+            }
+            //removing file
+            const plainObj = rec.toObject();
+            const [, info] = await storage.delete(plainObj);
+            //updating document as closed
+            await rec.close({ info });
+            //removing children elements
+            if (childrenToo){
+                const children = await this.listAll({__latest: true, parent: plainObj._id});
+                if(children && children.length){
+                    await Promise.all(
+                        children.map(
+                            child => this.closeOneAndRemoveFile(child, childrenToo)
+                        )
+                    );
+                }
+                plainObj.children = children.map(child=>child.toObject())
+            }
+            return plainObj;
+        } catch (e) {
+            log.error(e);
+            return e;
         }
     },
 };

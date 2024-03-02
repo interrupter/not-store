@@ -12,6 +12,7 @@ const FileLogic = GenericLogic({
     MODULE_NAME,
     actions: {
         delete:require("./actions/delete"),
+        deleteAllInStore:require("./actions/deleteAllInStore"),
         get: require("./actions/get"),
         list: require("./actions/list"),
         listAndCount: require("./actions/listAndCount"),

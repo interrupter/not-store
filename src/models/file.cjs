@@ -63,7 +63,11 @@ exports.thisStatics = {
             }
             //removing file
             const plainObj = rec.toObject();
-            const [, info] = await storage.delete(plainObj);
+            const result = await storage.delete(plainObj);
+            if (result instanceof Error) {
+                throw result;
+            }
+            const [, info] = result;
             //updating document as closed
             await rec.close({ info });
             //removing children elements

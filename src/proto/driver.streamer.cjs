@@ -7,17 +7,17 @@ const https = require("https");
 const isStream = require("is-stream");
 const isUrl = require("valid-url");
 const streamifier = require("streamifier");
-const {resolve} = require('path');
+const { resolve } = require("path");
 
 const tryFileAsync = require("not-node").Common.tryFileAsync;
 
 const { OPT_MAX_INPUT_PATH_LENGTH } = require("../const.cjs");
 
-const httpOptions = require('../http.options.js');
+const httpOptions = require("../http.options.js");
 
 const {
-    notStoreDriverStreamerExceptionNotStreamableSource,
     notStoreDriverStreamerExceptionFileNotExists,
+    notStoreDriverStreamerExceptionNotStreamableSource,
 } = require("../exceptions/driver.streamer.exception.cjs");
 
 /**
@@ -64,19 +64,20 @@ class notStoreDriverStreamer {
         if (source.length < OPT_MAX_INPUT_PATH_LENGTH) {
             //
             if (isUrl.isUri(encodeURI(source))) {
-                return notStoreDriverStreamer.readableStreamFromURL(encodeURI(source));
+                return notStoreDriverStreamer.readableStreamFromURL(
+                    encodeURI(source)
+                );
             } else {
                 //guess this is file path, but lets check it on existence
                 try {
-                    console.log('readableStreamFromString',resolve(source));
                     let stat = await fs.promises.lstat(resolve(source));
                     if (stat.isFile()) {
                         return notStoreDriverStreamer.readableStreamFromFilename(
                             source
                         );
                     }
-                } catch (e) {
-                    console.error('readableStreamFromString', e);
+                } catch (_) {
+                    //file not exists, treat string as a file content
                 }
             }
         }
@@ -94,19 +95,25 @@ class notStoreDriverStreamer {
             try {
                 const HTTP_OPTIONS = this.getHTTPOptions();
                 if (isUrl.isHttpsUri(source)) {
-                    https.get(source, HTTP_OPTIONS, resolve).on('error', (e)=>{
-                        console.error(e);
-                        reject(e);
-                    });
-                } else {
-                    if (isUrl.isHttpUri(source)) {
-                        http.get(source, HTTP_OPTIONS, resolve).on('error', (e)=>{
-                            console.error(e);
+                    https
+                        .get(source, HTTP_OPTIONS, resolve)
+                        .on("error", (e) => {
                             reject(e);
                         });
-                    }else{
-                        console.error(source);
-                        reject(new Error(`Is not valid URL: ${source}`));
+                } else {
+                    if (isUrl.isHttpUri(source)) {
+                        http.get(source, HTTP_OPTIONS, resolve).on(
+                            "error",
+                            (e) => {
+                                reject(e);
+                            }
+                        );
+                    } else {
+                        reject(
+                            new notStoreDriverStreamerExceptionNotStreamableSource(
+                                source
+                            )
+                        );
                     }
                 }
             } catch (e) {
@@ -115,8 +122,7 @@ class notStoreDriverStreamer {
         });
     }
 
-
-    static getHTTPOptions(){
+    static getHTTPOptions() {
         return httpOptions();
     }
 

@@ -35,5 +35,9 @@
     "field_store_processor_image.thumbs.create_options_sizes": "Размеры миниатюр",
     "field_store_processor_image.thumbs.create_options_preview": "Размер превью",
     "field_store_processor_image.parent.preview_options_variant": "Вариант размера",
-    "processors_options_reset_button_label": "Сбросить"
+    "processors_options_reset_button_label": "Сбросить",
+    "action_export_to_json_title": "Экспорт в JSON",
+    "action_export_success": "Экспорт завершен успешно",
+    "action_import_from_json_title": "Импорт из JSON",
+    "action_import_success": "Импорт завершен успешно"
 }

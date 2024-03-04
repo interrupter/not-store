@@ -52,6 +52,14 @@ class StoreLogic extends StoreGenericLogic {
         const store = await notStore.getDriverForConfig(storeConfig.toObject());
         return await store.test();
     }
+
+    static async importJSON({identity, importJSON}){
+        if(Array.isArray(importJSON)){
+            return await Promise.all(importJSON.map(item=>getModel().add(item)));
+        }else{
+            return await getModel().add(importJSON);
+        }        
+    }
 }
 
 module.exports[MODEL_NAME] = StoreLogic;

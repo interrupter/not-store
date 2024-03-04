@@ -14,6 +14,32 @@ module.exports = {
     url: "/api/:modelName",
     fields: FIELDS,
     actions: {
+        importFromJSON:{
+            postFix: "/:actionName",
+            method: "PUT",
+            data: ["record"],
+            rules:[{
+                auth:true,
+                root:true,
+            }]
+        },
+        exportToJSON:{
+            postFix: "/:actionName",
+            method: "GET",
+            data: ["record"],
+            rules:[{
+                auth:true,
+                root:true,
+                return: {
+                    name: true,
+                    driver: true,
+                    options: true,
+                    processors: true,
+                    active: true,
+                },
+                returnStrict: true
+            }]
+        },
         create: {
             method: "PUT",
             isArray: false,

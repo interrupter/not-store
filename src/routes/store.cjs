@@ -37,6 +37,15 @@ class StoreRoute extends StoreGenericRoute {
     static async _test(req,res,next, prepared){
         return await getLogic().test({...prepared});
     }
+
+    static async _importFromJSON(req, res, next, prepared){
+        const importJSON = await notNode.Common.tryParseAsync(req.body.import, undefined, true);
+        return await getLogic().importJSON({...prepared, importJSON});
+    }
+
+    static async _exportToJSON(req, res, next, prepared){        
+        return await getLogic().listAll({...prepared});
+    }
 }
 
 module.exports = StoreRoute;

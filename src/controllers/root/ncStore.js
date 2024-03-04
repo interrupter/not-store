@@ -1,5 +1,7 @@
 import { Frame } from "not-bulma";
 import { MODULE_NAME } from "../../const.cjs";
+import ncaImportFromJSON from "../common/actions/store.import.from.json.js";
+import ncaExportToJSON from "../common/actions/store.export.to.json.js";
 
 const { notCRUD } = Frame;
 const notFormRules = Frame.notFormRules;
@@ -16,8 +18,7 @@ const BOTTOM_CLASS = [],
 let DRIVERS_CACHE = [];
 let PROCESSORS_CACHE = [];
 
-notFormRules.add("changeComponent", (value, master, slaves, form) => {
-    console.log("change component", value, master, slaves, form);
+notFormRules.add("changeComponent", (value, master, slaves, form) => {    
     const el = DRIVERS_CACHE.find((itm) => itm.id === value);
     if (el && el.ui) {
         return {
@@ -28,8 +29,7 @@ notFormRules.add("changeComponent", (value, master, slaves, form) => {
     }
 });
 
-notFormRules.add("changeProcessorsProps", (value, master, slaves, form) => {
-    console.log("change processors props", value, master, slaves, form);
+notFormRules.add("changeProcessorsProps", (value, master, slaves, form) => {    
     const el = DRIVERS_CACHE.find((itm) => itm.id === value);
     if (el && el.actions) {
         return {
@@ -46,7 +46,10 @@ class ncStore extends notCRUD {
     static MODEL_NAME = MODEL_NAME;
 
     constructor(app, params) {
-        super(app, `${MODULE_NAME}.${MODEL_NAME}`);
+        super(app, `${MODULE_NAME}.${MODEL_NAME}`, {actions: {
+            importFromJSON: ncaImportFromJSON,
+            exportToJSON: ncaExportToJSON,
+        }});
         this.setModuleName(MODULE_NAME);
         this.setModelName(MODEL_NAME);
         this.setOptions("names", LABELS);
@@ -70,7 +73,10 @@ class ncStore extends notCRUD {
             sorter: {
                 storeID: -1,
             },
-            actions: [],
+            actions: [
+                ncaImportFromJSON.actionButton(this),
+                ncaExportToJSON.actionButton(this),
+            ],
             showSearch: true,
             idField: "_id",
             fields: this.buildFieldsList(),
@@ -122,21 +128,7 @@ class ncStore extends notCRUD {
                 type: "button",
                 preprocessor: (value) => {
                     return [
-                        {
-                            action: this.goTest.bind(this, value),
-                            title: "Тест",
-                            size: "small",
-                        },
-                        {
-                            action: this.goFiles.bind(this, value),
-                            title: "Файлы",
-                            size: "small",
-                        },
-                        {
-                            action: this.goUpload.bind(this, value),
-                            title: "Загрузить",
-                            size: "small",
-                        },
+                      
                         {
                             action: this.goDetails.bind(this, value),
                             title: "Подробнее",

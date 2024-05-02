@@ -44,7 +44,7 @@
     "download": "^8.0.0",
     "easy-yandex-s3": "^2.0.0",
     "is-stream": "2.*",
-    "jsdoc": "^4.0.2",
+    "jsdoc": "^4.0.3",
     "mkdirp": "*",
     "not-error": "^0.2.9",
     "not-path": "^1.0.5",

@@ -49,10 +49,10 @@ class notStoreDriver {
      */
     static getDescription() {
         return {
+            actions: ["list", "of", "actions", "names"], //needed to attach pre/pos processors via Store editor UI
             id: "id_in_store",
             title: "user friendly title",
             ui: "UIComponent name to edit driver options",
-            actions: ["list", "of", "actions", "names"], //needed to attach pre/pos processors via Store editor UI
         };
     }
 
@@ -133,8 +133,8 @@ class notStoreDriver {
      */
     composeFilePath(fname) {
         return notStoreDriver.filenameResolver.composePathToFile(fname, {
-            path: this.getOptionValueCheckENV("path"),
             groupFiles: this.getOptionValueCheckENV("groupFiles"),
+            path: this.getOptionValueCheckENV("path"),
         });
     }
 
@@ -181,8 +181,8 @@ class notStoreDriver {
             postfix,
             format,
             {
-                path: this.getOptionValueCheckENV("path"),
                 groupFiles: this.getOptionValueCheckENV("groupFiles"),
+                path: this.getOptionValueCheckENV("path"),
             }
         );
     }
@@ -283,7 +283,6 @@ class notStoreDriver {
      */
     async getFileSize(filePath) {
         const stats = await fs.promises.stat(filePath);
-        const file = await fs.promises.readFile(filePath, {encoding:'utf-8'});
         return stats.size;
     }
 

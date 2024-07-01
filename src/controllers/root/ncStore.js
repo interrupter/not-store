@@ -2,8 +2,10 @@ import { Frame } from "not-bulma";
 import { MODULE_NAME } from "../../const.cjs";
 import ncaImportFromJSON from "../common/actions/store.import.from.json.js";
 import ncaExportToJSON from "../common/actions/store.export.to.json.js";
+import CRUDActionList from "not-bulma/src/frame/crud/actions/list.js";
 
 const { notCRUD } = Frame;
+
 const notFormRules = Frame.notFormRules;
 const MODEL_NAME = "Store";
 
@@ -18,7 +20,7 @@ const BOTTOM_CLASS = [],
 let DRIVERS_CACHE = [];
 let PROCESSORS_CACHE = [];
 
-notFormRules.add("changeComponent", (value, master, slaves, form) => {    
+notFormRules.add("changeComponent", (value, master, slaves, form) => {
     const el = DRIVERS_CACHE.find((itm) => itm.id === value);
     if (el && el.ui) {
         return {
@@ -29,7 +31,7 @@ notFormRules.add("changeComponent", (value, master, slaves, form) => {
     }
 });
 
-notFormRules.add("changeProcessorsProps", (value, master, slaves, form) => {    
+notFormRules.add("changeProcessorsProps", (value, master, slaves, form) => {
     const el = DRIVERS_CACHE.find((itm) => itm.id === value);
     if (el && el.actions) {
         return {
@@ -46,10 +48,12 @@ class ncStore extends notCRUD {
     static MODEL_NAME = MODEL_NAME;
 
     constructor(app, params) {
-        super(app, `${MODULE_NAME}.${MODEL_NAME}`, {actions: {
-            importFromJSON: ncaImportFromJSON,
-            exportToJSON: ncaExportToJSON,
-        }});
+        super(app, `${MODULE_NAME}.${MODEL_NAME}`, {
+            actions: {
+                exportToJSON: ncaExportToJSON,
+                importFromJSON: ncaImportFromJSON,
+            },
+        });
         this.setModuleName(MODULE_NAME);
         this.setModelName(MODEL_NAME);
         this.setOptions("names", LABELS);
@@ -65,21 +69,21 @@ class ncStore extends notCRUD {
         this.setOptions("update.masters", masters);
         this.setOptions("create.masters", masters);
         this.setOptions("list", {
-            interface: {
-                combined: true,
-                factory: this.make.store,
-            },
-            endless: false,
-            sorter: {
-                storeID: -1,
-            },
             actions: [
                 ncaImportFromJSON.actionButton(this),
                 ncaExportToJSON.actionButton(this),
             ],
-            showSearch: true,
-            idField: "_id",
+            endless: false,
             fields: this.buildFieldsList(),
+            idField: "_id",
+            interface: {
+                combined: true,
+                factory: this.make.store,
+            },
+            showSearch: true,
+            sorter: {
+                storeID: -1,
+            },
         });
 
         this.preloadKeys()
@@ -92,28 +96,24 @@ class ncStore extends notCRUD {
         return [
             {
                 path: ":storeID",
-                title: "ID",
                 searchable: true,
                 sortable: true,
+                title: "ID",
             },
             {
                 path: ":name",
-                title: "Имя",
                 searchable: true,
                 sortable: true,
+                title: "Имя",
             },
             {
                 path: ":driver",
-                title: "Тип",
                 searchable: true,
                 sortable: true,
+                title: "Тип",
             },
             {
                 path: ":active",
-                title: "Активность",
-                sortable: true,
-                searchable: true,
-                type: "boolean",
                 preprocessor: (value) => {
                     return [
                         {
@@ -121,42 +121,26 @@ class ncStore extends notCRUD {
                         },
                     ];
                 },
+                searchable: true,
+                sortable: true,
+                title: "Активность",
+                type: "boolean",
             },
             {
                 path: ":_id",
+                preprocessor: (value) =>
+                    CRUDActionList.createActionsButtons(this, value),
                 title: "Действия",
                 type: "button",
-                preprocessor: (value) => {
-                    return [
-                      
-                        {
-                            action: this.goDetails.bind(this, value),
-                            title: "Подробнее",
-                            size: "small",
-                        },
-                        {
-                            action: this.goUpdate.bind(this, value),
-                            title: "Изменить",
-                            size: "small",
-                        },
-                        {
-                            action: this.goDelete.bind(this, value),
-                            type: "danger",
-                            title: "Удалить",
-                            size: "small",
-                            style: "outlined",
-                        },
-                    ];
-                },
             },
         ];
     }
 
     getFrameClasses() {
         return {
-            TOP_CLASS: this.TOP_CLASS,
-            MAIN_CLASS,
             BOTTOM_CLASS,
+            MAIN_CLASS,
+            TOP_CLASS: this.TOP_CLASS,
         };
     }
 
@@ -166,11 +150,11 @@ class ncStore extends notCRUD {
 
     createDefault() {
         return {
-            name: "",
+            active: true,
             driver: "",
+            name: "",
             options: {},
             processors: {},
-            active: true,
         };
     }
 
@@ -198,7 +182,7 @@ class ncStore extends notCRUD {
     }
 
     async goTest(_id) {
-        try {            
+        try {
             const res = await this.getModel({ _id }).$test();
             this.log(res);
         } catch (error) {
@@ -207,16 +191,16 @@ class ncStore extends notCRUD {
     }
 
     async goFiles(_id) {
-        try {            
-            this.log('files of store', _id);
+        try {
+            this.log("files of store", _id);
         } catch (error) {
             this.error(error);
         }
     }
 
     async goUpload(_id) {
-        try {                        
-            this.log('upload to store', _id);
+        try {
+            this.log("upload to store", _id);
         } catch (error) {
             this.error(error);
         }

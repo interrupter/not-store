@@ -1,15 +1,15 @@
 import CRUDGenericActionCreate from "not-bulma/src/frame/crud/actions/generic/create";
-import UIStoreImportFromJSON from './store.import.from.json.svelte';
+import UIStoreImportFromJSON from "./store.import.from.json.svelte";
 import { MODULE_NAME } from "not-store/src/const.cjs";
-import notCommon from 'not-bulma/src/frame/common';
+import notCommon from "not-bulma/src/frame/common";
 
 const DEFAULT_BREADCRUMB_TAIL = `${MODULE_NAME}:action_import_from_json_title`;
 
-class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate{
+class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
     static get deafultBreadcrumbsTail() {
         return DEFAULT_BREADCRUMB_TAIL;
     }
-    
+
     static get breadcrumbsTails() {
         return {
             preset: DEFAULT_BREADCRUMB_TAIL,
@@ -42,19 +42,22 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate{
     static prepareUIOptions(controller, value) {
         const actionName = this.getModelActionName(controller);
         return {
+            props: {
+                actionName,
+            },
             target: controller.getContainerInnerElement(),
-            props:{                
-                actionName
-            }
         };
     }
 
-    static actionButton(controller){
+    static actionButton(controller) {
         return {
+            action() {
+                controller.navigateAction(
+                    undefined,
+                    notStoreCRUDActionImportFromJSON.ACTION
+                );
+            },
             title: `${MODULE_NAME}:action_import_from_json_title`,
-            action(){
-                controller.navigateAction(undefined,notStoreCRUDActionImportFromJSON.ACTION);
-            }
         };
     }
 
@@ -70,7 +73,7 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate{
             this.presetBreadcrumbs(controller, params);
             //creating action UI component
             const uiComponent = this.UIConstructor;
-            const response= {};
+            const response = {};
             this.setUI(
                 controller,
                 new uiComponent(this.prepareUIOptions(controller, response))
@@ -94,40 +97,43 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate{
             this.bindUIEvent(controller, "reject", () => controller.goBack());
         }
 
-        this.bindUIEvent(controller, "import", ({detail})=>{            
+        this.bindUIEvent(controller, "import", ({ detail }) => {
             notStoreCRUDActionImportFromJSON.import(controller, detail);
         });
-        
     }
 
-    static setUILoading(controller){
-        controller.ui[notStoreCRUDActionImportFromJSON.ACTION].$set({loading: true});
+    static setUILoading(controller) {
+        this.getUI(controller).$set({ loading: true });
     }
 
-    static setUILoaded(controller){
-        controller.ui[notStoreCRUDActionImportFromJSON.ACTION].$set({loading: false});
+    static setUILoaded(controller) {
+        this.getUI(controller).$set({ loading: false });
     }
 
-    static setUIError(controller, message){
-        controller.ui[notStoreCRUDActionImportFromJSON.ACTION].$set({error: message});
+    static setUIError(controller, message) {
+        this.getUI(controller).$set({ error: message });
     }
 
-    static async import(controller, jsonAsText){
-        try{
-            notStoreCRUDActionImportFromJSON.setUILoading(controller);            
-            const res = await controller.getModel({import:jsonAsText})[`$${notStoreCRUDActionImportFromJSON.MODEL_ACTION_PUT}`]();            
-            if(this.isResponseBad(res)){
+    static async import(controller, jsonAsText) {
+        try {
+            notStoreCRUDActionImportFromJSON.setUILoading(controller);
+            const res = await controller
+                .getModel({ import: jsonAsText })
+                [`$${notStoreCRUDActionImportFromJSON.MODEL_ACTION_PUT}`]();
+            if (this.isResponseBad(res)) {
                 controller.showErrorMessage(res);
-            }else{
-                controller.showSuccessMessage('',`${MODULE_NAME}:action_import_success`);
-                controller.navigateAction(undefined, 'list', 'NORMAL');
+            } else {
+                controller.showSuccessMessage(
+                    "",
+                    `${MODULE_NAME}:action_import_success`
+                );
+                controller.navigateAction(undefined, "list", "NORMAL");
             }
-        }catch(e){
+        } catch (e) {
             controller.showErrorMessage(e);
-        }finally{
+        } finally {
             notStoreCRUDActionImportFromJSON.setUILoaded(controller);
         }
-        
     }
 }
 

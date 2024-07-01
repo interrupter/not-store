@@ -1,6 +1,6 @@
 {
   "name": "not-store",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "file storage interface",
   "main": "index.cjs",
   "repository": "https://github.com/interrupter/not-store",
@@ -43,7 +43,7 @@
     "aws-sdk": "^2.1642.0",
     "download": "^8.0.0",
     "easy-yandex-s3": "^2.0.0",
-    "is-stream": "4.*",
+    "is-stream": "2.*",
     "jsdoc": "^4.0.3",
     "mkdirp": "*",
     "not-error": "^0.2.9",

@@ -9,31 +9,31 @@ const notStoreProcessors = require("../store.processors.cjs");
 const {
     Log,
     LogAction,
-    say,
-    phrase,
     config,
+    getLogic,
     getModel,
     getModelSchema,
-    getLogic,
     getModelUser,
+    phrase,
+    say,
 } = notNode.Bootstrap.notBootstrapLogic({
-    target: module,
     MODEL_NAME,
     MODULE_NAME,
+    target: module,
 });
 
 const StoreGenericLogic = notNode.Generic.GenericLogic({
-    MODEL_NAME,
-    MODULE_NAME,
     Log,
     LogAction,
-    say,
-    phrase,
+    MODEL_NAME,
+    MODULE_NAME,
     config,
+    getLogic,
     getModel,
     getModelSchema,
-    getLogic,
     getModelUser,
+    phrase,
+    say,
 });
 
 module.exports.thisLogicName = MODEL_NAME;
@@ -53,12 +53,14 @@ class StoreLogic extends StoreGenericLogic {
         return await store.test();
     }
 
-    static async importJSON({identity, importJSON}){
-        if(Array.isArray(importJSON)){
-            return await Promise.all(importJSON.map(item=>getModel().add(item)));
-        }else{
+    static async importJSON({ importJSON }) {
+        if (Array.isArray(importJSON)) {
+            return await Promise.all(
+                importJSON.map((item) => getModel().add(item))
+            );
+        } else {
             return await getModel().add(importJSON);
-        }        
+        }
     }
 }
 

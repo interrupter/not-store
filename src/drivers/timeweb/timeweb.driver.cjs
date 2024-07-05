@@ -1,21 +1,25 @@
 // @ts-check
 
 const Log = require("not-log")(module, "Timeweb driver");
-const { MODULE_NAME, OPT_INFO_PARENT, OPT_INFO_VARIANT } = require("../../const.cjs");
+const {
+    MODULE_NAME,
+    OPT_INFO_PARENT,
+    OPT_INFO_VARIANT,
+} = require("../../const.cjs");
 const S3 = require("aws-sdk/clients/s3");
 
 const notError = require("not-error/src/error.node.cjs");
 const notNode = require("not-node");
-const {partCopyObjExcept} = notNode.Common;
+const { partCopyObjExcept } = notNode.Common;
 const path = require("node:path");
 
 const {
-    notStoreExceptionUploadError,
-    notStoreExceptionDirectUploadError,
+    notStoreExceptionDeleteFromStoreError,
     notStoreExceptionDirectDeleteError,
     notStoreExceptionDirectListError,
-    notStoreExceptionDeleteFromStoreError,
+    notStoreExceptionDirectUploadError,
     notStoreExceptionListStoreError,
+    notStoreExceptionUploadError,
 } = require("../../exceptions/driver.exceptions.cjs");
 const DEFAULT_OPTIONS = require("./timeweb.driver.options.cjs");
 const notStoreDriver = require("../../proto/driver.cjs");
@@ -64,7 +68,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
      * @param {boolean} options.s3ForcePathStyle	Whether to force path style URLs for S3 objects. more at https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#s3ForcePathStyle-property
      * @param {string} options.region				store server location
      * @param {string} options.apiVersion			preffered API version
-     * @param {string} options.bucket 				bucket name
+     * @param {string} options.bucket 				AWS S3 bucket name
      * @param {string} options.path        			sub path in bucket
      * @param {string} options.tmp					absolute path to local tmp folder
      * @param {boolean} options.groupFiles			file groupping in folders by first few letters of filename
@@ -105,10 +109,10 @@ class notStoreDriverTimeweb extends notStoreDriver {
      */
     static getDescription() {
         return {
+            actions: ["upload", "delete", "list"],
             id: "timeweb",
             title: `${MODULE_NAME}:driver_timeweb_title`,
             ui: "notStoreUIDriverOptionsTimeweb",
-            actions: ["upload", "delete", "list"],
         };
     }
 
@@ -157,11 +161,11 @@ class notStoreDriverTimeweb extends notStoreDriver {
      */
     async getDirectUploadParams(fullFilenameFrom, fullFilenameInStoreTo) {
         return {
-            Bucket: this.getOptionValueCheckENV("bucket"),
-            Key: this.resolvePath(fullFilenameInStoreTo),
             Body: await notStoreDriver.streamer.readableStreamFromFilename(
                 fullFilenameFrom
             ),
+            Bucket: this.getOptionValueCheckENV("bucket"),
+            Key: this.resolvePath(fullFilenameInStoreTo),
         };
     }
 
@@ -183,25 +187,33 @@ class notStoreDriverTimeweb extends notStoreDriver {
             fileInfo.name_tmp = name_tmp;
             fileInfo.size = await this.getFileSize(name_tmp);
             //file processing sequence pre-main-post
-            await this.processors.runPre("upload", {
-                parent: fileInfo[OPT_INFO_PARENT],
-                path: name_tmp, 
-                info: fileInfo
-            }, this);
+            await this.processors.runPre(
+                "upload",
+                {
+                    info: fileInfo,
+                    parent: fileInfo[OPT_INFO_PARENT],
+                    path: name_tmp,
+                },
+                this
+            );
             const result = await this.directUpload(
                 name_tmp,
                 this.composeFullFilename(uuid)
             );
-            fileInfo.cloud = partCopyObjExcept(result, ['name_tmp']);
-            await this.processors.runPost("upload", {
-                variant:    fileInfo[OPT_INFO_VARIANT],  
-                parent:     fileInfo[OPT_INFO_PARENT], 
-                cloud:      result, 
-                path:       name_tmp, 
-                info:       fileInfo
-            }, this);
+            fileInfo.cloud = partCopyObjExcept(result, ["name_tmp"]);
+            await this.processors.runPost(
+                "upload",
+                {
+                    cloud: result,
+                    info: fileInfo,
+                    parent: fileInfo[OPT_INFO_PARENT],
+                    path: name_tmp,
+                    variant: fileInfo[OPT_INFO_VARIANT],
+                },
+                this
+            );
             //
-            Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);            
+            Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);
             return fileInfo;
         } catch (e) {
             let err = e;
@@ -319,8 +331,8 @@ class notStoreDriverTimeweb extends notStoreDriver {
             ? this.resolvePath(filename)
             : filename;
         return {
-            Key: fullFilenameInStore,
             Bucket: this.getOptionValueCheckENV("bucket"),
+            Key: fullFilenameInStore,
         };
     }
 
@@ -342,7 +354,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
         } catch (e) {
             throw new notStoreExceptionDirectDeleteError(
                 {
-                    filename:file.cloud.Key,
+                    filename: file.cloud.Key,
                 },
                 e
             );
@@ -399,8 +411,8 @@ class notStoreDriverTimeweb extends notStoreDriver {
         try {
             const params = {
                 Bucket: this.getOptionValueCheckENV("bucket"),
-                Prefix: pathInStore,
                 MaxKeys: limit,
+                Prefix: pathInStore,
             };
             let isTruncated = true;
             let listContent = [];
@@ -418,7 +430,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
             return listContent;
         } catch (e) {
             throw new notStoreExceptionDirectListError(
-                { pathInStore, limit },
+                { limit, pathInStore },
                 e
             );
         }
@@ -434,9 +446,17 @@ class notStoreDriverTimeweb extends notStoreDriver {
      */
     async list(pathInStore, info = {}) {
         try {
-            await this.processors.runPre("list", {path: pathInStore, info}, this);
+            await this.processors.runPre(
+                "list",
+                { info, path: pathInStore },
+                this
+            );
             const result = await this.directList(pathInStore);
-            await this.processors.runPost("list", {path: pathInStore, info, result}, this);
+            await this.processors.runPost(
+                "list",
+                { info, path: pathInStore, result },
+                this
+            );
             return [result, info];
         } catch (e) {
             let err = e;

@@ -5,7 +5,6 @@
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
 
     import { createEventDispatcher, onMount } from "svelte";
-    import { object_without_properties } from "svelte/internal";
     const dispatch = createEventDispatcher();
 
     export let filter = {
@@ -14,7 +13,7 @@
         extension: "",
     };
 
-    let buckets = [];
+    let stores = [];
     let search = "";
 
     function setFilter() {
@@ -36,7 +35,7 @@
             .$listAndCount()
             .then((result) => {
                 if (result && result.status === "ok") {
-                    buckets.push(
+                    stores.push(
                         ...result.result.list.map((itm) => {
                             return {
                                 id: itm.name,
@@ -44,7 +43,7 @@
                             };
                         })
                     );
-                    buckets = buckets;
+                    stores = stores;
                 }
                 notCommon.log(result);
             })
@@ -71,7 +70,7 @@
         <UISelect
             placeholder="Все хранилища"
             bind:value={filter.store}
-            bind:variants={buckets}
+            bind:variants={stores}
             on:change={({ detail }) => {
                 if (detail.value === "__CLEAR__") {
                     filter.store = "";

@@ -5,7 +5,7 @@ const Form = require("not-node").Form;
 //form
 const FIELDS = [
     ["activeUser", "not-node//requiredObject"],
-    ["bucket", `${MODULE_NAME}//_Bucket_data`],
+    ["store", `${MODULE_NAME}//_Store_data`],
     ["ip", "not-node//ip"],
 ];
 
@@ -27,14 +27,14 @@ module.exports = class FileCreateForm extends Form {
     extract(req) {
         const ip = getIP(req);
         const instructions = {
-            bucket: ["fromParams", "xss"],
+            store: ["fromParams", "xss"],
         };
         const data = this.extractByInstructions(req, instructions);
-        return {            
+        return {
             activeUser: req.user,
-            ip,
-            bucket: data.bucket,
             files: req.files,
+            ip,
+            store: data.store,
         };
     }
 };

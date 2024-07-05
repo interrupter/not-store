@@ -3,17 +3,17 @@
     let dispatch = createEventDispatcher();
     import { MODULE_NAME, OPT_ACLs } from "../../const.cjs";
     import { Elements } from "not-bulma";
-    import DEFAULT_OPTIONS from "./timeweb.driver.options.cjs";
+    import * as DEFAULT_OPTIONS from "./timeweb.driver.options.cjs";
     import {
         UITextfield,
         UILabel,
         UISelect,
         UISwitch,
     } from "not-bulma/src/elements/form";
-    const { UITitle } = Elements.Various;
+
     const UIBox = Elements.Blocks.UIBox;
 
-    export let value = { ...DEFALT_OPTIONS };
+    export let value = { ...DEFAULT_OPTIONS };
     export let fieldname = "options";
     export let readonly = false;
 

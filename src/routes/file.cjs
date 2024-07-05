@@ -9,34 +9,33 @@ const notNode = require("not-node"),
 const {
     //	say,
     //	config,
+    after,
     //	Log,
     before,
-    after,
     getLogic,
     //	getModel,
     //	getModelSchema,
 } = notNode.Bootstrap.notBootstrapRoute({
-    target: module,
     MODEL_NAME,
     MODULE_NAME,
     defaultAccessRule: true,
+    target: module,
 });
 
 const FileGenericRoute = notNode.Generic.GenericRoute({
-    before,
     after,
+    before,
     getLogic,
 });
 
-class FileRoute extends FileGenericRoute {   
-
+class FileRoute extends FileGenericRoute {
     static async create(req, res) {
-        const App = notNode.Application;        
+        const App = notNode.Application;
         if (req.files) {
             let query = {
-                bucket: "client",
                 files: req.files,
-                identity: notAppIdentity.extractAuthData(req)
+                identity: notAppIdentity.extractAuthData(req),
+                store: "client",
             };
             return await App.getLogic("not-store//File").upload(query);
         } else {
@@ -46,13 +45,12 @@ class FileRoute extends FileGenericRoute {
 
     static async _create(req, res) {
         const App = notNode.Application;
-        
-        const bucket = req.params.bucket ? req.params.bucket : "server";
+        const store = req.params.store ? req.params.store : "server";
         if (req.files) {
             let query = {
-                bucket,
+                files: req.files,
                 identity: notAppIdentity.extractAuthData(req),
-                files: req.files,                
+                store,
             };
             return await App.getLogic("not-store//File").upload(query);
         } else {
@@ -65,16 +63,16 @@ class FileRoute extends FileGenericRoute {
         try {
             let fileId = req.params._id;
             let query = {
-                targetId: fileId,
                 identity: notAppIdentity.extractAuthData(req),
+                targetId: fileId,
             };
             let result = await App.getLogic("not-store//File").delete(query);
             return result;
         } catch (e) {
             throw new notError("File delete error", {
+                admin: true,
                 params: req.params,
                 sid: false,
-                admin: true,
             });
         }
     }
@@ -84,16 +82,16 @@ class FileRoute extends FileGenericRoute {
         try {
             let fileId = req.params._id;
             let query = {
-                targetId: fileId,
                 identity: notAppIdentity.extractAuthData(req),
+                targetId: fileId,
             };
             let result = await App.getLogic("not-store//File").delete(query);
             return result;
         } catch (e) {
             throw new notError("File delete error", {
+                admin: false,
                 params: req.params,
                 sid: false,
-                admin: false,
             });
         }
     }

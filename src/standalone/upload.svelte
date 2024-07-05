@@ -88,7 +88,7 @@
         <div class="previews {short ? 'short' : 'long'}">
             {#if uploads.length > 0}
                 {#each uploads as upload}
-                    <NotFileUpload bucketId={id} data={upload} />
+                    <NotFileUpload storeId={id} data={upload} />
                 {/each}
             {/if}
         </div>

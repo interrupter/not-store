@@ -15,9 +15,6 @@ const CONTENT = [
 ];
 
 module.exports = {
-    notStore,
-    name: MODULE_NAME,
-    paths: generatePaths(CONTENT, __dirname + "/src"),
     initialize: (/*notApp*/) => {
         const configReaderName = config.get("configReader");
         console.log("config_reader", configReaderName);
@@ -26,4 +23,7 @@ module.exports = {
             notStore.setConfigReader(configReaders[configReaderName]);
         }
     },
+    name: MODULE_NAME,
+    notStore,
+    paths: generatePaths(CONTENT, __dirname + "/src"),
 };

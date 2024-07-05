@@ -4,9 +4,9 @@ const DEFAULT_OPTIONS = {
         region: "",
     },
     s3: {
+        bucket: "",
         id: "",
         key: "",
-        bucket: "",
         path: "/",
     },
     tmp: "../tmp",

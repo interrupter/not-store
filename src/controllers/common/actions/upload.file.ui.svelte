@@ -8,9 +8,9 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let bucket = "";
+    export let storeName = "";
 
-    let buckets = [];
+    let stores = [];
 
     function setFilter() {
         dispatch("change", filter);
@@ -24,7 +24,7 @@
             .$listAndCount()
             .then((result) => {
                 if (result && result.status === "ok") {
-                    buckets.push(
+                    stores.push(
                         ...result.result.list.map((itm) => {
                             return {
                                 id: itm.name,
@@ -32,7 +32,7 @@
                             };
                         })
                     );
-                    buckets = buckets;
+                    stores = stores;
                 }
                 notCommon.log(result);
             })
@@ -43,7 +43,7 @@
 
     function onFileSelect({ detail }) {
         const data = {
-            bucket,
+            storeName: storeName,
             files: detail,
         };
         console.log("file selected", data);
@@ -55,19 +55,19 @@
     <UIColumn>
         <UISelect
             placeholder="Все хранилища"
-            bind:value={bucket}
-            bind:variants={buckets}
+            bind:value={storeName}
+            bind:variants={stores}
             on:change={({ detail }) => {
                 if (detail.value === "__CLEAR__") {
-                    bucket = "";
+                    storeName = "";
                 } else {
-                    bucket = detail.value;
+                    storeName = detail.value;
                 }
             }}
         />
     </UIColumn>
 </UIColumns>
 
-{#if bucket}
-    <UIUpload bind:id={bucket} show={true} on:filesAdded={onFileSelect} />
+{#if storeName}
+    <UIUpload bind:id={storeName} show={true} on:filesAdded={onFileSelect} />
 {/if}

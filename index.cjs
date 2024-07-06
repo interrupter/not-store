@@ -15,11 +15,14 @@ const CONTENT = [
 ];
 
 module.exports = {
-    initialize: (/*notApp*/) => {
+    initialize: (notApp) => {
         const configReaderName = config.get("configReader");
-        console.log("config_reader", configReaderName);
-        if (Object.hasOwn(configReaders, configReaderName)) {
-            console.log("changing_default_config_reader", configReaderName);
+        notApp.debug("config_reader", configReaderName);
+        if (
+            configReaderName &&
+            Object.hasOwn(configReaders, configReaderName)
+        ) {
+            notApp.log("changing_default_config_reader", configReaderName);
             notStore.setConfigReader(configReaders[configReaderName]);
         }
     },

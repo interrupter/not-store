@@ -7,20 +7,21 @@ const getApp = require("not-node/src/getApp");
 const GenericLogic = require("not-node/src/logic/generic");
 
 const FileLogic = GenericLogic({
-    target: module,
     MODEL_NAME,
     MODULE_NAME,
     actions: {
-        delete:require("./actions/delete"),
-        deleteAllInStore:require("./actions/deleteAllInStore"),
+        delete: require("./actions/delete"),
+        deleteAllInStore: require("./actions/deleteAllInStore"),
         get: require("./actions/get"),
+        getOwn: require("./actions/getOwn"),
         list: require("./actions/list"),
         listAndCount: require("./actions/listAndCount"),
-        upload: require('./actions/upload')
+        upload: require("./actions/upload"),
     },
     actionsSets: [],
-    beforeActions: {},
     afterActions: {},
+    beforeActions: {},
+    target: module,
 });
 
 module.exports[MODEL_NAME] = FileLogic;

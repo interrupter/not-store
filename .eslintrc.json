@@ -14,13 +14,7 @@
         "mongo": true,
         "mocha": true
     },
-    "plugins": ["svelte3", "perfectionist"],
-    "overrides": [
-        {
-            "files": ["*.svelte"],
-            "processor": "svelte3/svelte3"
-        }
-    ],
+    "plugins": ["perfectionist"],
     "extends": "eslint:recommended",
     "rules": {
         "indent": ["error", 4, { "SwitchCase": 1 }],

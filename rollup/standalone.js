@@ -1,18 +1,18 @@
 // Rollup plugins
-import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
+import babel from "@rollup/plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
 import postcss from "rollup-plugin-postcss";
-import resolve from "rollup-plugin-node-resolve";
+import resolve from "@rollup/plugin-node-resolve";
 
 import filesize from "rollup-plugin-filesize";
 
 export default {
     input: "src/standalone/index.js",
     output: {
-        name: "notStore",
-        format: "iife",
         file: "dist/notStore.js",
+        format: "iife",
+        name: "notStore",
         sourcemap: false,
     },
     plugins: [
@@ -23,8 +23,9 @@ export default {
             browser: true,
             dedupe: (importee) =>
                 importee === "svelte" || importee.startsWith("svelte/"),
+            preferBuiltins: true,
         }),
-        commonjs(),
+        commonjs({}),
         postcss({
             extract: true,
             minimize: true,
@@ -39,32 +40,8 @@ export default {
         }),
         //(process.env.ENV !== 'test' && process.env.ENV !== 'debug' &&
         babel({
-            presets: [
-                [
-                    "@babel/preset-env",
-                    {
-                        corejs: 3,
-                        modules: false,
-                        useBuiltIns: "usage",
-                        targets: {
-                            ie: "11",
-                        },
-                    },
-                ],
-            ],
+            babelHelpers: "bundled",
             babelrc: false,
-            runtimeHelpers: true,
-            plugins: [
-                "@babel/plugin-syntax-class-properties",
-                "@babel/plugin-proposal-class-properties",
-                "@babel/transform-arrow-functions",
-                [
-                    "@babel/transform-runtime",
-                    {
-                        regenerator: true,
-                    },
-                ],
-            ],
             exclude: [
                 "tmpl/**",
                 "build/**",
@@ -75,6 +52,23 @@ export default {
                 "bower_components/**",
                 "assets/*",
                 "dist/**",
+            ],
+            plugins: [
+                "@babel/plugin-syntax-class-properties",
+                "@babel/plugin-proposal-class-properties",
+                "@babel/transform-arrow-functions",
+                [],
+            ],
+            presets: [
+                [
+                    "@babel/preset-env",
+                    {
+                        corejs: 3,
+                        modules: false,
+                        targets: "> 2.5%, not dead",
+                        useBuiltIns: "usage",
+                    },
+                ],
             ],
         }),
         //)

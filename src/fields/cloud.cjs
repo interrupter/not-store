@@ -3,13 +3,17 @@ const { MODULE_NAME } = require("not-store/src/const.cjs");
 const Schema = require("mongoose").Schema;
 
 module.exports = {
+    model: {
+        required: false,
+        safe: {
+            read: ["@owner", "root", "admin"],
+            update: ["@owner", "root", "admin"],
+        },
+        type: Schema.Types.Mixed,
+    },
     ui: {
         component: "UIJSON",
-        placeholder: `${MODULE_NAME}:field_cloud_placeholder`,
         label: `${MODULE_NAME}:field_cloud_label`,
-    },
-    model: {
-        type: Schema.Types.Mixed,
-        required: false,
+        placeholder: `${MODULE_NAME}:field_cloud_placeholder`,
     },
 };

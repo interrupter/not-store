@@ -2,14 +2,18 @@ const Schema = require("mongoose").Schema;
 const { MODULE_NAME } = require("../const.cjs");
 
 module.exports = {
-    ui: {
-        component: "FUIStoreProcessors",
-        placeholder: `${MODULE_NAME}:field_processors_placeholder`,
-        label: `${MODULE_NAME}:field_processors_label`,
-    },
     model: {
-        type: Schema.Types.Mixed,
         default: {},
         required: false,
+        safe: {
+            read: ["@owner", "root", "admin"],
+            update: ["@owner", "root", "admin"],
+        },
+        type: Schema.Types.Mixed,
+    },
+    ui: {
+        component: "FUIStoreProcessors",
+        label: `${MODULE_NAME}:field_processors_label`,
+        placeholder: `${MODULE_NAME}:field_processors_placeholder`,
     },
 };

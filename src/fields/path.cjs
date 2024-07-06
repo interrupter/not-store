@@ -3,13 +3,17 @@ const { MODULE_NAME } = require("../const.cjs");
 const Schema = require("mongoose").Schema;
 
 module.exports = {
+    model: {
+        required: false,
+        safe: {
+            read: ["@owner", "root", "admin"],
+            update: ["@owner", "root", "admin"],
+        },
+        type: Schema.Types.Mixed,
+    },
     ui: {
         component: "UITexteditor",
-        placeholder: `${MODULE_NAME}:field_path_placeholder`,
         label: `${MODULE_NAME}:field_path_label`,
-    },
-    model: {
-        type: Schema.Types.Mixed,
-        required: false,
+        placeholder: `${MODULE_NAME}:field_path_placeholder`,
     },
 };

@@ -7,16 +7,13 @@ module.exports = {
             postFix: "/:store?",
             rules: [
                 {
-                    auth: true,
                     root: true,
                 },
                 {
                     auth: true,
-                    root: false,
                 },
                 {
                     auth: false,
-                    root: false,
                 },
             ],
         },
@@ -26,16 +23,13 @@ module.exports = {
             postFix: "/:record[_id]",
             rules: [
                 {
-                    auth: true,
                     root: true,
                 },
                 {
                     auth: true,
-                    root: false,
                 },
                 {
                     auth: false,
-                    root: false,
                 },
             ],
         },
@@ -65,16 +59,13 @@ module.exports = {
             postFix: "/:record[_id]",
             rules: [
                 {
-                    auth: true,
                     root: true,
                 },
                 {
                     auth: true,
-                    root: false,
                 },
                 {
                     auth: false,
-                    root: false,
                 },
             ],
         },
@@ -104,16 +95,13 @@ module.exports = {
             postFix: "/:record[_id]",
             rules: [
                 {
-                    auth: true,
                     root: true,
                 },
                 {
                     auth: true,
-                    root: false,
                 },
                 {
                     auth: false,
-                    root: false,
                 },
             ],
         },
@@ -142,16 +130,13 @@ module.exports = {
             method: "GET",
             rules: [
                 {
-                    auth: true,
                     root: true,
                 },
                 {
                     auth: true,
-                    root: false,
                 },
                 {
                     auth: false,
-                    root: false,
                 },
             ],
         },
@@ -180,12 +165,7 @@ module.exports = {
             postFix: "/:actionName",
             rules: [
                 {
-                    auth: true,
                     root: true,
-                },
-                {
-                    auth: true,
-                    role: "root",
                 },
             ],
         },

@@ -10,44 +10,13 @@ const FIELDS = [
 ];
 
 module.exports = {
-    model: "store",
-    url: "/api/:modelName",
-    fields: FIELDS,
     actions: {
-        importFromJSON:{
-            postFix: "/:actionName",
-            method: "PUT",
-            data: ["record"],
-            rules:[{
-                auth:true,
-                root:true,
-            }]
-        },
-        exportToJSON:{
-            postFix: "/:actionName",
-            method: "GET",
-            data: ["record"],
-            rules:[{
-                auth:true,
-                root:true,
-                return: {
-                    name: true,
-                    driver: true,
-                    options: true,
-                    processors: true,
-                    active: true,
-                },
-                returnStrict: true
-            }]
-        },
         create: {
-            method: "PUT",
-            isArray: false,
             data: ["record"],
+            isArray: false,
+            method: "PUT",
             rules: [
                 {
-                    auth: true,
-                    root: true,
                     fields: [
                         "name",
                         "driver",
@@ -55,17 +24,45 @@ module.exports = {
                         "processors",
                         "active",
                     ],
+                    root: true,
+                },
+            ],
+        },
+        delete: {
+            isArray: false,
+            method: "DELETE",
+            postFix: "/:record[_id]",
+            rules: [
+                {
+                    root: true,
+                },
+            ],
+        },
+        exportToJSON: {
+            data: ["record"],
+            method: "GET",
+            postFix: "/:actionName",
+            rules: [
+                {
+                    return: {
+                        active: true,
+                        driver: true,
+                        name: true,
+                        options: true,
+                        processors: true,
+                    },
+                    returnStrict: true,
+                    root: true,
                 },
             ],
         },
         get: {
-            method: "get",
             data: ["record"],
             isArray: false,
+            method: "get",
+            postFix: "/:record[_id]/:actionName",
             rules: [
                 {
-                    auth: true,
-                    root: true,
                     fields: [
                         "_id",
                         "storeID",
@@ -75,23 +72,12 @@ module.exports = {
                         "processors",
                         "active",
                     ],
+                    root: true,
                 },
             ],
-            postFix: "/:record[_id]/:actionName",
         },
         getRaw: {
-            method: "get",
             data: ["record"],
-            isArray: false,
-            return: [
-                "_id",
-                "storeID",
-                "name",
-                "driver",
-                "options",
-                "processors",
-                "active",
-            ],
             fields: [
                 "_id",
                 "storeID",
@@ -101,20 +87,84 @@ module.exports = {
                 "processors",
                 "active",
             ],
+            isArray: false,
+            method: "get",
+            postFix: "/:record[_id]/:actionName",
+            return: [
+                "_id",
+                "storeID",
+                "name",
+                "driver",
+                "options",
+                "processors",
+                "active",
+            ],
             rules: [
                 {
-                    auth: true,
                     root: true,
                 },
             ],
-            postFix: "/:record[_id]/:actionName",
         },
-        update: {
-            method: "post",
+        importFromJSON: {
+            data: ["record"],
+            method: "PUT",
+            postFix: "/:actionName",
             rules: [
                 {
-                    auth: true,
                     root: true,
+                },
+            ],
+        },
+        listAndCount: {
+            data: ["pager", "sorter", "filter", "search"],
+            isArray: false,
+            method: "get",
+            postFix: "/:actionName",
+            rules: [
+                {
+                    root: true,
+                },
+            ],
+        },
+        listDrivers: {
+            data: ["pager", "sorter", "filter", "search"],
+            isArray: false,
+            method: "get",
+            postFix: "/:actionName",
+            rules: [
+                {
+                    root: true,
+                },
+            ],
+        },
+        listProcessors: {
+            data: ["pager", "sorter", "filter", "search"],
+            isArray: false,
+            method: "get",
+            postFix: "/:actionName",
+            rules: [
+                {
+                    root: true,
+                },
+            ],
+        },
+        test: {
+            isArray: false,
+            method: "GET",
+            postFix: "/:record[_id]/:actionName",
+            rules: [
+                {
+                    root: true,
+                },
+            ],
+        },
+
+        update: {
+            data: ["record"],
+            method: "post",
+            postFix: "/:record[_id]/:actionName",
+            rules: [
+                {
                     fields: [
                         "name",
                         "driver",
@@ -122,69 +172,12 @@ module.exports = {
                         "processors",
                         "active",
                     ],
-                },
-            ],
-            data: ["record"],
-            postFix: "/:record[_id]/:actionName",
-        },
-        listAndCount: {
-            method: "get",
-            isArray: false,
-            data: ["pager", "sorter", "filter", "search"],
-            rules: [
-                {
-                    auth: true,
-                    root: true,
-                },
-            ],
-            postFix: "/:actionName",
-        },
-        listDrivers: {
-            method: "get",
-            isArray: false,
-            data: ["pager", "sorter", "filter", "search"],
-            rules: [
-                {
-                    auth: true,
-                    root: true,
-                },
-            ],
-            postFix: "/:actionName",
-        },
-        listProcessors: {
-            method: "get",
-            isArray: false,
-            data: ["pager", "sorter", "filter", "search"],
-            rules: [
-                {
-                    auth: true,
-                    root: true,
-                },
-            ],
-            postFix: "/:actionName",
-        },
-        delete: {
-            method: "DELETE",
-            postFix: "/:record[_id]",
-            isArray: false,
-            rules: [
-                {
-                    auth: true,
-                    root: true,
-                },
-            ],
-        },
-        
-        test: {
-            method: "GET",
-            postFix: "/:record[_id]/:actionName",
-            isArray: false,
-            rules: [
-                {
-                    auth: true,
                     root: true,
                 },
             ],
         },
     },
+    fields: FIELDS,
+    model: "store",
+    url: "/api/:modelName",
 };

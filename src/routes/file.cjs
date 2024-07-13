@@ -32,10 +32,16 @@ class FileRoute extends FileGenericRoute {
     static async create(req, res) {
         const App = notNode.Application;
         if (req.files) {
+            const identity = notAppIdentity.extractAuthData(req);
+            let store = "client";
+            if(identity.admin){
+                store = req.params.store ? req.params.store : "client";
+            }
+            
             let query = {
                 files: req.files,
-                identity: notAppIdentity.extractAuthData(req),
-                store: "client",
+                identity,
+                store,
             };
             return await App.getLogic("not-store//File").upload(query);
         } else {

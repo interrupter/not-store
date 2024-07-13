@@ -120,9 +120,13 @@ module.exports = {
             isArray: false,
             method: "get",
             postFix: "/:actionName",
-            rules: [
+            rules: [                
                 {
                     root: true,
+                },
+                {
+                    auth:true,
+                    role:['admin', 'confirmed']
                 },
             ],
         },

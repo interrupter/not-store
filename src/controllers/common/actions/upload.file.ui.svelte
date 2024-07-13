@@ -46,7 +46,7 @@
             storeName: storeName,
             files: detail,
         };
-        console.log("file selected", data);
+        //console.log("file selected", data);
         dispatch("filesAdded", data);
     }
 </script>

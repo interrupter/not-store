@@ -8,6 +8,11 @@
 
     export let show = false;
     export let storeName = "";
+    export let title = "Загрузка файла";
+
+    export let fieldname = "file";
+    export let accept = "image/*";
+    export let multiple = true;
 
     const closeButton = {
         title: "Закрыть",
@@ -33,18 +38,20 @@
             })
             .catch((er) => {
                 notCommon.report(er);
-
-                dispatch("reject", err);
+                dispatch("reject", er);
                 show = false;
             });
     }
 </script>
 
-<UIModal {show} {closeButton}>
+<UIModal {show} {closeButton} {title}>
     <UIUpload
         bind:id={storeName}
         show={true}
         on:filesAdded={onFilesAdded}
         short={true}
+        {fieldname}
+        {accept}
+        {multiple}
     />
 </UIModal>

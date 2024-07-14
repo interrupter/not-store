@@ -13,6 +13,10 @@
     export let show = false;
     export let short = false;
 
+    export let fieldname = "file";
+    export let accept = "image/*";
+    export let multiple = true;
+
     onMount(() => {
         FileStores.get(id, true).uploads.subscribe((value) => {
             uploads = value;
@@ -71,9 +75,9 @@
                 <input
                     class="file-input"
                     type="file"
-                    name="file"
-                    accept="image/*"
-                    multiple="true"
+                    name={fieldname}
+                    {accept}
+                    {multiple}
                     on:change={onChange}
                 />
                 Выберите изображения для загрузки
@@ -88,7 +92,7 @@
         <div class="previews {short ? 'short' : 'long'}">
             {#if uploads.length > 0}
                 {#each uploads as upload}
-                    <NotFileUpload storeId={id} data={upload} />
+                    <NotFileUpload data={upload} />
                 {/each}
             {/if}
         </div>

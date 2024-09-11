@@ -19,8 +19,8 @@
     export let show = false;
     export let elementSize = 3;
 
-    export let onReject;
-    export let onResolve;
+    export let onReject = null;
+    export let onResolve = null;
 
     /*
 	function getListContainer() {

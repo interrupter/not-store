@@ -78,7 +78,7 @@
             {/if}
             <img
                 draggable="true"
-                src={data.path.small.cloud.Location}
+                src={data.info.variantURL.micro}
                 alt={data.name}
                 crossorigin="anonymous"
             />

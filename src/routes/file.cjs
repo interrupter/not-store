@@ -16,9 +16,9 @@ const {
     //	getModel,
     //	getModelSchema,
 } = notNode.Bootstrap.notBootstrapRoute({
+    defaultAccessRule: true,
     MODEL_NAME,
     MODULE_NAME,
-    defaultAccessRule: true,
     target: module,
 });
 
@@ -34,10 +34,10 @@ class FileRoute extends FileGenericRoute {
         if (req.files) {
             const identity = notAppIdentity.extractAuthData(req);
             let store = "client";
-            if(identity.admin){
+            if (identity.admin) {
                 store = req.params.store ? req.params.store : "client";
             }
-            
+
             let query = {
                 files: req.files,
                 identity,

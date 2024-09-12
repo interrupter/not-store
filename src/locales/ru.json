@@ -13,6 +13,7 @@
     "field_driver_label": "Драйвер",
     "field_options_label": "Опции",
     "field_name_label": "Название",
+    "field_name_placeholder": "Название...",
     "field_processors_label": "Обработчики",
     "field_driver_placeholder": "Выберите драйвер хранилища",
     "driver_aws_title": "AWS",

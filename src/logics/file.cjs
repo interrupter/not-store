@@ -3,12 +3,9 @@ const { MODULE_NAME } = require("../const.cjs");
 const MODEL_NAME = "File";
 module.exports.thisLogicName = MODEL_NAME;
 
-const getApp = require("not-node/src/getApp");
 const GenericLogic = require("not-node/src/logic/generic");
 
 const FileLogic = GenericLogic({
-    MODEL_NAME,
-    MODULE_NAME,
     actions: {
         delete: require("./actions/delete"),
         deleteAllInStore: require("./actions/deleteAllInStore"),
@@ -21,6 +18,8 @@ const FileLogic = GenericLogic({
     actionsSets: [],
     afterActions: {},
     beforeActions: {},
+    MODEL_NAME,
+    MODULE_NAME,
     target: module,
 });
 

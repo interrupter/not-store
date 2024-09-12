@@ -12,8 +12,7 @@ const FIELDS = [
 module.exports = {
     actions: {
         create: {
-            data: ["record"],
-            isArray: false,
+            data: ["data"],
             method: "PUT",
             rules: [
                 {
@@ -29,7 +28,6 @@ module.exports = {
             ],
         },
         delete: {
-            isArray: false,
             method: "DELETE",
             postFix: "/:record[_id]",
             rules: [
@@ -39,7 +37,7 @@ module.exports = {
             ],
         },
         exportToJSON: {
-            data: ["record"],
+            data: ["data"],
             method: "GET",
             postFix: "/:actionName",
             rules: [
@@ -57,8 +55,7 @@ module.exports = {
             ],
         },
         get: {
-            data: ["record"],
-            isArray: false,
+            data: ["data"],
             method: "get",
             postFix: "/:record[_id]/:actionName",
             rules: [
@@ -77,7 +74,7 @@ module.exports = {
             ],
         },
         getRaw: {
-            data: ["record"],
+            data: ["data"],
             fields: [
                 "_id",
                 "storeID",
@@ -87,7 +84,7 @@ module.exports = {
                 "processors",
                 "active",
             ],
-            isArray: false,
+
             method: "get",
             postFix: "/:record[_id]/:actionName",
             return: [
@@ -105,8 +102,23 @@ module.exports = {
                 },
             ],
         },
+        listAndCount: {
+            data: ["pager", "sorter", "filter", "search"],
+            method: "get",
+            postFix: "/:actionName",
+            rules: [
+                {
+                    root: true,
+                    returnRoot: "list",
+                },
+                {
+                    auth: true,
+                    role: ["admin", "confirmed"],
+                },
+            ],
+        },
         importFromJSON: {
-            data: ["record"],
+            data: ["data"],
             method: "PUT",
             postFix: "/:actionName",
             rules: [
@@ -115,35 +127,25 @@ module.exports = {
                 },
             ],
         },
-        listAndCount: {
-            data: ["pager", "sorter", "filter", "search"],
-            isArray: false,
-            method: "get",
-            postFix: "/:actionName",
-            rules: [                
-                {
-                    root: true,
-                },
-                {
-                    auth:true,
-                    role:['admin', 'confirmed']
-                },
-            ],
-        },
+
         listDrivers: {
             data: ["pager", "sorter", "filter", "search"],
-            isArray: false,
             method: "get",
             postFix: "/:actionName",
             rules: [
                 {
                     root: true,
+                    return: {
+                        id: true,
+                        title: true,
+                        ui: true,
+                        actions: true,
+                    },
                 },
             ],
         },
         listProcessors: {
             data: ["pager", "sorter", "filter", "search"],
-            isArray: false,
             method: "get",
             postFix: "/:actionName",
             rules: [
@@ -153,7 +155,6 @@ module.exports = {
             ],
         },
         test: {
-            isArray: false,
             method: "GET",
             postFix: "/:record[_id]/:actionName",
             rules: [
@@ -164,7 +165,7 @@ module.exports = {
         },
 
         update: {
-            data: ["record"],
+            data: ["data"],
             method: "post",
             postFix: "/:record[_id]/:actionName",
             rules: [

@@ -8,6 +8,7 @@ const CONTENT = [
     "routes",
     "controllers",
     "logics",
+    "styles",
     "locales",
     "models",
     "fields",

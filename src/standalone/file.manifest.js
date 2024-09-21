@@ -32,6 +32,19 @@ module.exports = {
                 },
             ],
         },
+        listAndCountOriginal: {
+            data: ["pager", "sorter", "filter", "search"],
+            fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+            method: "get",
+            postFix: "/:actionName",
+            return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+            rules: [
+                {
+                    root: true,
+                    returnRoot: "list",
+                },
+            ],
+        },
         listAndCount: {
             data: ["pager", "sorter", "filter", "search"],
             fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],

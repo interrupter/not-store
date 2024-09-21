@@ -101,6 +101,15 @@ class FileRoute extends FileGenericRoute {
             });
         }
     }
+   
+
+    static async _listAndCountOriginal(req, res,next, prepared){
+        return await notNode.Application.getLogic("not-store//File").listAndCountOriginal(prepared);
+    }
+
+    static async listAndCountOriginal(req, res,next, prepared){
+        return await notNode.Application.getLogic("not-store//File").listAndCountOriginal(prepared);
+    }
 }
 
 module.exports = FileRoute;

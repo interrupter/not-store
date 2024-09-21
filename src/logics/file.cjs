@@ -13,6 +13,7 @@ const FileLogic = GenericLogic({
         getOwn: require("./actions/getOwn"),
         list: require("./actions/list"),
         listAndCount: require("./actions/listAndCount"),
+        listAndCountOriginal: require("./actions/listAndCountOriginal"),
         upload: require("./actions/upload"),
     },
     actionsSets: [],

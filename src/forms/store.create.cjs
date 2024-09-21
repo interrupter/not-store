@@ -1,5 +1,5 @@
 const getIP = require("not-node").Auth.getIP;
-const { MODULE_NAME } = require("../const.cjs");
+const { MODULE_NAME } = require("not-store/src/const.cjs");
 //DB related validation tools
 const Form = require("not-node").Form;
 //form

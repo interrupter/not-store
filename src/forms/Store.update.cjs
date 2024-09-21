@@ -6,7 +6,7 @@ const MODEL_NAME = "Store";
 const FIELDS = [
     ["targetId", { required: true }, "not-node//objectId"],
     ["activeUser", "not-node//requiredObject"],
-    ["data", `${MODULE_NAME}//_${MODEL_NAME}_data`], //sub forms validators should start with underscore
+    ["data", `${MODULE_NAME}//_store`], //sub forms validators should start with underscore
     ["ip", "not-node//ip"],
 ];
 const FORM_NAME = `${MODULE_NAME}:StoreUpdateForm`;

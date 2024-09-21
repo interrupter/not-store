@@ -5,7 +5,7 @@ const Form = require("not-node").Form;
 //form
 const FIELDS = [
     ["activeUser", "not-node//requiredObject"],
-    ["data", `${MODULE_NAME}//_Store_data`],
+    ["data", `${MODULE_NAME}//_store`],
     ["ip", "not-node//ip"],
 ];
 

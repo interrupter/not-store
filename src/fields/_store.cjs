@@ -11,7 +11,7 @@ module.exports = {
                 message: `${MODULE_NAME}:validation_message_store_data_is_not_valid`,
                 validator(val) {
                     return notNode.Application.getForm(
-                        `${MODULE_NAME}//_Store_data`
+                        `${MODULE_NAME}//_store`
                     ).run(val);
                 },
             },

@@ -23,6 +23,9 @@ const OPT_DEFAULT_THUMB_OPTIONS = {
     quality: 90,
 };
 
+const DEFAULT_USER_STORE = "client";
+const DEFAULT_SERVER_STORE = "server";
+
 /**
  *  @constant
  *  @default
@@ -59,25 +62,27 @@ const OPT_ENV_CHECKS = {
     drop: true,
 };
 
-const OPT_INFO_CHILDREN = '_children';
-const OPT_INFO_VARIANT = '_variant';
-const OPT_INFO_PARENT = '_parent';
-const OPT_INFO_NAME_TMP = 'name_tmp';
-const OPT_INFO_UUID = 'uuid';
-const OPT_INFO_CLOUD = 'cloud';
-const OPT_INFO_PREVIEW = '_preview';
+const OPT_INFO_CHILDREN = "_children";
+const OPT_INFO_VARIANT = "_variant";
+const OPT_INFO_PARENT = "_parent";
+const OPT_INFO_NAME_TMP = "name_tmp";
+const OPT_INFO_UUID = "uuid";
+const OPT_INFO_CLOUD = "cloud";
+const OPT_INFO_PREVIEW = "_preview";
 
 const INFO_EXCEPT_LIST = [
     OPT_INFO_CHILDREN,
     OPT_INFO_VARIANT,
     OPT_INFO_PARENT,
-    OPT_INFO_NAME_TMP, 
+    OPT_INFO_NAME_TMP,
     OPT_INFO_UUID,
     OPT_INFO_CLOUD,
     OPT_INFO_PREVIEW,
 ];
 
 module.exports = {
+    DEFAULT_USER_STORE,
+    DEFAULT_SERVER_STORE,
     OPT_INFO_CHILDREN,
     OPT_INFO_PARENT,
     OPT_INFO_VARIANT,

@@ -2,7 +2,6 @@ module.exports = {
     actions: {
         create: {
             data: ["data"],
-
             method: "PUT",
             postFix: "/:store?",
             rules: [
@@ -61,7 +60,6 @@ module.exports = {
         get: {
             data: ["filter", "data"],
             fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
-
             method: "GET",
             postFix: "/:record[_id]",
             return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
@@ -80,9 +78,8 @@ module.exports = {
         getRaw: {
             data: ["filter", "data"],
             fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
-
             method: "GET",
-            postFix: "/:record[_id]",
+            postFix: "/:record[_id]/:actionName",
             return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
             rules: [
                 {
@@ -99,7 +96,6 @@ module.exports = {
         list: {
             data: ["pager", "sorter", "filter", "search"],
             fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
-
             method: "GET",
             return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
             rules: [

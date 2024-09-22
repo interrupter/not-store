@@ -1,40 +1,30 @@
-const getIP = require("not-node").Auth.getIP;
-const { MODULE_NAME } = require("not-store/src/const.cjs");
+const {
+    MODULE_NAME,
+    DEFAULT_SERVER_STORE,
+    DEFAULT_USER_STORE,
+} = require("../const.cjs");
+const MODEL_NAME = "File";
 //DB related validation tools
 const Form = require("not-node").Form;
-//form
-const FIELDS = [
-    ["activeUser", "not-node//requiredObject"],
-    ["store", `${MODULE_NAME}//_store`],
-    ["ip", "not-node//ip"],
-];
-
-const FORM_NAME = `${MODULE_NAME}:FileCreateForm`;
 
 /**
  *
  **/
 module.exports = class FileCreateForm extends Form {
     constructor({ app }) {
-        super({ FIELDS, FORM_NAME, app });
+        super({ MODULE_NAME, MODEL_NAME, app, actionName: "create" });
     }
 
-    /**
-     * Extracts data
-     * @param {import('not-node/src/types').notNodeExpressRequest} req expressjs request object
-     * @return {Object}        forma data
-     **/
-    extract(req) {
-        const ip = getIP(req);
-        const instructions = {
-            store: ["fromParams", "xss"],
-        };
-        const data = this.extractByInstructions(req, instructions);
-        return {
-            activeUser: req.user,
-            files: req.files,
-            ip,
-            store: data.store,
-        };
+    async afterExtract(input, req) {
+        input = await super.afterExtract(input, req);
+        input.files = req.files;
+        if (input.identity.root || input.identity.admin) {
+            input.store = input.data.store || DEFAULT_SERVER_STORE;
+        } else {
+            input.store =
+                super.config.get("defaultUserStore") || DEFAULT_USER_STORE;
+        }
+        delete input.data.store;
+        return input;
     }
 };

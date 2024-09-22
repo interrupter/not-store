@@ -1,4 +1,3 @@
-const getApp = require("not-node/src/getApp");
 const { DOCUMENT_OWNER_FIELD_NAME } = require("not-node/src/auth/const.js");
 const { LogicGetActionException } = require("not-node/src/exceptions/action");
 

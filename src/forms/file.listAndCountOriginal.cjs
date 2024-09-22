@@ -1,5 +1,5 @@
 const notNode = require("not-node");
-const { MODULE_NAME } = require("not-store/src/const.cjs");
+const { MODULE_NAME } = require("../const.cjs");
 
 module.exports = notNode.Generic.GenericListAndCountForm({
     MODULE_NAME,

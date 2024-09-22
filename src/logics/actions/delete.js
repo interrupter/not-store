@@ -1,23 +1,26 @@
-const getApp = require('not-node/src/getApp');
-const { LogicDeleteActionException } = require("not-node/src/exceptions/action");
+const getApp = require("not-node/src/getApp");
+const {
+    LogicDeleteActionException,
+} = require("not-node/src/exceptions/action");
 
 module.exports = class deleteAction {
-
-    static checkIdentitySessionId(identity){
-        return typeof identity.sid !== "undefined" &&
-                identity.sid !== null &&
-                identity.sid &&
-                identity.sid.length > 10;
+    static checkIdentitySessionId(identity) {
+        return (
+            typeof identity.sid !== "undefined" &&
+            identity.sid !== null &&
+            identity.sid &&
+            identity.sid.length > 10
+        );
     }
 
     static async run(logic, actionName, { identity, targetId }) {
         try {
             logic.logDebugAction(actionName, identity);
             const File = getApp().getModel("File");
-            if (identity.admin) {
-                await File.getOneByIdAndRemove(targetId, undefined);                
+            if (identity.admin || identity.root) {
+                await File.getOneByIdAndRemove(targetId, undefined);
             } else if (this.checkIdentitySessionId(identity)) {
-                await File.getOneByIdAndRemove(targetId, identity.sid);                
+                await File.getOneByIdAndRemove(targetId, identity.sid);
             } else {
                 throw new Error("no user identity");
             }
@@ -36,5 +39,4 @@ module.exports = class deleteAction {
             );
         }
     }
-    
 };

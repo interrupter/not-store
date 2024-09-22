@@ -253,7 +253,7 @@ module.exports = class uploadAction {
     /**
      *
      * @param {*}   logic
-     * @param {*} storeBucket
+     * @param {*}   storeBucket
      * @param {import('not-node/src/types').notAppIdentityData} identity
      * @param {import('mongoose').Document} parent
      * @param {Array<Object>} children

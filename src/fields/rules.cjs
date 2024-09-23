@@ -1,4 +1,4 @@
-const { MODULE_NAME } = require("not-store/src/const.cjs");
+const { MODULE_NAME } = require("../const.cjs");
 const Mixed = require("mongoose").Schema.Types.Mixed;
 
 module.exports = {

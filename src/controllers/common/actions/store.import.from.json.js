@@ -1,6 +1,6 @@
 import CRUDGenericActionCreate from "not-bulma/src/frame/crud/actions/generic/create";
 import UIStoreImportFromJSON from "./store.import.from.json.svelte";
-import { MODULE_NAME } from "not-store/src/const.cjs";
+import { MODULE_NAME } from "./../../../const.cjs";
 import notCommon from "not-bulma/src/frame/common";
 
 const DEFAULT_BREADCRUMB_TAIL = `${MODULE_NAME}:action_import_from_json_title`;

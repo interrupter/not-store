@@ -1,5 +1,5 @@
 const Schema = require("mongoose").Schema;
-const { MODULE_NAME } = require("not-store/src/const.cjs");
+const { MODULE_NAME } = require("../const.cjs");
 module.exports = {
     model: {
         required: false,

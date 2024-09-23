@@ -27,7 +27,7 @@
     "cover:node:clear": "touch 'test/tmp/to.remove.test.file' && nyc --silent npm run test:node && npm run test:node:clear",
     "cover:report": "npm run test:server:off && npm run test:node:clear && npm run cover:report:slim",
     "cover:report:slim": "nyc report",
-    "prepare": "husky init",
+    "prepare": "husky",
     "update": "ncu -u -x escape-string-regexp,is-stream && npm i "
   },
   "svelte": "src/standalone/index.js",

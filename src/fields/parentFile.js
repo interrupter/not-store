@@ -1,5 +1,5 @@
 const { Schema } = require("mongoose");
-const { MODULE_NAME } = require("not-store/src/const.cjs");
+const { MODULE_NAME } = require("../const.cjs");
 const MODEL_NAME = "File";
 
 module.exports = {

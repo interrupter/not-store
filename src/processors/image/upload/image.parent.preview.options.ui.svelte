@@ -1,5 +1,5 @@
 <script>
-    import { MODULE_NAME } from "not-store/src/const.cjs";
+    import { MODULE_NAME } from "./../../../const.cjs";
 
     import notPath from "not-path";
 

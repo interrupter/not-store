@@ -1,10 +1,10 @@
 const notStoreProcessors = require("../../src/store.processors.cjs");
 const notStoreProcessor = require("../../src/proto/processor.cjs");
 const notStoreProcessorTest = require("../../src/processors/test.cjs");
-const { notError } = require("not-error");
+const { notError } = require("not-error/src/index.cjs");
 
 const {
-    notStoreExceptionProccesorRunError,
+    notStoreExceptionProcessorRunError,
     notStoreExceptionProcessorIsNotExists,
     notStoreExceptionProcessorAlreadyExists,
 } = require("../../src/exceptions.cjs");
@@ -65,7 +65,7 @@ describe("Proto/notStoreProcessors", () => {
     });
 
     describe("run", () => {
-        it("throws Error", (done) => {
+        it("throws Error", async () => {
             notStoreProcessors.setProcessor(
                 "test_throws_error",
                 class extends notStoreProcessor {
@@ -74,8 +74,8 @@ describe("Proto/notStoreProcessors", () => {
                     }
                 }
             );
-            notStoreProcessors
-                .run(
+            try {
+                await notStoreProcessors.run(
                     [
                         {
                             name: "test_throws_error",
@@ -83,18 +83,12 @@ describe("Proto/notStoreProcessors", () => {
                         },
                     ],
                     "file.ext",
-                    {},
                     { name: "some_driver" }
-                )
-                .then(() => {
-                    done(new Error("not throwed expected exception"));
-                })
-                .catch((e) => {
-                    expect(e).to.be.instanceof(
-                        notStoreExceptionProccesorRunError
-                    );
-                    done();
-                });
+                );
+                throw new Error("not throwed expected exception");
+            } catch (e) {
+                expect(e).to.be.instanceof(notStoreExceptionProcessorRunError);
+            }
         });
 
         it("throws notError", (done) => {

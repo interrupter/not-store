@@ -1,5 +1,7 @@
 const notStoreDriverProcessors = require("../../../src/proto/driver.processors.cjs");
+
 const expect = require("chai").expect;
+
 describe("Proto/DriverProcessors", function () {
     describe("isSet", () => {
         it("not set", () => {
@@ -36,14 +38,14 @@ describe("Proto/DriverProcessors", function () {
     describe("run", () => {
         it("empty pipeline", (done) => {
             new notStoreDriverProcessors({})
-                .run("pre", "delete")
+                .run("pre", "delete", {}, {})
                 .then(() => done())
                 .catch(done);
         });
 
         it("not empty pipeline", (done) => {
-            const file = "file.ext";
-            const meta = {};
+            const filePath = "file.ext";
+            const file = { path: filePath, info: {} };
             const driver = Math.random();
             new notStoreDriverProcessors({
                 delete: {
@@ -57,11 +59,12 @@ describe("Proto/DriverProcessors", function () {
                     ],
                 },
             })
-                .run("pre", "delete", file, meta, driver)
+                .run("pre", "delete", file, driver)
                 .then(() => {
-                    expect(meta.filename).to.be.equal(file);
-                    expect(meta.options.processed).to.be.true;
-                    expect(meta.driver).to.be.deep.equal(driver);
+                    console.log(file);
+                    expect(file.path).to.be.equal(filePath);
+                    expect(file.info.options.processed).to.be.true;
+                    expect(file.info.driver).to.be.deep.equal(driver);
                     done();
                 })
                 .catch(done);
@@ -77,8 +80,8 @@ describe("Proto/DriverProcessors", function () {
         });
 
         it("not empty pipeline", (done) => {
-            const file = "file.ext";
-            const meta = {};
+            const filePath = "file.ext";
+            const file = { path: filePath, info: {} };
             const driver = Math.random();
             new notStoreDriverProcessors({
                 delete: {
@@ -92,11 +95,11 @@ describe("Proto/DriverProcessors", function () {
                     ],
                 },
             })
-                .runPre("delete", file, meta, driver)
+                .runPre("delete", file, driver)
                 .then(() => {
-                    expect(meta.filename).to.be.equal(file);
-                    expect(meta.options.processed).to.be.true;
-                    expect(meta.driver).to.be.deep.equal(driver);
+                    expect(file.path).to.be.equal(filePath);
+                    expect(file.info.options.processed).to.be.true;
+                    expect(file.info.driver).to.be.deep.equal(driver);
                     done();
                 })
                 .catch(done);
@@ -112,8 +115,8 @@ describe("Proto/DriverProcessors", function () {
         });
 
         it("not empty pipeline", (done) => {
-            const file = "file.ext";
-            const meta = {};
+            const filePath = "file.ext";
+            const file = { path: filePath, info: {} };
             const driver = Math.random();
             new notStoreDriverProcessors({
                 delete: {
@@ -127,11 +130,11 @@ describe("Proto/DriverProcessors", function () {
                     ],
                 },
             })
-                .runPost("delete", file, meta, driver)
+                .runPost("delete", file, driver)
                 .then(() => {
-                    expect(meta.filename).to.be.equal(file);
-                    expect(meta.options.processed).to.be.true;
-                    expect(meta.driver).to.be.deep.equal(driver);
+                    expect(file.path).to.be.equal(filePath);
+                    expect(file.info.options.processed).to.be.true;
+                    expect(file.info.driver).to.be.deep.equal(driver);
                     done();
                 })
                 .catch(done);

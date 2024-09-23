@@ -4,6 +4,7 @@ const fs = require("node:fs/promises");
 const sharp = require("sharp");
 const expect = require("chai").expect;
 const notStoreProcessorImageThumbsDeleteRemote = require("../../../../../src/processors/image.thumbs/delete/image.thumbs.delete.remote.cjs");
+const { OPT_INFO_CHILDREN } = require("../../../../../src/const.cjs");
 
 function imageExists(fname, params) {
     return new Promise((res, rej) => {
@@ -40,7 +41,7 @@ describe("notStoreProcessorImageThumbsDeleteRemote", () => {
     describe("listOfFilesToDelete", () => {
         it("all listed", () => {
             const info = {
-                thumbs: {
+                [OPT_INFO_CHILDREN]: {
                     small: {
                         cloud: { Key: "1" },
                     },
@@ -61,7 +62,7 @@ describe("notStoreProcessorImageThumbsDeleteRemote", () => {
     describe("updateInfoAfterDelete", () => {
         it("property `cloud` removed from thumbs", () => {
             const info = {
-                thumbs: {
+                [OPT_INFO_CHILDREN]: {
                     small: {
                         cloud: 1,
                     },
@@ -73,8 +74,8 @@ describe("notStoreProcessorImageThumbsDeleteRemote", () => {
             notStoreProcessorImageThumbsDeleteRemote.updateInfoAfterDelete(
                 info
             );
-            expect(info.thumbs.small.cloud).to.be.undefined;
-            expect(info.thumbs.big.cloud).to.be.undefined;
+            expect(info[OPT_INFO_CHILDREN].small.cloud).to.be.undefined;
+            expect(info[OPT_INFO_CHILDREN].big.cloud).to.be.undefined;
         });
     });
 
@@ -82,8 +83,7 @@ describe("notStoreProcessorImageThumbsDeleteRemote", () => {
         it("list is empty", async () => {
             const store = createTestStore();
             await notStoreProcessorImageThumbsDeleteRemote.run(
-                "",
-                {},
+                { info: {} },
                 {},
                 store
             );
@@ -92,7 +92,7 @@ describe("notStoreProcessorImageThumbsDeleteRemote", () => {
         it("list not empty", async () => {
             const store = createTestStore();
             const info = {
-                thumbs: {
+                [OPT_INFO_CHILDREN]: {
                     small: {
                         cloud: { Key: "test/12312" },
                     },
@@ -102,13 +102,12 @@ describe("notStoreProcessorImageThumbsDeleteRemote", () => {
                 },
             };
             await notStoreProcessorImageThumbsDeleteRemote.run(
-                "",
-                info,
+                { info },
                 {},
                 store
             );
-            expect(info.thumbs.small.cloud).to.be.undefined;
-            expect(info.thumbs.big.cloud).to.be.undefined;
+            expect(info[OPT_INFO_CHILDREN].small.cloud).to.be.undefined;
+            expect(info[OPT_INFO_CHILDREN].big.cloud).to.be.undefined;
         });
     });
 });

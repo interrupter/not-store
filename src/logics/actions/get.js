@@ -1,4 +1,5 @@
 const { LogicGetActionException } = require("not-node/src/exceptions/action");
+const { DOCUMENT_OWNER_FIELD_NAME } = require("not-node/src/auth/const.js");
 
 module.exports = class getAction {
     static async run(logic, actionName, { identity, targetId }) {
@@ -7,7 +8,10 @@ module.exports = class getAction {
             const result = await logic
                 .getModel()
                 .getOne(targetId, [
-                    { path: "userId", select: "_id userID username" },
+                    {
+                        path: DOCUMENT_OWNER_FIELD_NAME,
+                        select: "_id userID username",
+                    },
                     "children",
                 ]);
             logic.logAction(actionName, identity, { targetId });

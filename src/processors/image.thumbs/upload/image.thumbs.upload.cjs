@@ -1,6 +1,7 @@
 // @ts-check
 
 const notStoreProcessor = require("../../../proto/processor.cjs");
+const { OPT_INFO_CHILDREN } = require("../../../const.cjs");
 /**
  *
  *
@@ -26,7 +27,7 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
     }
 
     /**
-     * adds cloud locations of file into info.thumbs[_thumb_name_].cloud
+     * adds cloud locations of file into info[OPT_INFO_CHILDREN][_thumb_name_].cloud
      *
      * @static
      * @param {object} fileInfo
@@ -34,7 +35,7 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
      * @memberof notStoreProcessorImageThumbsUpload
      */
     static updateFileInfo(fileInfo, cloudNames) {
-        Object.values(fileInfo.thumbs).forEach((thumb) => {
+        Object.values(fileInfo[OPT_INFO_CHILDREN]).forEach((thumb) => {
             thumb.cloud = cloudNames[thumb.local];
         });
     }
@@ -42,14 +43,14 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
     /**
      *
      *
-     * @static     
+     * @static
      * @param {object} file
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
      * @memberof notStoreProcessorImageThumbsUpload
      */
     static async run(file, options, driver) {
-        const filenames = Object.values(file.info.thumbs).map(
+        const filenames = Object.values(file.info[OPT_INFO_CHILDREN]).map(
             (thumb) => thumb.local
         );
         if (filenames.length) {

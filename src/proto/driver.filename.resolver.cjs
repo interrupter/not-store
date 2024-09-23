@@ -28,7 +28,7 @@ class notStoreDriverFilenameResolver {
     }
 
     /**
-     * /path/in/medium/to/store/ <-- store root, all *InStore function start here,
+     * /path/in/medium/to/store/ <-- store root, all *InStore function starts from there,
      * if InStore suffix is absent then starting here
      * / <-- at medium root, without store.path option
      * **
@@ -44,13 +44,13 @@ class notStoreDriverFilenameResolver {
      *
      *
      * @static
-     * @param {string} dirname
-     * @param {object}      options                storage system filenaming rules
-     * @param {string}      options.path           additional path from storage root
+     * @param {string}      dirname
+     * @param {object}      [options = {}]                storage system filenaming rules
+     * @param {string}      [options.path ]          additional path from storage root
      * @memberof notStoreDriverFilenameResolver
      */
-    static resolvePath(dirname, options) {
-        if (options.path) {
+    static resolvePath(dirname, options = {}) {
+        if (options?.path) {
             return path.join(options.path, dirname);
         } else {
             return dirname;
@@ -132,7 +132,7 @@ class notStoreDriverFilenameResolver {
 
     /**
      * Returns filename for a specific processing options
-     * @param {object} 		srcParts  			path.parse result object
+     * @param {import('path').ParsedPath} 		srcParts  			path.parse result object
      * @param {string} 		variantShortName 	name of variant
      * @param {string|number|object} [variant] 	some file processing description
      * @returns {string}
@@ -151,7 +151,7 @@ class notStoreDriverFilenameResolver {
 
     /**
      * Returns filename path for a specific processing options
-     * @param {object} 		srcParts  			path.parse result object
+     * @param {import('path').ParsedPath} 		srcParts  			path.parse result object
      * @param {string} 		variantShortName 	name of variant
      * @param {string|number|object} [variant] 	some file processing description
      * @returns {string}
@@ -210,7 +210,7 @@ class notStoreDriverFilenameResolver {
      * @param {string} 	name 			original filename without extension
      * @param {object} 	variants 		{[name]:<optionsOfProcessing: object>}
      * @param {string} 	format 			extension of file
-     * @param {boolean} addOriginal 	add original file variant to result object
+     * @param {boolean} [addOriginal=true] 	add original file variant to result object
      * @returns
      */
     static composeVariantsFilenames(
@@ -226,7 +226,7 @@ class notStoreDriverFilenameResolver {
             result[variantShortName] =
                 notStoreDriverFilenameResolver.composeVariantFilename(
                     {
-                        name: srcParts.name,
+                        ...srcParts,
                         ext,
                     },
                     variantShortName,

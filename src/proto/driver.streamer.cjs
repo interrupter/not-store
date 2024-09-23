@@ -93,7 +93,7 @@ class notStoreDriverStreamer {
     static async readableStreamFromURL(source) {
         return new Promise((resolve, reject) => {
             try {
-                const HTTP_OPTIONS = this.getHTTPOptions();
+                const HTTP_OPTIONS = this.getHTTPOptions() ?? {};
                 if (isUrl.isHttpsUri(source)) {
                     https
                         .get(source, HTTP_OPTIONS, resolve)
@@ -149,16 +149,11 @@ class notStoreDriverStreamer {
     }
 
     /**
-     * @typedef {Object} FileInfoShort
-     * @property {string} uuid - The X Coordinate
-     * @property {string} name_tmp - The Y Coordinate
-     */
-    /**
      * Saves data in temporal file returns Promise of temp filename
      * @param {ReadingPipe} streamIn 	        incoming stream of file data
      * @param {string} uuid 	            uuid as unique base for a filename
      * @param {string} name_tmp 	        path to tmp file
-     * @returns {Promise<FileInfoShort>}
+     * @returns {Promise<import('../types.cjs').FileInfoShort>}
      * @memberof notStoreDriverStreamer
      */
     static async streamFileOut(streamIn, uuid, name_tmp) {

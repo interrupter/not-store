@@ -6,8 +6,8 @@ class notStoreProcessorTest extends notStoreProcessor {
     static getDescription() {
         return {
             id: "test",
-            title: 'test',
-            optionsDefault:{}
+            title: "test",
+            optionsDefault: {},
         };
     }
 
@@ -18,14 +18,12 @@ class notStoreProcessorTest extends notStoreProcessor {
     }
 
     static async run(
-        filename, //current target file
-        fileInfo, //file metadata object
+        file, //file object
         preprocOptions, //preprocessor options for this store
         driver //driver instance
     ) {
-        fileInfo.filename = filename;
-        fileInfo.options = preprocOptions;
-        fileInfo.driver = driver;
+        file.info.options = preprocOptions;
+        file.info.driver = driver;
     }
 }
 

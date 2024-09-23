@@ -42,23 +42,27 @@ class notStoreProcessorImageUpload extends notStoreProcessor {
      *
      *
      * @static
-     * @param {object} file
+     * @param {object} input
+     * @param {string} input.path
+     * @param {string} input.parent
+     * @param {object} input.info
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
      * @returns {Promise<undefined>}
      * @memberof notStoreProcessorImageUpload
      */
-    static async run(file, options, driver) {
-        if (file?.path && file.path.length) {
+    static async run(input, options, driver) {
+        if (input?.path && input.path.length) {
             const cloudName = await driver.directUpload(
-                file.path,
-                path.basename(file.path)
+                input.path,
+                path.basename(input.path)
             );
-            this.updateFileInfo(file.info, cloudName);
+            this.updateFileInfo(input.info, cloudName);
         }
-        if(file.parent ){
-            
+        /*
+        if (input.parent) {
         }
+        */
     }
 }
 

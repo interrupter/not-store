@@ -11,7 +11,7 @@
     "cypress:open": "NODE_ENV=test ./node_modules/.bin/cypress open",
     "test:open": "npm run cypress:open",
     "test:run": "npm run cypress:run",
-    "test:node": "NODE_ENV=test ./node_modules/.bin/mocha -t 30000 ./test/node/**.cjs ./test/node/**/**.cjs ./test/node/**/**/**.cjs ./test/node/**/**/**/**.cjs",
+    "test:node": "touch 'test/tmp/to.remove.test.file' && NODE_ENV=test ./node_modules/.bin/mocha --exit -t 30000 ./test/node/**.cjs ./test/node/**/**.cjs ./test/node/**/**/**.cjs ./test/node/**/**/**/**.cjs",
     "test:node:clear": "rm -rf ./test/tmp/*",
     "test:server": "NODE_ENV=test nyc --silent node --inspect=8357 ./test/server/index.js",
     "debug:server": "NODE_ENV=test  node --inspect=8357 ./test/server/index.js",
@@ -27,7 +27,7 @@
     "cover:node:clear": "touch 'test/tmp/to.remove.test.file' && nyc --silent npm run test:node && npm run test:node:clear",
     "cover:report": "npm run test:server:off && npm run test:node:clear && npm run cover:report:slim",
     "cover:report:slim": "nyc report",
-    "prepare": "husky install",
+    "prepare": "husky init",
     "update": "ncu -u -x escape-string-regexp,is-stream && npm i "
   },
   "svelte": "src/standalone/index.js",

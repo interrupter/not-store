@@ -10,7 +10,10 @@ module.exports = class getOwnAction {
                 .getOne(
                     targetId,
                     [
-                        { path: "userId", select: "_id userID username" },
+                        {
+                            path: DOCUMENT_OWNER_FIELD_NAME,
+                            select: "_id userID username",
+                        },
                         "children",
                     ],
                     {

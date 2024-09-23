@@ -1,14 +1,11 @@
-const Log = require("not-log")(module, "routes");
 const MODEL_NAME = "File";
 const { MODULE_NAME } = require("../const.cjs");
 
-const notNode = require("not-node"),
-    { notAppIdentity } = notNode,
-    notError = require("not-error").notError;
+const notNode = require("not-node");
 
 const {
     //	say,
-    config,
+    //config,
     after,
     //	Log,
     before,
@@ -30,21 +27,15 @@ const FileGenericRoute = notNode.Generic.GenericRoute({
 
 class FileRoute extends FileGenericRoute {
     static async create(req, res, next, prepared) {
-        return await notNode.Application.getLogic("not-store//File").upload(
-            prepared
-        );
+        return await getLogic().upload(prepared);
     }
 
     static async _create(req, res, next, prepared) {
-        return await notNode.Application.getLogic("not-store//File").upload(
-            prepared
-        );
+        return await getLogic().upload(prepared);
     }
 
     static async _listAndCountOriginal(req, res, next, prepared) {
-        return await notNode.Application.getLogic(
-            "not-store//File"
-        ).listAndCountOriginal(prepared);
+        return await getLogic().listAndCountOriginal(prepared);
     }
 }
 

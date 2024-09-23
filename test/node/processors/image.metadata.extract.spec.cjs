@@ -53,16 +53,18 @@ describe("notStoreProcessorImageExtractMetadata", () => {
         it("file exists, image, sharp supported format", async () => {
             const FILE_NAME =
                 __dirname + "/../../browser/files/bone.tomahawk.jpg";
-            const info = {};
-            await notStoreProcessorImageExtractMetadata.run(FILE_NAME, info);
-            expect(info).to.have.any.keys(["metadata"]);
+            const file = { path: FILE_NAME, info: {} };
+            await notStoreProcessorImageExtractMetadata.run(file);
+            expect(file.info).to.have.any.keys(["metadata"]);
         });
 
         it("file not exists", async () => {
             try {
                 const FILE_NAME =
                     __dirname + "/../../browser/files/bone.tomahawk.txt";
-                await notStoreProcessorImageExtractMetadata.run(FILE_NAME, {});
+                await notStoreProcessorImageExtractMetadata.run({
+                    path: FILE_NAME,
+                });
                 expect(true).to.be.equal("this should throw");
             } catch (e) {
                 expect(e).to.be.an.instanceOf(Error);

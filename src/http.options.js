@@ -1,7 +1,9 @@
-const config = require('not-config').forModule(require('./const.cjs').MODULE_NAME);
+const config = require("not-config").forModule(
+    require("./const.cjs").MODULE_NAME
+);
 
-function func(){    
-    return config.get('httpOptions');    
-};
+function func() {
+    return config.get("httpOptions") ?? {};
+}
 
 module.exports = func;

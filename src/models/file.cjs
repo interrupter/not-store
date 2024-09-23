@@ -1,5 +1,6 @@
 // @ts-check
 const store = require("../../").notStore;
+const { DOCUMENT_OWNER_FIELD_NAME } = require("not-node/src/auth/const.js");
 const { MODULE_NAME } = require("../const.cjs");
 const config = require("not-config").readerForModule("store");
 const log = require("not-log")(module, "Model//File");
@@ -29,7 +30,8 @@ const FIELDS = [
     "size",
     //owner
     ["userIp", {}, "ip"],
-    ["userId", "not-node//userId"],
+    [DOCUMENT_OWNER_FIELD_NAME, "not-node//owner"],
+    "not-node//ownerModel",
     ["session", { required: !!config.get("sessionRequired") }],
     //dates
     "createdAt",
@@ -135,7 +137,7 @@ exports.thisStatics = {
                 _id,
             };
             if (sessionId) {
-                query["session"] = sessionId;
+                query.session = sessionId;
             }
             let rec = await this.findOne(query);
             if (!rec) {

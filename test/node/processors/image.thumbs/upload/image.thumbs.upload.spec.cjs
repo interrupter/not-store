@@ -3,7 +3,7 @@ const expect = require("chai").expect;
 const notStoreProcessorImageThumbsUpload = require("../../../../../src/processors/image.thumbs/upload/image.thumbs.upload.cjs");
 
 const { createTestStore } = require("../../../test.store.cjs");
-
+const { OPT_INFO_CHILDREN } = require("../../../../../src/const.cjs");
 const FILES_TO_UPLOAD = ["castle_3.jpg", "castle_4.jpg"].map(
     (name) => __dirname + "/../../../../browser/files/" + name
 );
@@ -26,7 +26,7 @@ describe("notStoreProcessorImageThumbsUpload", () => {
     describe("updateFileInfo", () => {
         it("fileInfo is not empty", () => {
             const fileInfo = {
-                thumbs: {
+                [OPT_INFO_CHILDREN]: {
                     small: {
                         local: "1",
                     },
@@ -40,15 +40,15 @@ describe("notStoreProcessorImageThumbsUpload", () => {
                 fileInfo,
                 cloudNames
             );
-            expect(fileInfo.thumbs.small.cloud.first).to.be.true;
-            expect(fileInfo.thumbs.big.cloud.second).to.be.true;
+            expect(fileInfo[OPT_INFO_CHILDREN].small.cloud.first).to.be.true;
+            expect(fileInfo[OPT_INFO_CHILDREN].big.cloud.second).to.be.true;
         });
     });
 
     describe("run", () => {
         it("uploaded", async () => {
             const info = {
-                thumbs: {
+                [OPT_INFO_CHILDREN]: {
                     small: {
                         local: FILES_TO_UPLOAD[0],
                     },
@@ -58,8 +58,8 @@ describe("notStoreProcessorImageThumbsUpload", () => {
                 },
             };
             const store = createTestStore();
-            await notStoreProcessorImageThumbsUpload.run("", info, {}, store);
-            expect(info.thumbs.small.cloud).to.have.all.keys([
+            await notStoreProcessorImageThumbsUpload.run({ info }, {}, store);
+            expect(info[OPT_INFO_CHILDREN].small.cloud).to.have.all.keys([
                 "ETag",
                 "Location",
                 "key",
@@ -67,7 +67,7 @@ describe("notStoreProcessorImageThumbsUpload", () => {
                 "Bucket",
             ]);
 
-            expect(info.thumbs.big.cloud).to.have.all.keys([
+            expect(info[OPT_INFO_CHILDREN].big.cloud).to.have.all.keys([
                 "ETag",
                 "Location",
                 "key",
@@ -78,10 +78,10 @@ describe("notStoreProcessorImageThumbsUpload", () => {
 
         it("not uploaded, list is empty", async () => {
             const info = {
-                thumbs: {},
+                [OPT_INFO_CHILDREN]: {},
             };
             const store = createTestStore();
-            await notStoreProcessorImageThumbsUpload.run("", info, {}, store);
+            await notStoreProcessorImageThumbsUpload.run({ info }, {}, store);
         });
     });
 });

@@ -50,22 +50,18 @@ describe("notStoreProcessorImageDeleteRemote", () => {
         });
 
         it("deleted", async () => {
-            const info = {
+            const input = {
+                info: {},
                 cloud: uploaded,
             };
-            await notStoreProcessorImageDeleteRemote.run(
-                FILES_TO_UPLOAD[0],
-                info,
-                {},
-                store
-            );
-            expect(info.cloud).to.be.undefined;
+            await notStoreProcessorImageDeleteRemote.run(input, {}, store);
+            expect(input.info.cloud).to.be.undefined;
         });
 
         it("not uploaded, filename is empty", async () => {
             const info = {};
             const store = createTestStore();
-            await notStoreProcessorImageDeleteRemote.run("", info, {}, store);
+            await notStoreProcessorImageDeleteRemote.run(info, {}, store);
             expect(info.cloud).to.be.undefined;
         });
     });

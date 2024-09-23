@@ -22,8 +22,8 @@ class notStoreDriverProcessors {
     /**
      *
      * @param {string} 	type 	`pre` or `post`
-     * @param {string} 	action 			name of action pipeline dedicated for     
-     * @param {object} 	file 		file document
+     * @param {string} 	action 			name of action pipeline dedicated for
+     * @param {import('mongoose').Document} 	file 		file document
      * @param {object} 	driver 		    driver instance
      * @returns {Promise}
      * @memberof notStoreDriverProcessors
@@ -67,8 +67,8 @@ class notStoreDriverProcessors {
 
     /**
      * Runs pre processors of action
-     * @param {string}  action      name of action     
-     * @param {object}  file        object with different information about file
+     * @param {string}  action      name of action
+     * @param {import('mongoose').Document}  file        object with different information about file
      * @param {object} 	driver 		driver instance
      * @returns {Promise<any>}
      * @memberof notStoreDriverProcessors
@@ -84,8 +84,8 @@ class notStoreDriverProcessors {
 
     /**
      * Runs post processors of action
-     * @param {string}  action      name of action     
-     * @param {object}  file        object with different information about file
+     * @param {string}  action      name of action
+     * @param {import('mongoose').Document}  file        object with different information about file
      * @param {object} 	driver 		driver instance
      * @returns {Promise<any>}
      * @memberof notStoreDriverProcessors

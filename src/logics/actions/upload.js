@@ -1,3 +1,4 @@
+const { DOCUMENT_OWNER_FIELD_NAME } = require("not-node/src/auth/const.js");
 const {
     LogicCreateActionException,
 } = require("not-node/src/exceptions/action");
@@ -315,23 +316,23 @@ module.exports = class uploadAction {
             extension: uploadResult?.metadata?.format || file?.format,
             //various information
             info: partCopyObjExcept(uploadResult, INFO_EXCEPT_LIST),
+            //name of store bucket config
+            store: storeBucket.name,
             //original file name if provided
             name: file.name || uploadResult.name || uploadResult.uuid,
+            //unique id
+            uuid: uploadResult.uuid,
+            variant: uploadResult[OPT_INFO_VARIANT],
             //objectId of file this produced from
             parent: uploadResult[OPT_INFO_PARENT],
             //
             path: uploadResult?.path || uploadResult?.cloud?.Key,
             //ownership
             session: identity.sid,
+            [DOCUMENT_OWNER_FIELD_NAME]: identity.uid,
+            userIp: identity.ip,
             //size
             size: uploadResult.size || file.size || 0,
-            //name of store bucket config
-            store: storeBucket.name,
-            userId: identity.uid,
-            userIp: identity.ip,
-            //unique id
-            uuid: uploadResult.uuid,
-            variant: uploadResult[OPT_INFO_VARIANT],
         };
     }
 };

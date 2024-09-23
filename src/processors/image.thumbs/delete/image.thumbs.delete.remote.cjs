@@ -1,7 +1,7 @@
 // @ts-check
 
 const notStoreProcessor = require("../../../proto/processor.cjs");
-
+const { OPT_INFO_CHILDREN } = require("../../../const.cjs");
 /**
  *
  *
@@ -36,8 +36,8 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
      */
     //eslint-disable-next-line   no-unused-vars
     static listOfFilesToDelete(fileInfo, preprocOptions = {}) {
-        if (!fileInfo.thumbs) return [];
-        const variantsToDelete = { ...fileInfo.thumbs };
+        if (!fileInfo[OPT_INFO_CHILDREN]) return [];
+        const variantsToDelete = { ...fileInfo[OPT_INFO_CHILDREN] };
         return Object.values(variantsToDelete).map(
             (variant) => variant.cloud.Key
         );
@@ -53,31 +53,32 @@ class notStoreProcessorImageThumbsDeleteRemote extends notStoreProcessor {
      */
     //eslint-disable-next-line   no-unused-vars
     static updateInfoAfterDelete(fileInfo, preprocOptions = {}) {
-        /*Object.keys(fileInfo[]).forEach((key) => {
-            delete fileInfo[][key].cloud;
-        });*/
+        Object.keys(fileInfo[OPT_INFO_CHILDREN]).forEach((key) => {
+            delete fileInfo[OPT_INFO_CHILDREN][key].cloud;
+        });
     }
 
     /**
      *
      *
-     * @static     
+     * @static
      * @param {object} file
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
      * @memberof notStoreProcessorImageThumbsDeleteRemote
      */
     static async run(file, options, driver) {
-        if(file.parent){
+        if (file.parent) {
             return;
         }
-        /*
         const filenames = this.listOfFilesToDelete(file.info, options);
         if (filenames.length) {
-            await driver.directDeleteMany(filenames, false);
+            await driver.directDeleteMany(
+                Object.values(file.info[OPT_INFO_CHILDREN]),
+                false
+            );
             this.updateInfoAfterDelete(file.info, options);
         }
-        */
     }
 }
 

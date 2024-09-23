@@ -27,7 +27,7 @@ describe("notStoreDriverTimeweb", () => {
         region: "ru-1",
         apiVersion: "latest",
         bucket: "ENV$TIMEWEB_BUCKET_NAME",
-        pathToStoreRoot: "ENV$TIMEWEB_BUCKET_PATH",
+        path: "ENV$TIMEWEB_BUCKET_PATH",
         tmp: "/var/tmp",
         groupFiles: false,
     };
@@ -66,7 +66,7 @@ describe("notStoreDriverTimeweb", () => {
                 "region",
                 "s3ForcePathStyle",
                 "bucket",
-                "pathToStoreRoot",
+                "path",
                 "tmp",
                 "groupFiles",
             ]);
@@ -83,7 +83,7 @@ describe("notStoreDriverTimeweb", () => {
             expect(options.secretAccessKey).to.be.equal(
                 process.env.TIMEWEB_BUCKET_KEY
             );
-            expect(store.getOptionValueCheckENV("pathToStoreRoot")).to.be.equal(
+            expect(store.getOptionValueCheckENV("path")).to.be.equal(
                 process.env.TIMEWEB_BUCKET_PATH
             );
             expect(store.getOptionValueCheckENV("bucket")).to.be.equal(
@@ -236,18 +236,18 @@ describe("notStoreDriverTimeweb", () => {
             notStoreProcessors.setProcessor(
                 "uploadPre",
                 class {
-                    static async run(filename, metadata, options, driver) {
-                        metadata.pre = true;
-                        metadata.counter++;
+                    static async run(file, options, driver) {
+                        file.info.pre = true;
+                        file.info.counter++;
                     }
                 }
             );
             notStoreProcessors.setProcessor(
                 "uploadPost",
                 class {
-                    static async run(filename, metadata, options, driver) {
-                        metadata.post = true;
-                        metadata.counter++;
+                    static async run(file, options, driver) {
+                        file.info.post = true;
+                        file.info.counter++;
                     }
                 }
             );
@@ -261,11 +261,10 @@ describe("notStoreDriverTimeweb", () => {
                 },
                 STORE_NAME
             );
-            const res = await store.upload(FILES_TO_UPLOAD[0], { counter: 0 });
-
-            expect(Array.isArray(res)).to.be.true;
-            const [result, info] = res;
-            expect(result).to.have.all.keys([
+            const info = await store.upload(FILES_TO_UPLOAD[0], {
+                counter: 0,
+            });
+            expect(info.cloud).to.have.all.keys([
                 "ETag",
                 "Location",
                 "key",
@@ -280,7 +279,7 @@ describe("notStoreDriverTimeweb", () => {
                 "pre",
                 "post",
                 "counter",
-                "path",
+
                 "cloud",
             ]);
             expect(info.pre).to.be.true;
@@ -291,6 +290,7 @@ describe("notStoreDriverTimeweb", () => {
 
     describe("directDelete", () => {
         it("invalid API creds", (done) => {
+            let alreadyEnded = false;
             const store = new notStoreDriverTimeweb(
                 { ...TEST_STORE, secretAccessKey: "" },
                 {},
@@ -299,24 +299,42 @@ describe("notStoreDriverTimeweb", () => {
             store
                 .directDelete("test/alps_1.jpuk")
                 .then(() => {
-                    done(new Error("Should throw error, but worked out fine"));
+                    if (!alreadyEnded) {
+                        alreadyEnded = true;
+                        done(
+                            new Error("Should throw error, but worked out fine")
+                        );
+                    }
                 })
                 .catch((e) => {
                     expect(e).to.be.instanceOf(
                         notStoreExceptionDirectDeleteError
                     );
-                    done();
+                    if (!alreadyEnded) {
+                        alreadyEnded = true;
+                        done();
+                    }
                 });
+            setTimeout(() => {
+                if (!alreadyEnded) {
+                    alreadyEnded = true;
+                    done();
+                }
+            }, 10000);
         });
 
         it("file not exists", async () => {
             const store = new notStoreDriverTimeweb(TEST_STORE, {}, STORE_NAME);
-            const res = await store.directDelete("test/alps_1.jpuk");
+            const res = await store.directDelete({
+                cloud: { Key: "test/alps_1.jpuk" },
+            });
             expect(res).to.be.deep.equal({});
         });
         it("file exists", async () => {
             const store = new notStoreDriverTimeweb(TEST_STORE, {}, STORE_NAME);
-            const res = await store.directDelete("test/alps_1.jpg");
+            const res = await store.directDelete({
+                cloud: { Key: "test/alps_1.jpg" },
+            });
             expect(res).to.be.deep.equal({});
         });
     });
@@ -346,7 +364,10 @@ describe("notStoreDriverTimeweb", () => {
                 {},
                 STORE_NAME
             );
-            const res = await store.delete(path.basename(FILES_TO_UPLOAD_2[0]));
+            const res = await store.delete({
+                cloud: { Key: path.basename(FILES_TO_UPLOAD_2[0]) },
+                uuid: "some-fake-test-id",
+            });
             expect(Array.isArray(res)).to.be.true;
         });
 
@@ -357,8 +378,8 @@ describe("notStoreDriverTimeweb", () => {
                 STORE_NAME
             );
             const res = await store.delete();
-            expect(Array.isArray(res)).to.be.true;
-            expect(Array.isArray(res[0])).to.be.false;
+            expect(Array.isArray(res)).to.be.false;
+            expect(res).to.be.instanceOf(notError);
         });
     });
 
@@ -449,18 +470,18 @@ describe("notStoreDriverTimeweb", () => {
             notStoreProcessors.setProcessor(
                 "listPre",
                 class {
-                    static async run(filename, metadata, options, driver) {
-                        metadata.pre = true;
-                        metadata.counter++;
+                    static async run(metadata, options, driver) {
+                        metadata.info.pre = true;
+                        metadata.info.counter++;
                     }
                 }
             );
             notStoreProcessors.setProcessor(
                 "listPost",
                 class {
-                    static async run(filename, metadata, options, driver) {
-                        metadata.post = true;
-                        metadata.counter++;
+                    static async run(metadata, options, driver) {
+                        metadata.info.post = true;
+                        metadata.info.counter++;
                     }
                 }
             );
@@ -475,11 +496,11 @@ describe("notStoreDriverTimeweb", () => {
                 },
                 STORE_NAME
             );
-            const [result, metadata] = await store.list(prefix, { counter: 0 });
+            const [result, info] = await store.list(prefix, { counter: 0 });
             expect(result.length).to.be.greaterThan(0);
-            expect(metadata.pre).to.be.true;
-            expect(metadata.post).to.be.true;
-            expect(metadata.counter).to.be.equal(2);
+            expect(info.pre).to.be.true;
+            expect(info.post).to.be.true;
+            expect(info.counter).to.be.equal(2);
         });
     });
 });

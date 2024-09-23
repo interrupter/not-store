@@ -41,14 +41,10 @@ describe("notStoreProcessorImageUpload", () => {
     describe("run", () => {
         it("uploaded", async () => {
             const info = {};
+            const input = { path: FILES_TO_UPLOAD[0], info, parent: "" };
             const store = createTestStore();
-            await notStoreProcessorImageUpload.run(
-                FILES_TO_UPLOAD[0],
-                info,
-                {},
-                store
-            );
-            expect(info.cloud).to.have.all.keys([
+            await notStoreProcessorImageUpload.run(input, {}, store);
+            expect(input.info.cloud).to.have.all.keys([
                 "ETag",
                 "Location",
                 "Local",
@@ -59,10 +55,10 @@ describe("notStoreProcessorImageUpload", () => {
         });
 
         it("not uploaded, filename is empty", async () => {
-            const info = {};
+            const input = {};
             const store = createTestStore();
-            await notStoreProcessorImageUpload.run("", info, {}, store);
-            expect(info.cloud).to.be.undefined;
+            await notStoreProcessorImageUpload.run(input, {}, store);
+            expect(input.cloud).to.be.undefined;
         });
     });
 });

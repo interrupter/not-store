@@ -3,6 +3,7 @@ const sharp = require("sharp");
 const expect = require("chai").expect;
 const notStoreProcessorImageThumbsCreate = require("../../../../../src/processors/image.thumbs/create/image.thumbs.create.cjs");
 const notStoreDriver = require("../../../../../src/proto/driver.cjs");
+const notStoreDriverFilenameResolver = require("../../../../../src/proto/driver.filename.resolver.cjs");
 
 function imageExists(fname, params) {
     return new Promise((res, rej) => {
@@ -79,7 +80,7 @@ describe("notStoreProcessorImageThumbsCreate", () => {
             });
         });
 
-        it("file not exists, sharp supported, options not provided", () => {
+        it("file not exists, sharp supported, options not provided", (done) => {
             notStoreProcessorImageThumbsCreate
                 .makeThumb(
                     FILE_NAME + Math.random(),
@@ -144,8 +145,10 @@ describe("notStoreProcessorImageThumbsCreate", () => {
 
         it("running with default notStoreDriver", async () => {
             await notStoreProcessorImageThumbsCreate.run(
-                TEST_FILE_NAME,
-                {},
+                {
+                    path: TEST_FILE_NAME,
+                    info: {},
+                },
                 {
                     format: "jpeg",
                     sizes: {

@@ -56,7 +56,7 @@ class notStoreProcessorImageDeleteRemote extends notStoreProcessor {
     /**
      *
      *
-     * @static     
+     * @static
      * @param {object} file
      * @param {object} options
      * @param {import('../../../drivers/timeweb/timeweb.driver.cjs')} driver
@@ -65,8 +65,8 @@ class notStoreProcessorImageDeleteRemote extends notStoreProcessor {
     static async run(file, options, driver) {
         const cloudFilename = this.filenameToDelete(file.cloud, options);
         if (cloudFilename) {
-            await driver.directDelete(cloudFilename, false);
-            this.updateInfoAfterDelete(file.info, options);
+            await driver.directDelete(file, false);
+            this.updateInfoAfterDelete(file, options);
         }
     }
 }

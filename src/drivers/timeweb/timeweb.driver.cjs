@@ -172,7 +172,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
     /**
      * adds file to storage
      * @param		{String|Buffer|import('node:stream').Readable}	file	file in some form or his URI
-     * @param {object} [fileInfo={}]
+     * @param       {object} [fileInfo={}]
      * @returns	    {Promise<Object>}	            file info object (info field in document)
      */
     async upload(file, fileInfo = {}) {
@@ -181,7 +181,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
             //saving input data to local temp file
             Log.debug("start stash");
             const { name_tmp, uuid } = await this.stashFile(file);
-            tmpFilename = name_tmp;
+
             //fill file info
             fileInfo.uuid = uuid;
             fileInfo.name_tmp = name_tmp;
@@ -346,6 +346,11 @@ class notStoreDriverTimeweb extends notStoreDriver {
      */
     async directDelete(file, inStorePath = true) {
         try {
+            if (typeof file !== "object") {
+                throw new TypeError(
+                    `Argument "file" should be an object, provided ${typeof file}`
+                );
+            }
             const params = this.composeDirectDeleteParams(
                 file.cloud.Key,
                 inStorePath
@@ -354,7 +359,8 @@ class notStoreDriverTimeweb extends notStoreDriver {
         } catch (e) {
             throw new notStoreExceptionDirectDeleteError(
                 {
-                    filename: file.cloud.Key,
+                    cloud: file.cloud,
+                    inStorePath,
                 },
                 e
             );
@@ -392,7 +398,10 @@ class notStoreDriverTimeweb extends notStoreDriver {
         } catch (e) {
             let err = e;
             if (!(e instanceof notError)) {
-                err = new notStoreExceptionDeleteFromStoreError(file.uuid, e);
+                err = new notStoreExceptionDeleteFromStoreError(
+                    (file && file?.uuid) ?? "NO_FILE_UUID",
+                    e
+                );
             }
             this.report(err);
             return err;

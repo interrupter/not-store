@@ -1,5 +1,5 @@
 const notError = require("not-error/src/error.node.cjs");
-const notNode = require("not-node");
+
 const Log = require("not-log")(module, "notStoreProcessors");
 
 const {
@@ -11,6 +11,11 @@ const {
 const DEFAULT_PROCESSORS = require("./processors/index.cjs");
 
 class notStoreProcessors {
+    /**
+     * @type Object<string, import('./proto/processor.cjs')>
+     *
+     * @memberof notStoreProcessors
+     */
     static #processors = {
         ...DEFAULT_PROCESSORS,
     };
@@ -27,6 +32,14 @@ class notStoreProcessors {
         throw new notStoreExceptionProcessorIsNotExists(name);
     }
 
+    /**
+     *
+     *
+     * @static
+     * @param {string} name
+     * @param {import('./proto/processor.cjs')} processor
+     * @memberof notStoreProcessors
+     */
     static setProcessor(name, processor) {
         if (Object.hasOwn(this.#processors, name)) {
             throw new notStoreExceptionProcessorAlreadyExists(name);
@@ -34,6 +47,13 @@ class notStoreProcessors {
         this.#processors[name] = processor;
     }
 
+    /**
+     *
+     *
+     * @static
+     * @return {Array<import('./proto/processor.cjs').StoreProcessorDescription>}
+     * @memberof notStoreProcessors
+     */
     static list() {
         return Object.values(this.#processors).map((proc) =>
             proc.getDescription()
@@ -44,7 +64,7 @@ class notStoreProcessors {
      * @typedef {Object}    ProcessorItem
      * @property    {number}    id
      * @property    {string}    name
-     * @property    {object}    options          
+     * @property    {object}    options
      */
 
     /**
@@ -52,20 +72,21 @@ class notStoreProcessors {
      *
      * @static
      * @param {Array<ProcessorItem>}            list        list of processors objects with id,name,options
-     * @param {object}                          file        file object
+     * @param {import('mongoose').Document}     file        file object
      * @param {import('./proto/driver.cjs')}    driver      notStoreDriver child class instance
      * @memberof notStoreProcessors
      */
     static async run(
-        list,       //processors list to run against file
-        file,   //file metadata object
-        driver      //store driver
+        list, //processors list to run against file
+        file, //file metadata object
+        driver //store driver
     ) {
         try {
             if (Array.isArray(list)) {
                 for (let item of list) {
-                    Log && Log.debug('store processor:', item);
-                    const [processor, options] = this.getProcessorAndOptions(item);
+                    Log && Log.debug("store processor:", item);
+                    const [processor, options] =
+                        this.getProcessorAndOptions(item);
                     Log && Log.debug(options);
                     await processor.run(file, options, driver);
                 }
@@ -76,7 +97,7 @@ class notStoreProcessors {
             } else {
                 throw new notStoreExceptionProcessorRunError(
                     list,
-                    file?.toObject(),
+                    file?.toObject ? file.toObject() : file,
                     driver.name,
                     e
                 );

@@ -15,7 +15,53 @@ const {
     OPT_INFO_VARIANT,
 } = require("../../const.cjs");
 
-module.exports = class uploadAction {
+module.exports = class UploadAction {
+    static async run(logic, actionName, { files, identity, store: storeName }) {
+        try {
+            logic.logDebugAction(actionName, identity);
+            this.normalizeInputFiles(files);
+            if (logic.config.get("sessionRequired")) {
+                if (!identity.sid) {
+                    throw new notError("User session is undefined", {
+                        identity,
+                    });
+                }
+            }
+            const storeBucket = await store.get(storeName);
+            if (!storeBucket) {
+                throw new notError("Store bucket is not exist", {
+                    storeName,
+                });
+            }
+            const results = await this.uploadSets(
+                logic,
+                identity,
+                files,
+                storeBucket
+            );
+            if (this.resultsIsPartiallySuccessful(results)) {
+                if (!logic.config.get("keepPartiallySuccessful")) {
+                    await this.removeFiles(results, storeBucket);
+                }
+            }
+            logic.logAction(actionName, identity, {
+                errors: this.getErroredResults(files, results),
+                files: this.getFilesInfo(files, true),
+            });
+            return this.simplifyResults(results);
+        } catch (e) {
+            throw new LogicCreateActionException(
+                {
+                    actionName,
+                    activeUserId: identity?.uid,
+                    role: identity?.role,
+                    store: storeName,
+                },
+                e
+            );
+        }
+    }
+
     static countErrors(results) {
         let n = 0;
         results.forEach((item) => {
@@ -98,10 +144,12 @@ module.exports = class uploadAction {
      */
     static normalizeInputFiles(files) {
         Object.keys(files).forEach((setName) => {
-            if (!Array.isArray(files[setName])) {
-                files[setName] = [this.getFileInfo(files[setName])];
+            if (Array.isArray(files[setName])) {
+                files[setName] = files[setName].map((itm) =>
+                    this.getFileInfo(itm)
+                );
             } else {
-                files[setName] = files[setName].map(this.getFileInfo);
+                files[setName] = [this.getFileInfo(files[setName])];
             }
         });
         return files;
@@ -150,52 +198,6 @@ module.exports = class uploadAction {
                     if (itm.status !== "rejected") {
                     }
                 })
-            );
-        }
-    }
-
-    static async run(logic, actionName, { files, identity, store: storeName }) {
-        try {
-            logic.logDebugAction(actionName, identity);
-            this.normalizeInputFiles(files);
-            if (logic.config.get("sessionRequired")) {
-                if (!identity.sid) {
-                    throw new notError("User session is undefined", {
-                        identity,
-                    });
-                }
-            }
-            const storeBucket = await store.get(storeName);
-            if (!storeBucket) {
-                throw new notError("Store bucket is not exist", {
-                    storeName,
-                });
-            }
-            const results = await this.uploadSets(
-                logic,
-                identity,
-                files,
-                storeBucket
-            );
-            if (this.resultsIsPartiallySuccessful(results)) {
-                if (!logic.config.get("keepPartiallySuccessful")) {
-                    await this.removeFiles(results, storeBucket);
-                }
-            }
-            logic.logAction(actionName, identity, {
-                errors: this.getErroredResults(files, results),
-                files: this.getFilesInfo(files, true),
-            });
-            return this.simplifyResults(results);
-        } catch (e) {
-            throw new LogicCreateActionException(
-                {
-                    actionName,
-                    activeUserId: identity?.uid,
-                    role: identity?.role,
-                    store: storeName,
-                },
-                e
             );
         }
     }

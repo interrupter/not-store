@@ -1,5 +1,6 @@
 const notNode = require("not-node");
 const path = require("path");
+const fs = require("fs");
 const notStore = require("../../").notStore;
 const { ObjectId } = require("mongoose").Types;
 
@@ -59,7 +60,7 @@ function shutDown() {
         .then(async (list) => {
             for (let file of list) {
                 const store = await notStore.get(file.store);
-                await store.delete(file.path, file.metadata);
+                await store.delete(file);
             }
             process.exit(0);
         })
@@ -76,31 +77,34 @@ module.exports = async (notApp, config) => {
         process.on("SIGINT", shutDown);
         //creating few records for files
         let t = 0;
+        const uploadResults = {};
         for (let role in AUTHS) {
-            const store = await notStore.get(`test_store_${role}`);
             const userId = new ObjectId();
             console.log(role, AUTHS[role]);
+            const files = { files: [] };
             for (let i = 0; i < FILE_COUNT; i++) {
                 t++;
-                t = t % FILES.length;
-                let filePath = FILES[t];
-                const fpath = path.parse(filePath);
-                await FileLogic.uploadFile(
-                    store,
-                    filePath,
-                    {
-                        name: fpath.name,
-                        size: t,
-                        format: fpath.ext.slice(1),
-                    },
-                    {
-                        session: `${role}_session`,
-                        ip: "127.0.0.1",
-                        id: userId,
-                    }
-                );
+                let filePath = FILES.at(t);
+                let fpath = path.parse(filePath);
+                files.files.push({
+                    data: filePath,
+                    format: fpath.ext.slice(1),
+                    mimetype: "image/jpeg",
+                    name: fpath.name,
+                    size: (await fs.promises.stat(filePath)).size,
+                });
             }
+            uploadResults[role] = await FileLogic.upload({
+                files,
+                identity: {
+                    sid: `${role}_session`,
+                    ip: "127.0.0.1",
+                    uid: userId,
+                },
+                store: `test_store_${role}`,
+            });
         }
+        console.log("upload results", JSON.stringify(uploadResults, null, 4));
         const results = await FileLogic.listAndCount({
             query: {
                 size: 100,
@@ -111,9 +115,9 @@ module.exports = async (notApp, config) => {
             },
         });
         results.list = results.list.map((item) =>
-            JSON.stringify(item.toObject(), null, 4)
+            JSON.stringify(item, null, 4)
         );
-        console.log(results);
+        console.log("list results", results);
     } catch (e) {
         console.error(e);
         notApp.report(e);

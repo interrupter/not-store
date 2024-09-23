@@ -27,7 +27,7 @@
  **/
 
 /**
- *  @typedef {String|Buffer|import('node:stream').Readable} FileDataSource
+ *  @typedef {(String|Buffer|import('node:stream').Readable)} FileDataSource
  */
 
 /**
@@ -47,7 +47,6 @@
  * @property {String}   [mimetype]
  * @property {String}   [format]
  * @property {Number}   [size = 0]
- * @property {FileInCloudLocation}   [cloud = {}]
  * @property {Object}   [info = {}]
  **/
 

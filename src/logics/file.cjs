@@ -37,6 +37,8 @@ const FileLogic = GenericLogic({
         delete: FileDeleteAction,
         deleteOwn: FileDeleteAction,
         deleteAllInStore: require("./actions/deleteAllInStore"),
+        getRaw: StandartActions.getRaw,
+        getRawOwn: StandartActions.getRaw,
         get: StandartActions.get,
         getOwn: StandartActions.get,
         list: StandartActions.list,

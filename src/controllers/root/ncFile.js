@@ -1,10 +1,9 @@
-import notFileCRUDActionUploadFile from '../common/actions/upload.file.action';
+import notFileCRUDActionUploadFile from "../common/actions/upload.file.action";
 import Validators from "../common/validators.js";
 import { MODULE_NAME } from "../../const.cjs";
 import { Frame } from "not-bulma";
-import FileFilterUI from '../common/file.filter.svelte';
+import FileFilterUI from "../common/file.filter.svelte";
 const { notCRUD } = Frame;
-
 
 const MODEL_NAME = "file";
 
@@ -13,16 +12,15 @@ const LABELS = {
     single: "Файл",
 };
 
-
-const DEFAULT_OPTS = {	
-	preview: {
-		width: 100,
-		height: 100
-	}
+const DEFAULT_OPTS = {
+    preview: {
+        width: 100,
+        height: 100,
+    },
 };
 
 const CUSTOM_ACTIONS = {
-    create: notFileCRUDActionUploadFile
+    create: notFileCRUDActionUploadFile,
 };
 
 class ncFile extends notCRUD {
@@ -30,9 +28,9 @@ class ncFile extends notCRUD {
     static MODEL_NAME = MODEL_NAME;
 
     constructor(app, params) {
-        super(app, `${MODEL_NAME}`, {actions:CUSTOM_ACTIONS});
+        super(app, `${MODEL_NAME}`, { actions: CUSTOM_ACTIONS });
         this.setModuleName(MODULE_NAME);
-        this.setModelName(MODEL_NAME);        
+        this.setModelName(MODEL_NAME);
         this.setOptions("names", LABELS);
         this.setOptions("Validators", Validators);
         this.setOptions("params", params);
@@ -62,6 +60,7 @@ class ncFile extends notCRUD {
                     title: `${MODULE_NAME}:field_name_label`,
                     searchable: true,
                     sortable: true,
+                    classes: "max-width-20vw overflow-wrap-break-word",
                 },
                 {
                     path: ":extension",
@@ -80,16 +79,16 @@ class ncFile extends notCRUD {
                     title: `${MODULE_NAME}:field_variant_label`,
                     searchable: true,
                     sortable: true,
-                    preprocessor: (value)=>{
-                        return typeof value === 'undefined'?'':value;
-                    }
+                    preprocessor: (value) => {
+                        return typeof value === "undefined" ? "" : value;
+                    },
                 },
                 {
                     path: ":info.previewURL",
-                    title: "Превью",                    
+                    title: "Превью",
                     type: "image",
                     preprocessor: (value, item) => {
-                        if(item.info.variantURL){
+                        if (item.info.variantURL) {
                             return [
                                 {
                                     title: item.name,
@@ -98,12 +97,11 @@ class ncFile extends notCRUD {
                                     cors: "anonymous",
                                 },
                             ];
-                        }else{
+                        } else {
                             return [];
                         }
-                        
                     },
-                },                
+                },
                 {
                     path: ":_id",
                     title: "Действия",
@@ -132,18 +130,14 @@ class ncFile extends notCRUD {
                 },
             ],
         });
-        
+
         this.start();
         return this;
     }
 
-   
-   
     getItemTitle(item) {
         return item.fileID + "#" + item.name;
     }
-
-   
 }
 
 export default ncFile;

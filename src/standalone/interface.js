@@ -30,11 +30,7 @@ class netInterface {
     }
 
     initAction(actionName) {
-        if (
-            !Object.prototype.hasOwnProperty.call(this, [
-                DEFAULT_ACTION_PREFIX + actionName,
-            ])
-        ) {
+        if (!Object.hasOwn(this, [DEFAULT_ACTION_PREFIX + actionName])) {
             this[DEFAULT_ACTION_PREFIX + actionName] = (
                 opts,
                 headers,
@@ -145,7 +141,7 @@ class netInterface {
     getURL(record, actionData, actionName) {
         var line =
             this.parseLine(this.manifest.url, record, actionName) +
-            (Object.prototype.hasOwnProperty.call(actionData, "postFix")
+            (Object.hasOwn(actionData, "postFix")
                 ? this.parseLine(actionData.postFix, record, actionName)
                 : "");
         return line;
@@ -186,7 +182,7 @@ class netInterface {
     collectRequestData(actionData) {
         let requestData = {};
         if (
-            Object.prototype.hasOwnProperty.call(actionData, "data") &&
+            Object.hasOwn(actionData, "data") &&
             Array.isArray(actionData.data)
         ) {
             for (let i = 0; i < actionData.data.length; i++) {
@@ -222,17 +218,14 @@ class netInterface {
         let resultId,
             list = OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY,
             prefixes = ["", this.manifest.model];
-        if (
-            Object.prototype.hasOwnProperty.call(actionData, "index") &&
-            actionData.index
-        ) {
+        if (Object.hasOwn(actionData, "index") && actionData.index) {
             list = [actionData.index].concat(
                 OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY
             );
         }
         for (let pre of prefixes) {
             for (let t of list) {
-                if (Object.prototype.hasOwnProperty.call(record, pre + t)) {
+                if (Object.hasOwn(record, pre + t)) {
                     resultId = record[pre + t];
                     break;
                 }

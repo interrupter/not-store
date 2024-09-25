@@ -54,6 +54,24 @@ for (let t in AUTHS) {
     });
 }
 
+async function initUsers() {
+    const User = notNode.Application.getLogic("not-user//User");
+    let t = 0;
+    for (let role of Object.keys(AUTHS)) {
+        t++;
+        let newUserDoc = await User.createNewUserDocument({
+            username: `VasyaPupkinIs_${role}`,
+            email: `vasya@pupkin.hacker.${role}.fakes`,
+            password: "password",
+            ip: "127.0.0.1",
+            telephone: `+1-234-234-234${t}`,
+            role: [role],
+        });
+        console.log(newUserDoc.toObject());
+        AUTHS[role].uid = newUserDoc._id;
+    }
+}
+
 function shutDown() {
     const File = notNode.Application.getModel("not-store//File");
     File.listAll()
@@ -72,6 +90,7 @@ function shutDown() {
 
 module.exports = async (notApp, config) => {
     try {
+        await initUsers();
         const FileLogic = notNode.Application.getLogic("not-store//File");
         process.on("SIGTERM", shutDown);
         process.on("SIGINT", shutDown);
@@ -79,8 +98,7 @@ module.exports = async (notApp, config) => {
         let t = 0;
         const uploadResults = {};
         for (let role in AUTHS) {
-            const userId = new ObjectId();
-            console.log(role, AUTHS[role]);
+            //console.log(role, AUTHS[role]);
             const files = { files: [] };
             for (let i = 0; i < FILE_COUNT; i++) {
                 t++;
@@ -99,7 +117,10 @@ module.exports = async (notApp, config) => {
                 identity: {
                     sid: `${role}_session`,
                     ip: "127.0.0.1",
-                    uid: userId,
+                    uid: AUTHS[role].uid,
+                    auth: ["root", "user"].includes(role),
+                    admin: role === "admin",
+                    root: role === "root",
                 },
                 store: `test_store_${role}`,
             });
@@ -118,6 +139,7 @@ module.exports = async (notApp, config) => {
             JSON.stringify(item, null, 4)
         );
         console.log("list results", results);
+        return AUTHS;
     } catch (e) {
         console.error(e);
         notApp.report(e);

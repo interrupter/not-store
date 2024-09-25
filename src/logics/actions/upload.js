@@ -20,13 +20,7 @@ module.exports = class UploadAction {
         try {
             logic.logDebugAction(actionName, identity);
             this.normalizeInputFiles(files);
-            if (logic.config.get("sessionRequired")) {
-                if (!identity.sid) {
-                    throw new notError("User session is undefined", {
-                        identity,
-                    });
-                }
-            }
+
             const storeBucket = await store.get(storeName);
             if (!storeBucket) {
                 throw new notError("Store bucket is not exist", {
@@ -196,6 +190,7 @@ module.exports = class UploadAction {
             await Promise.allSettled(
                 results[setName].map((itm) => {
                     if (itm.status !== "rejected") {
+                        console.error(itm);
                     }
                 })
             );
@@ -313,28 +308,28 @@ module.exports = class UploadAction {
 
     static composeDocument(file, uploadResult, storeBucket, identity) {
         return {
+            //unique id
+            uuid: uploadResult.uuid,
+            //name of store bucket config
+            store: storeBucket.name,
             cloud: uploadResult?.cloud,
+            //original file name if provided
+            name: file.name || uploadResult.name || uploadResult.uuid,
+            //size
+            size: uploadResult.size || file.size || 0,
             //extension of file
             extension: uploadResult?.metadata?.format || file?.format,
             //various information
             info: partCopyObjExcept(uploadResult, INFO_EXCEPT_LIST),
-            //name of store bucket config
-            store: storeBucket.name,
-            //original file name if provided
-            name: file.name || uploadResult.name || uploadResult.uuid,
-            //unique id
-            uuid: uploadResult.uuid,
-            variant: uploadResult[OPT_INFO_VARIANT],
             //objectId of file this produced from
             parent: uploadResult[OPT_INFO_PARENT],
+            variant: uploadResult[OPT_INFO_VARIANT],
             //
             path: uploadResult?.path || uploadResult?.cloud?.Key,
             //ownership
             session: identity.sid,
             [DOCUMENT_OWNER_FIELD_NAME]: identity.uid,
             userIp: identity.ip,
-            //size
-            size: uploadResult.size || file.size || 0,
         };
     }
 };

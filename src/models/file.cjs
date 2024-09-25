@@ -56,6 +56,15 @@ exports.schemaOptions = {
 };
 
 exports.thisStatics = {
+    createQueryModificator(name) {
+        switch (name) {
+            case "original":
+                return Object.freeze({
+                    parent: { $exists: false },
+                    variant: { $exists: false },
+                });
+        }
+    },
     //
     async closeOneAndRemoveFile(rec, childrenToo = false) {
         try {
@@ -129,7 +138,7 @@ exports.thisStatics = {
         }
     },
     //
-    async getOneByIdAndRemove(_id, sessionId) {
+    async getOneByIdAndRemove(_id, sessionId = undefined, userId = undefined) {
         try {
             let query = {
                 __closed: false,
@@ -138,6 +147,9 @@ exports.thisStatics = {
             };
             if (sessionId) {
                 query.session = sessionId;
+            }
+            if (userId) {
+                query[DOCUMENT_OWNER_FIELD_NAME] = sessionId;
             }
             let rec = await this.findOne(query);
             if (!rec) {
@@ -160,7 +172,11 @@ exports.thisStatics = {
                 if (children && children.length) {
                     await Promise.all(
                         children.map((child) =>
-                            this.getOneByIdAndRemove(child._id, sessionId)
+                            this.getOneByIdAndRemove(
+                                child._id,
+                                sessionId,
+                                userId
+                            )
                         )
                     );
                 }

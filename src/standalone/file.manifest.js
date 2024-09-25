@@ -1,3 +1,20 @@
+const safeFields = [
+    "_id",
+    "fileID",
+    "uuid",
+    "parent",
+    "variant",
+    "name",
+    "extension",
+    "store",
+    "info",
+    "path",
+    "cloud",
+    "size",
+    "createdAt",
+    "updatedAt",
+];
+
 module.exports = {
     actions: {
         create: {
@@ -33,80 +50,118 @@ module.exports = {
         },
         listAndCountOriginal: {
             data: ["pager", "sorter", "filter", "search"],
-            fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+            fields: safeFields,
             method: "get",
             postFix: "/:actionName",
-            return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+            return: safeFields,
             rules: [
                 {
                     root: true,
                     returnRoot: "list",
+                    return: safeFields,
+                },
+                {
+                    auth: true,
+                    returnRoot: "list",
+                    return: safeFields,
+                },
+                {
+                    auth: false,
+                    returnRoot: "list",
+                    return: safeFields,
                 },
             ],
         },
         listAndCount: {
             data: ["pager", "sorter", "filter", "search"],
-            fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+            fields: safeFields,
             method: "get",
             postFix: "/:actionName",
-            return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+            return: safeFields,
             rules: [
                 {
                     root: true,
                     returnRoot: "list",
+
+                    return: safeFields,
+                },
+                {
+                    auth: true,
+                    returnRoot: "list",
+
+                    return: safeFields,
+                },
+                {
+                    auth: false,
+                    returnRoot: "list",
+
+                    return: safeFields,
                 },
             ],
         },
         get: {
             data: ["filter", "data"],
-            fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+
             method: "GET",
             postFix: "/:record[_id]",
-            return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+
             rules: [
                 {
                     root: true,
+                    fields: safeFields,
+                    return: safeFields,
                 },
                 {
                     auth: true,
+                    fields: safeFields,
+                    return: safeFields,
                 },
                 {
                     auth: false,
+                    fields: safeFields,
+                    return: safeFields,
                 },
             ],
         },
         getRaw: {
             data: ["filter", "data"],
-            fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+
             method: "GET",
             postFix: "/:record[_id]/:actionName",
-            return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
+
             rules: [
                 {
                     root: true,
+                    fields: safeFields,
+                    return: safeFields,
                 },
                 {
                     auth: true,
+                    fields: safeFields,
+                    return: safeFields,
                 },
                 {
                     auth: false,
+                    fields: safeFields,
+                    return: safeFields,
                 },
             ],
         },
         list: {
             data: ["pager", "sorter", "filter", "search"],
-            fields: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
             method: "GET",
-            return: ["@id", "@ID", "@safe", "@ownage", "@timestamps"],
             rules: [
                 {
                     root: true,
+                    return: safeFields,
                 },
                 {
                     auth: true,
+                    return: safeFields,
                 },
                 {
                     auth: false,
+                    return: safeFields,
                 },
             ],
         },

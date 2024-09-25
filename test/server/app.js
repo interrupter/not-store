@@ -7,6 +7,8 @@ const Init = require("not-node").Init,
     path = require("path"),
     manifest = require("../test.manifest.json");
 
+let AUTHS;
+
 module.exports = () => {
     const options = {
         pathToApp: path.join(__dirname),
@@ -44,7 +46,7 @@ module.exports = () => {
                     console.log(req.originalUrl, req.query);
                     //test environment hacks
                     try {
-                        if (req.query) {
+                        if ((req.query && req.query.session, req.query.role)) {
                             console.log(
                                 "change user identity to",
                                 req.query.session,
@@ -53,10 +55,12 @@ module.exports = () => {
                             if (req.session) {
                                 req.session.id = req.query.session;
                                 req.session.role = [req.query.role];
+                                req.session.user = AUTHS[req.query.role];
                             } else if (!req.session) {
                                 req.session = {
                                     id: req.query.session,
                                     role: req.query.role,
+                                    user: AUTHS[req.query.role].uid.toString(),
                                     save() {
                                         console.trace();
                                     },
@@ -72,7 +76,7 @@ module.exports = () => {
             },
         },
         async post({ master, config }) {
-            await require("./testEnv")(master.getApp(), config);
+            AUTHS = await require("./testEnv")(master.getApp(), config);
         },
     };
 

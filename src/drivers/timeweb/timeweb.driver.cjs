@@ -181,7 +181,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
             //saving input data to local temp file
             Log.debug("start stash");
             const { name_tmp, uuid } = await this.stashFile(file);
-
+            tmpFilename = name_tmp;
             //fill file info
             fileInfo.uuid = uuid;
             fileInfo.name_tmp = name_tmp;

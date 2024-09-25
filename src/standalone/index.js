@@ -192,7 +192,7 @@ class notStore {
                     let result = await this.getInterface()
                         .setFilter(reqOpts)
                         .$delete({
-                            fileID: file.fileID,
+                            _id: file._id,
                         });
                     if (this.isGood(result)) {
                         toRemove.push(file);

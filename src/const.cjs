@@ -23,6 +23,7 @@ const OPT_DEFAULT_THUMB_OPTIONS = {
     quality: 90,
 };
 
+const DEFAULT_GUEST_STORE = "guest";
 const DEFAULT_USER_STORE = "client";
 const DEFAULT_SERVER_STORE = "server";
 
@@ -83,6 +84,7 @@ const INFO_EXCEPT_LIST = [
 module.exports = {
     DEFAULT_USER_STORE,
     DEFAULT_SERVER_STORE,
+    DEFAULT_GUEST_STORE,
     OPT_INFO_CHILDREN,
     OPT_INFO_PARENT,
     OPT_INFO_VARIANT,

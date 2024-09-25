@@ -46,6 +46,9 @@
         "store": {
             "sessionRequired": true,
             "configReader": "not-config",
+            "guestStoreName": "test_store_guest",
+            "userStoreName": "test_store_user",
+            "serverStoreName": "test_store_root",
             "stores": {
                 "test_store_guest": {
                     "driver": "timeweb",
@@ -148,6 +151,7 @@
     },
     "importModulesFromNPM": [
         "not-options",
-        "not-user"
+        "not-user",
+        "not-filter"
     ]
 }

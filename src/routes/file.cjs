@@ -27,15 +27,23 @@ const FileGenericRoute = notNode.Generic.GenericRoute({
 
 class FileRoute extends FileGenericRoute {
     static async create(req, res, next, prepared) {
-        return await getLogic().upload(prepared);
+        return await getLogic(prepared).upload(prepared);
     }
 
     static async _create(req, res, next, prepared) {
-        return await getLogic().upload(prepared);
+        return await FileRoute.create(req, res, next, prepared);
+    }
+
+    static async listAndCountOriginal(req, res, next, prepared) {
+        if (prepared.identity.admin) {
+            return await getLogic(prepared).listAndCountOriginal(prepared);
+        } else {
+            return await getLogic(prepared).listAndCountOriginalOwn(prepared);
+        }
     }
 
     static async _listAndCountOriginal(req, res, next, prepared) {
-        return await getLogic().listAndCountOriginal(prepared);
+        return await getLogic(prepared).listAndCountOriginal(prepared);
     }
 }
 

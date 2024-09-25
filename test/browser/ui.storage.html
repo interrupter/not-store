@@ -37,11 +37,13 @@
 					storageEl: document.body,
 					test: {
 						session: `user_session`,
+						role: 'user'
 					},
 					selectMany: false,
 					storage: {
 						popup: true
-					}
+					},
+					store: `test_store_user`
 				});
 			}
 			STORE['user_popup'].show()
@@ -49,12 +51,11 @@
 					console.log(images);
 					images.forEach((image) => {
 						console.log(image);
-						return;
 						let img = document.createElement('img');
 						img.id = image.uuid;
-						img.src = image.info.cloud.Location;
+						img.src = image.cloud.Location;
 						document.getElementById('results').appendChild(img);
-					})
+					});
 				})
 				.catch(console.error);
 		}
@@ -86,11 +87,9 @@
 					session: `${role}_session`,
 					role
 				},
-				selectMany: role === 'root'
+				selectMany: role === 'root',
+				store: `test_store_${role}`
 			};
-			if (role === 'root') {
-				opts.bucket = 'root';
-			}
 			STORE[role] = new notStore.notStore(opts);
 		}
 		document.addEventListener('DOMContentLoaded', () => {

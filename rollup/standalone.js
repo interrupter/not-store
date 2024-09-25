@@ -25,7 +25,7 @@ export default {
                 importee === "svelte" || importee.startsWith("svelte/"),
             preferBuiltins: true,
         }),
-        commonjs({}),
+        commonjs(),
         postcss({
             extract: true,
             minimize: true,
@@ -57,7 +57,6 @@ export default {
                 "@babel/plugin-syntax-class-properties",
                 "@babel/plugin-proposal-class-properties",
                 "@babel/transform-arrow-functions",
-                [],
             ],
             presets: [
                 [

@@ -1,10 +1,11 @@
 import notFileCRUDActionUploadFile from "../common/actions/upload.file.action";
+
 import Validators from "../common/validators.js";
 import { MODULE_NAME } from "../../const.cjs";
 import { Frame } from "not-bulma";
 import FileFilterUI from "../common/file.filter.svelte";
 const { notCRUD } = Frame;
-
+import CRUDActionList from "not-bulma/src/frame/crud/actions/list";
 const MODEL_NAME = "file";
 
 const LABELS = {
@@ -106,27 +107,8 @@ class ncFile extends notCRUD {
                     path: ":_id",
                     title: "Действия",
                     type: "button",
-                    preprocessor: (value) => {
-                        return [
-                            {
-                                action: this.goDetails.bind(this, value),
-                                title: "Подробнее",
-                                size: "small",
-                            },
-                            {
-                                action: this.goUpdate.bind(this, value),
-                                title: "Изменить",
-                                size: "small",
-                            },
-                            {
-                                action: this.goDelete.bind(this, value),
-                                type: "danger",
-                                title: "Удалить",
-                                size: "small",
-                                style: "outlined",
-                            },
-                        ];
-                    },
+                    preprocessor: (value) =>
+                        CRUDActionList.createActionsButtons(this, value),
                 },
             ],
         });

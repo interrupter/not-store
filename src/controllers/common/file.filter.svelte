@@ -1,6 +1,11 @@
 <script>
     import { notCommon } from "not-bulma";
-    import { UISelect, UITextfield } from "not-bulma/src/elements/form";
+    import {
+        UISelect,
+        UITextfield,
+        UISwitch,
+    } from "not-bulma/src/elements/form";
+
     import { UIButton } from "not-bulma/src/elements/button";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
 
@@ -15,6 +20,11 @@
 
     let stores = [];
     let search = "";
+    let onlyOriginal = false;
+
+    function getActionName() {
+        return onlyOriginal ? "listAndCountOriginal" : "listAndCount";
+    }
 
     function setFilter() {
         let copyFilter = {};
@@ -24,14 +34,14 @@
             }
             copyFilter[key] = filter[key];
         });
-        dispatch("change", copyFilter);
+        dispatch("change", { filter: copyFilter, actionName: getActionName() });
     }
 
     onMount(() => {
         notCommon
             .getApp()
             .getInterface("store")({})
-            .setFilter({ active: true })
+            .setFilter({})
             .$listAndCount()
             .then((result) => {
                 if (result && result.status === "ok") {
@@ -79,6 +89,9 @@
                 }
             }}
         />
+    </UIColumn>
+    <UIColumn>
+        <UISwitch label="Оригиналы" bind:value={onlyOriginal} />
     </UIColumn>
     <UIColumn>
         <UITextfield placeholder="Название" bind:value={filter.name} />

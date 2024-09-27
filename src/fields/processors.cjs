@@ -2,6 +2,7 @@ const Schema = require("mongoose").Schema;
 const { MODULE_NAME } = require("../const.cjs");
 
 module.exports = {
+    parent: 'not-node//requiredObject',
     model: {
         default: {},
         required: false,

@@ -2,6 +2,7 @@ const { MODULE_NAME } = require("../const.cjs");
 const Mixed = require("mongoose").Schema.Types.Mixed;
 
 module.exports = {
+    parent: 'not-node//requiredObject',
     model: {
         required: true,
         safe: {

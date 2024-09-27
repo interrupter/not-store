@@ -3,13 +3,14 @@ const { MODULE_NAME } = require("../const.cjs");
 const Schema = require("mongoose").Schema;
 
 module.exports = {
+    parent: "not-node//codeName",
     model: {
         required: false,
         safe: {
             read: ["@owner", "root", "admin"],
             update: ["@owner", "root", "admin"],
-        },
-        type: Schema.Types.Mixed,
+        },        
+        default: ''
     },
     ui: {
         component: "UITexteditor",

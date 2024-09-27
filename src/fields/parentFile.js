@@ -3,6 +3,7 @@ const { MODULE_NAME } = require("../const.cjs");
 const MODEL_NAME = "File";
 
 module.exports = {
+    parent: 'not-node//objectId',
     model: {
         match: { __closed: false, __latest: true },
         ref: MODEL_NAME,

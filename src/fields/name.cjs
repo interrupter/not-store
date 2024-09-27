@@ -1,6 +1,7 @@
 const { MODULE_NAME } = require("../const.cjs");
 
 module.exports = {
+    parent: 'not-node//title',
     model: {
         required: true,
         safe: {

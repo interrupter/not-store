@@ -74,15 +74,15 @@
         />
         {#if icon}
             <span class="icon is-small is-left"
-                ><i class="fas fa-{icon}" /></span
+                ><i class="fas fa-{icon}"></i></span
             >
         {/if}
         {#if validated === true}
             <span class="icon is-small is-right">
                 {#if valid === true}
-                    <i class="fas fa-check" />
+                    <i class="fas fa-check"></i>
                 {:else if valid === false}
-                    <i class="fas fa-exclamation-triangle" />
+                    <i class="fas fa-exclamation-triangle"></i>
                 {/if}
             </span>
         {/if}

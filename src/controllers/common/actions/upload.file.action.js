@@ -24,7 +24,7 @@ class notFileCRUDActionCreate extends CRUDGenericActionCreate {
         return UIFileUpload;
     }
 
-    static prepareUIOptions(controller, response) {
+    static prepareUIOptions(controller) {
         //const actionName = this.getModelActionName(controller);
         return {
             props: {},
@@ -33,7 +33,7 @@ class notFileCRUDActionCreate extends CRUDGenericActionCreate {
     }
 
     static bindUIEvents(controller) {
-        this.bindUIEvent(controller, "filesAdded", ({ detail }) => {
+        super.bindUIEvent(controller, "filesAdded", ({ detail }) => {
             const { files, store } = detail;
             this.onFilesAdded(controller, store, files);
         });
@@ -87,7 +87,10 @@ class notFileCRUDActionCreate extends CRUDGenericActionCreate {
                         );
                         res(cnvs.toDataURL("image/png"));
                     };
-                    img.src = e.target.result;
+                    img.src =
+                        typeof e.target.result === "string"
+                            ? e.target.result
+                            : undefined;
                 };
                 reader.onerror = rej;
                 // Read in the image file as a data URL.

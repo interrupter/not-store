@@ -63,8 +63,12 @@
 
 <div
     class="column file-tile is-one-quarter-desktop is-half-mobile {ifSelected}"
-    on:click={onClick}
+    onclick={onClick}
+    onkeypress={onClick}
     data-uuid={data.uuid}
+    aria-label="file thumb"
+    role="gridcell"
+    tabindex="0"
 >
     {#if notUploaded}
         <progress class="progress is-link" value={progress} max="100"
@@ -74,7 +78,11 @@
     {#if data.path}
         <figure class="image is-4by3">
             {#if !hideDeleteButton}
-                <button class="delete" on:click={remove}></button>
+                <button
+                    class="delete"
+                    onclick={remove}
+                    aria-label="delete button"
+                ></button>
             {/if}
             <img
                 draggable="true"
@@ -88,54 +96,3 @@
         </figure>
     {/if}
 </div>
-
-<style>
-    .file-tile.selected {
-        background-color: hsl(204, 71%, 53%);
-    }
-
-    figure.image {
-        overflow: hidden;
-    }
-
-    figure.image img {
-        opacity: 1;
-        display: block;
-        width: 100%;
-        object-fit: cover;
-        transition: 0.5s ease;
-        backface-visibility: hidden;
-    }
-
-    .middle {
-        transition: 0.5s ease;
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        text-align: center;
-    }
-
-    button.delete {
-        z-index: 1;
-        position: absolute;
-        right: 1.5em;
-        top: 1.5em;
-    }
-
-    .image:hover img {
-        opacity: 0.3;
-    }
-
-    .image:hover .middle {
-        opacity: 1;
-    }
-
-    .text {
-        color: #3b3b3b;
-        font-size: 16px;
-        padding: 16px 32px;
-    }
-</style>

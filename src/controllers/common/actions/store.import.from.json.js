@@ -39,8 +39,8 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
         return UIStoreImportFromJSON;
     }
 
-    static prepareUIOptions(controller, value) {
-        const actionName = this.getModelActionName(controller);
+    static prepareUIOptions(controller) {
+        const actionName = super.getModelActionName(controller);
         return {
             props: {
                 actionName,
@@ -66,17 +66,17 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
             //inform that we are starting
             controller.emit(`before:render:${this.ACTION}`, params);
             //if UI for this action exists exiting
-            if (this.isUIRendered(controller)) {
+            if (super.isUIRendered(controller)) {
                 return;
             }
             //setting initial state of breadcrumbs tail
-            this.presetBreadcrumbs(controller, params);
+            super.presetBreadcrumbs(controller, params);
             //creating action UI component
             const uiComponent = this.UIConstructor;
             const response = {};
-            this.setUI(
+            super.setUI(
                 controller,
-                new uiComponent(this.prepareUIOptions(controller, response))
+                new uiComponent(super.prepareUIOptions(controller, response))
             );
             //bind events to UI
             this.bindUIEvents(controller, params, response);
@@ -92,35 +92,35 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
         }
     }
 
-    static bindUIEvents(controller, params, response) {
+    static bindUIEvents(controller) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.bindUIEvent(controller, "reject", () => controller.goBack());
+            super.bindUIEvent(controller, "reject", () => controller.goBack());
         }
 
-        this.bindUIEvent(controller, "import", ({ detail }) => {
+        super.bindUIEvent(controller, "import", ({ detail }) => {
             notStoreCRUDActionImportFromJSON.import(controller, detail);
         });
     }
 
     static setUILoading(controller) {
-        this.getUI(controller).$set({ loading: true });
+        super.getUI(controller).$set({ loading: true });
     }
 
     static setUILoaded(controller) {
-        this.getUI(controller).$set({ loading: false });
+        super.getUI(controller).$set({ loading: false });
     }
 
     static setUIError(controller, message) {
-        this.getUI(controller).$set({ error: message });
+        super.getUI(controller).$set({ error: message });
     }
 
     static async import(controller, jsonAsText) {
         try {
             notStoreCRUDActionImportFromJSON.setUILoading(controller);
-            const res = await controller
-                .getModel({ import: jsonAsText })
-                [`$${notStoreCRUDActionImportFromJSON.MODEL_ACTION_PUT}`]();
-            if (this.isResponseBad(res)) {
+            const actionName = `$${notStoreCRUDActionImportFromJSON.MODEL_ACTION_PUT}`;
+            const model = controller.getModel({ import: jsonAsText });
+            const res = await model[actionName]();
+            if (super.isResponseBad(res)) {
                 controller.showErrorMessage(res);
             } else {
                 controller.showSuccessMessage(

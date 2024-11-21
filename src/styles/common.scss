@@ -13,3 +13,54 @@
 .overflow-wrap-break-word {
     overflow-wrap: break-word;
 }
+
+.column.file-tile {
+    &.selected {
+        background-color: hsl(204, 71%, 53%);
+    }
+
+    figure.image {
+        overflow: hidden;
+    }
+
+    figure.image img {
+        opacity: 1;
+        display: block;
+        width: 100%;
+        object-fit: cover;
+        transition: 0.5s ease;
+        backface-visibility: hidden;
+    }
+
+    .middle {
+        transition: 0.5s ease;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    button.delete {
+        z-index: 1;
+        position: absolute;
+        right: 1.5em;
+        top: 1.5em;
+    }
+
+    .image:hover img {
+        opacity: 0.3;
+    }
+
+    .image:hover .middle {
+        opacity: 1;
+    }
+
+    .text {
+        color: #3b3b3b;
+        font-size: 16px;
+        padding: 16px 32px;
+    }
+}

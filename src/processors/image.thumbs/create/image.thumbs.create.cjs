@@ -1,10 +1,10 @@
 // @ts-check
-const fs = require("fs");
+
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const sharp = require("sharp");
 const DEFAULT_OPTIONS = require("./image.thumbs.create.options.cjs");
 const { OPT_INFO_CHILDREN, OPT_INFO_PREVIEW } = require("../../../const.cjs");
-const { resolve } = require("path");
+
 const notCommon = require("not-node/src/common");
 
 class notStoreProcessorImageThumbsCreate extends notStoreProcessor {

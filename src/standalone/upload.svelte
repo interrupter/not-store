@@ -9,7 +9,7 @@
 
     export let id;
     export let uploads = [];
-    //export let popup = false;
+
     export let show = false;
     export let short = false;
 

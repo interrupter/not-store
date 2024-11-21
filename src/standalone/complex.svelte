@@ -105,7 +105,13 @@
 
 {#if popup && show}
     <div class="modal is-active">
-        <div class="modal-background" on:click={rejectPopup}></div>
+        <div
+            class="modal-background"
+            onclick={rejectPopup}
+            onkeypress={rejectPopup}
+            role="button"
+            tabindex="0"
+        ></div>
         <div class="modal-card box is-rounded">
             {#if !short}
                 <header class="modal-card-head">
@@ -113,14 +119,14 @@
                     <button
                         class="delete"
                         aria-label="close"
-                        on:click={closePopup}
+                        onclick={closePopup}
+                        tabindex="0"
                     ></button>
                 </header>
             {/if}
             <section class="modal-card-body">
                 <div class="container">
                     <UploaderComponent
-                        popup={false}
                         show={true}
                         short={true}
                         bind:id
@@ -138,14 +144,13 @@
             </section>
             {#if !short}
                 <footer class="modal-card-foot">
-                    <button class="button is-success" on:click={resolvePopup}
+                    <button class="button is-success" onclick={resolvePopup}
                         >Выбрать</button
                     >
-                    <button class="button is-danger" on:click={removeSelected}
+                    <button class="button is-danger" onclick={removeSelected}
                         >Удалить</button
                     >
-                    <button class="button" on:click={rejectPopup}
-                        >Закрыть</button
+                    <button class="button" onclick={rejectPopup}>Закрыть</button
                     >
                 </footer>
             {/if}

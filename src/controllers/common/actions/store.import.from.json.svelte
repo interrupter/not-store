@@ -1,18 +1,24 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
     import UITextarea from "not-bulma/src/elements/form/ui.textarea.svelte";
     import UIButton from "not-bulma/src/elements/button/ui.button.svelte";
     import { MODULE_NAME } from "../../../const.cjs";
-    export let value = "";
-    export let loading = false;
+
+    /**
+     * @typedef {Object} Props
+     * @property {string} [value]
+     * @property {boolean} [loading]
+     * @property {function} [onimport]
+     */
+
+    /** @type {Props} */
+    let { value = $bindable(""), loading, onimport = () => {} } = $props();
 </script>
 
 <UITextarea bind:value rows={20} disabled={loading} placeholder={""} />
 
 <UIButton
     action={() => {
-        dispatch("import", value);
+        onimport(value);
     }}
     color={"primary"}
     disabled={loading}

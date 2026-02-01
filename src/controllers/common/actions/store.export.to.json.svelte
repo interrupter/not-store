@@ -1,7 +1,11 @@
 <script>
-    export let value = {};
+    let { value } = $props();
 
-    $: json = value && JSON.stringify(value, null, 4);
+    let json = $state("{}");
+
+    $effect(() => {
+        json = value && JSON.stringify(value, null, 4);
+    });
 </script>
 
 <pre>{json}</pre>

@@ -20,7 +20,7 @@ module.exports = {
         create: {
             data: ["data"],
             method: "PUT",
-            postFix: "/:store?",
+            postFix: "/{:store}",
             rules: [
                 {
                     root: true,

@@ -1,24 +1,24 @@
 <script>
-    import { createEventDispatcher, onMount } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     import { Confirmation } from "./confirm.js";
     import * as FileStores from "./file.stores.js";
 
-    export let progress = 0;
-    export let selected = false;
-    export let notUploaded = false;
-    export let selectMany = false;
-    export let hideDeleteButton = false;
-    //export let elementSize = 3;
-
-    export let storeId;
-
-    export let data = {
-        name: "default.file.name",
-        size: 1000,
-        preview: false,
-    };
+    let {
+        progress = 0,
+        selected = false,
+        notUploaded = false,
+        selectMany = false,
+        hideDeleteButton = false,
+        storeId,
+        data = {
+            name: "default.file.name",
+            size: 1000,
+            preview: false,
+        },
+        onselected = () => {},
+        onremove = () => {},
+    } = $props();
 
     onMount(() => {
         FileStores.get(storeId).selected.subscribe((value) => {
@@ -40,7 +40,7 @@
                 } else {
                     value.splice(0, value.length, data.uuid);
                 }
-                dispatch("selected");
+                onselected();
             }
             return value;
         });
@@ -53,7 +53,7 @@
             approval: "Удалить файл?",
         })
             .then(() => {
-                dispatch("remove", data);
+                onremove(data);
             })
             .catch(() => {});
     }

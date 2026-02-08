@@ -4,13 +4,18 @@
     import { UISelect } from "not-bulma/src/elements/form";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
     import { UITitle } from "not-bulma/src/elements/various";
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
-    export let index;
-    export let value;
-    export let processors = [];
-    export let readonly = false;
+    let {
+        index,
+        value,
+        processors = [],
+        readonly = false,
+        onchange = () => {},
+        onup = () => {},
+        ondown = () => {},
+        onremove = () => {},
+    } = $props();
 
     let id = Math.random();
     let name = "generic";
@@ -44,10 +49,10 @@
     function onOptionsChange() {
         value.options = options;
         value = value;
-        dispatch("change", { index, value });
+        onchange({ index, value });
     }
 
-    function onProcessorChange({ detail }) {
+    function onProcessorChange(detail) {
         const proc = processors.find((item) => {
             return item.id === detail.value;
         });
@@ -61,7 +66,7 @@
             value.name = detail.value;
             value.options = options;
             value = value;
-            dispatch("change", { index, value });
+            onchange({ index, value });
         }
     }
 
@@ -70,7 +75,7 @@
             icon: "angle-up",
             action: () => {
                 console.log("move up", value);
-                dispatch("up", index);
+                onup(index);
             },
             classes: CLASSES,
         },
@@ -78,7 +83,7 @@
             icon: "angle-down",
             action: () => {
                 console.log("move down", value);
-                dispatch("down", index);
+                ondown(index);
             },
             classes: CLASSES,
         },
@@ -86,7 +91,7 @@
             icon: "minus",
             action: () => {
                 console.log("remove", index);
-                dispatch("remove", index);
+                onremove(index);
             },
             color: "danger",
             classes: CLASSES,
@@ -101,7 +106,7 @@
                 variants={processors}
                 bind:readonly
                 bind:value={name}
-                on:change={onProcessorChange}
+                onchange={onProcessorChange}
                 fieldname="processor"
                 classes={CLASSES}
             />
@@ -118,6 +123,6 @@
         this={COMPONENTS.get(optionsUI)}
         bind:value={options}
         bind:readonly
-        on:change={onOptionsChange}
+        onchange={onOptionsChange}
     />
 {/if}

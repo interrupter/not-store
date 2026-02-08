@@ -1,6 +1,5 @@
 <script>
-    import { createEventDispatcher, onMount } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     import UploaderComponent from "./upload.svelte";
     import StorageComponent from "./storage.svelte";
@@ -17,18 +16,19 @@
         });
     });
 
-    export let id;
-    export let files = [];
-    export let selected = [];
-    export let selectMany;
-    export let selectOnClick;
-    export let short = false;
-    export let show = true;
-    export let popup = true;
-    export let elementSize = 3;
-
-    export let onReject;
-    export let onResolve;
+    let {
+        id,
+        files = [],
+        selected = [],
+        selectMany,
+        selectOnClick,
+        short = false,
+        show = true,
+        popup = true,
+        elementSize = 3,
+        onReject,
+        onResolve,
+    } = $props();
 
     function closePopup() {
         show = false;
@@ -44,7 +44,7 @@
                 onResolve(images);
                 onResolve = null;
             } else {
-                dispatch("resolve", {
+                onresolve({
                     selected: images,
                 });
             }
@@ -53,7 +53,7 @@
                 onResolve([]);
                 onResolve = null;
             } else {
-                dispatch("resolve", {
+                onresolve({
                     selected: [],
                 });
             }
@@ -66,7 +66,7 @@
             onReject();
             onReject = null;
         } else {
-            dispatch("reject");
+            reject();
         }
     }
 
@@ -77,7 +77,7 @@
     }
 
     function onChange(ev) {
-        dispatch("filesAdded", ev.detail);
+        onFilesAdded(ev);
     }
 
     function removeSelected() {
@@ -87,7 +87,7 @@
             approval: "Удалить файлы?",
         })
             .then(() => {
-                dispatch("remove", {
+                onremove({
                     selected,
                 });
             })
@@ -97,8 +97,8 @@
     }
 
     function removeFile(ev) {
-        dispatch("remove", {
-            selected: ev.detail.selected,
+        onremove({
+            selected: ev.selected,
         });
     }
 </script>

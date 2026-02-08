@@ -1,34 +1,34 @@
 <script>
     import UICommon from "not-bulma/src/elements/common";
 
-    import { createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
+    let {
+        inputStarted = false,
+        value = "",
+        placeholder = "input some text here, please",
+        fieldname = "textfield",
+        icon = false,
+        required = true,
+        disabled = false,
+        readonly = false,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false,
+        onchange = () => {},
+    } = $props();
 
-    export let inputStarted = false;
-    export let value = "";
-    export let placeholder = "input some text here, please";
-    export let fieldname = "textfield";
-    export let icon = false;
-    export let required = true;
-    export let disabled = false;
-    export let readonly = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
-
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
+    let iconClasses = $derived(
+        (icon ? " has-icons-left " : "") + " has-icons-right "
     );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    let allErrors = $derived(
+        [].concat(errors ? errors : [], formErrors ? formErrors : [])
+    );
+    let showErrors = $derived(!(validated && valid) && inputStarted);
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses = $derived(
+        valid === true || !inputStarted ? UICommon.CLASS_OK : UICommon.CLASS_ERR
+    );
 
     function onBlur(/*ev*/) {
         let data = {
@@ -36,7 +36,7 @@
             value,
         };
         inputStarted = true;
-        dispatch("change", data);
+        onchange(data);
         return true;
     }
 
@@ -46,7 +46,7 @@
             value: ev.currentTarget.value,
         };
         inputStarted = true;
-        dispatch("change", data);
+        onchange(data);
         return true;
     }
 </script>
@@ -65,11 +65,11 @@
             {required}
             {readonly}
             {placeholder}
-            bind:value
+            {value}
             autocomplete={fieldname}
             aria-controls="input-field-helper-{fieldname}"
-            on:change={onBlur}
-            on:input={onInput}
+            onchange={onBlur}
+            oninput={onInput}
             aria-describedby="input-field-helper-{fieldname}"
         />
         {#if icon}

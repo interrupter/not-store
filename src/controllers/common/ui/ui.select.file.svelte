@@ -1,3 +1,3 @@
 <script>
-    export let storeName = "";
+    let { storeName = "" } = $props();
 </script>

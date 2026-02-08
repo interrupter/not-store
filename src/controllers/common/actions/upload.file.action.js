@@ -26,14 +26,11 @@ class notFileCRUDActionCreate extends CRUDGenericActionCreate {
 
     static prepareUIOptions(controller) {
         //const actionName = this.getModelActionName(controller);
-        return {
-            props: {},
-            target: controller.getContainerInnerElement(),
-        };
+        return {};
     }
 
     static bindUIEvents(controller) {
-        super.bindUIEvent(controller, "filesAdded", ({ detail }) => {
+        super.bindUIEvent(controller, "onFilesAdded", (detail) => {
             const { files, store } = detail;
             this.onFilesAdded(controller, store, files);
         });

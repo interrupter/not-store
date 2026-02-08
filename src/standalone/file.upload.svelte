@@ -1,10 +1,12 @@
 <script>
-    export let uploaded = false;
-    export let data = {
-        name: "default.file.name",
-        size: 1000,
-        preview: false,
-    };
+    let {
+        uploaded = false,
+        data = {
+            name: "default.file.name",
+            size: 1000,
+            preview: false,
+        },
+    } = $props();
 </script>
 
 <div class="tile file is-3 is-child" data-id={data.id}>

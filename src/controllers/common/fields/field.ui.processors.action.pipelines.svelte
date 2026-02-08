@@ -1,18 +1,19 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
     import { UITitle } from "not-bulma/src/elements/various";
     import { UIBox } from "not-bulma/src/elements/block";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
     import FUIProcessorsPipeline from "./field.ui.processors.pipeline.svelte";
-    export let value = {
-        pre: [],
-        post: [],
-    };
-    export let action;
-    export let actions = [];
-    export let processors = [];
-    export let readonly = false;
+    let {
+        value = {
+            pre: [],
+            post: [],
+        },
+        action,
+        actions = [],
+        processors = [],
+        readonly = false,
+        onchange = () => {},
+    } = $props();
 
     function add(to) {
         if (processors.length) {
@@ -25,7 +26,7 @@
             });
             value[to] = value[to];
             value = value;
-            dispatch("change");
+            onchange();
         }
     }
 
@@ -37,15 +38,15 @@
         add("post");
     }
 
-    function onChangePost({ detail }) {
+    function onChangePost(detail) {
         value.post = detail.value;
         value = value;
-        dispatch("change");
+        onchange();
     }
-    function onChangePre({ detail }) {
+    function onChangePre(detail) {
         value.pre = detail.value;
         value = value;
-        dispatch("change");
+        onchange();
     }
 </script>
 
@@ -54,11 +55,11 @@
         <UIColumns>
             <UIColumn classes="is-5">
                 <FUIProcessorsPipeline
-                    bind:readonly
-                    bind:pipeline={value.pre}
+                    readonly
+                    pipeline={value.pre}
                     title="pre"
-                    on:add={addPre}
-                    on:change={onChangePre}
+                    onadd={addPre}
+                    onchange={onChangePre}
                     {action}
                     {actions}
                     {processors}
@@ -69,11 +70,11 @@
             </UIColumn>
             <UIColumn classes="is-5">
                 <FUIProcessorsPipeline
-                    bind:readonly
-                    bind:pipeline={value.post}
+                    readonly
+                    pipeline={value.post}
                     title="post"
-                    on:add={addPost}
-                    on:change={onChangePost}
+                    onadd={addPost}
+                    onchange={onChangePost}
                     {action}
                     {actions}
                     {processors}

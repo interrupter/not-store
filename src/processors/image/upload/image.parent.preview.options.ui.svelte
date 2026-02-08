@@ -4,8 +4,8 @@
     import notPath from "not-path";
 
     import Common from "not-bulma/src/frame/common";
-    import { onMount, createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     import { Elements } from "not-bulma";
     import {
         UISwitch,
@@ -19,15 +19,17 @@
 
     import DEFAULT_OPTIONS from "./image.parent.preview.options.cjs";
 
-    export let value = Common.copyObj(DEFAULT_OPTIONS);
+    let {
+        value = Common.copyObj(DEFAULT_OPTIONS),
+        fieldname = "options",
+        readonly = false,
+        onchange = () => {},
+    } = $props();
 
-    export let fieldname = "options";
-    export let readonly = false;
-
-    const onChange = ({ detail }) => {
+    const onChange = (detail) => {
         notPath.set(`:${detail.field}`, value, {}, detail.value);
         value = value;
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -49,10 +51,10 @@
                 label={`${MODULE_NAME}:field_store_processor_image.parent.preview_options_variant`}
             />
             <UITextfield
-                bind:readonly
-                bind:disabled={value.all}
-                bind:value={value.variant}
-                on:change={onChange}
+                readonly
+                disabled={value.all}
+                value={value.variant}
+                onchange={onChange}
                 fieldname="variant"
             />
         </div>
@@ -61,9 +63,9 @@
         <div class="field">
             <UISwitch
                 label="Все"
-                bind:readonly
-                bind:value={value.all}
-                on:change={onChange}
+                readonly
+                value={value.all}
+                onchange={onChange}
                 fieldname="all"
             />
         </div>

@@ -9,18 +9,20 @@
     import { UIButton } from "not-bulma/src/elements/button";
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
 
-    import { createEventDispatcher, onMount } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
-    export let filter = {
-        store: "",
-        name: "",
-        extension: "",
-    };
-
-    let stores = [];
-    let search = "";
-    let onlyOriginal = false;
+    let {
+        filter = {
+            store: "",
+            name: "",
+            extension: "",
+        },
+        stores = [],
+        search = "",
+        onSearchChange = () => {},
+        onchange = () => {},
+        onlyOriginal = false,
+    } = $props();
 
     function getActionName() {
         return onlyOriginal ? "listAndCountOriginal" : "listAndCount";
@@ -34,7 +36,7 @@
             }
             copyFilter[key] = filter[key];
         });
-        dispatch("change", { filter: copyFilter, actionName: getActionName() });
+        onchange({ filter: copyFilter, actionName: getActionName() });
     }
 
     onMount(() => {
@@ -66,11 +68,11 @@
 <UIColumns>
     <UIColumn>
         <UITextfield
-            bind:value={search}
+            value={search}
             placeholder="Поиск"
-            on:change={({ detail }) => {
+            onchange={(detail) => {
                 const search = detail.value.trim();
-                dispatch("searchChange", search);
+                onSearchChange(search);
             }}
         />
     </UIColumn>
@@ -79,9 +81,9 @@
     <UIColumn>
         <UISelect
             placeholder="Все хранилища"
-            bind:value={filter.store}
-            bind:variants={stores}
-            on:change={({ detail }) => {
+            value={filter.store}
+            variants={stores}
+            onchange={(detail) => {
                 if (detail.value === "__CLEAR__") {
                     filter.store = "";
                 } else {
@@ -91,13 +93,13 @@
         />
     </UIColumn>
     <UIColumn>
-        <UISwitch label="Оригиналы" bind:value={onlyOriginal} />
+        <UISwitch label="Оригиналы" value={onlyOriginal} />
     </UIColumn>
     <UIColumn>
-        <UITextfield placeholder="Название" bind:value={filter.name} />
+        <UITextfield placeholder="Название" value={filter.name} />
     </UIColumn>
     <UIColumn>
-        <UITextfield placeholder="Тип" bind:value={filter.extension} />
+        <UITextfield placeholder="Тип" value={filter.extension} />
     </UIColumn>
     <UIColumn>
         <UIButton action={setFilter} title="Применить" color="primary" />

@@ -5,8 +5,7 @@
     import notPath from "not-path";
 
     import Common from "not-bulma/src/frame/common";
-    import { onMount, createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
     import { Elements } from "not-bulma";
     import {
         UITextfield,
@@ -19,15 +18,17 @@
 
     import DEFAULT_OPTIONS from "./image.thumbs.create.options.cjs";
 
-    export let value = Common.copyObj(DEFAULT_OPTIONS);
+    let {
+        value = Common.copyObj(DEFAULT_OPTIONS),
+        fieldname = "options",
+        readonly = false,
+        onchange = () => {},
+    } = $props();
 
-    export let fieldname = "options";
-    export let readonly = false;
-
-    const onChange = ({ detail }) => {
+    const onChange = (detail) => {
         notPath.set(`:${detail.field}`, value, {}, detail.value);
         value = value;
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -54,7 +55,7 @@
                 })}
                 bind:readonly
                 bind:value={value.resize.fit}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="resize.fit"
             />
         {/if}
@@ -64,7 +65,7 @@
             bind:value={value.sizes}
             bind:readonly
             label={`${MODULE_NAME}:field_store_processor_image.thumbs.create_options_sizes`}
-            on:change={onChange}
+            onchange={onChange}
             fieldname="sizes"
         />
     {/if}

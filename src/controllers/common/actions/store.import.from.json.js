@@ -43,11 +43,8 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
         const actionName = super.getModelActionName(controller);
         const events = this.createUIEvents(controller);
         return {
-            props: {
-                actionName,
-                ...events,
-            },
-            target: controller.getContainerInnerElement(),
+            actionName,
+            ...events,
         };
     }
 
@@ -74,11 +71,10 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
             //setting initial state of breadcrumbs tail
             super.presetBreadcrumbs(controller, params);
             //creating action UI component
-            const uiComponent = this.UIConstructor;
             const response = {};
-            super.setUI(
+            super.buildUI(
                 controller,
-                new uiComponent(super.prepareUIOptions(controller, response))
+                super.prepareUIOptions(controller, response)
             );
             //inform that we are ready
             controller.emit(`after:render:${this.ACTION}`, params, response);
@@ -104,15 +100,15 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
     }
 
     static setUILoading(controller) {
-        super.getUI(controller).$set({ loading: true });
+        super.getUI(controller).set('loading', true);
     }
 
     static setUILoaded(controller) {
-        super.getUI(controller).$set({ loading: false });
+        super.getUI(controller).set('loading', false );
     }
 
     static setUIError(controller, message) {
-        super.getUI(controller).$set({ error: message });
+        super.getUI(controller).set( 'error', message );
     }
 
     static async import(controller, jsonAsText) {

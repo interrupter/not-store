@@ -40,11 +40,11 @@ let manifest = {
                     items: [
                         {
                             title: "Файлы",
-                            url: `/${MODULE_NAME}/file`,
+                            href: `/${MODULE_NAME}/file`,
                         },
                         {
                             title: "Хранилища",
-                            url: `/${MODULE_NAME}/store`,
+                            href: `/${MODULE_NAME}/store`,
                         },
                     ],
                 },

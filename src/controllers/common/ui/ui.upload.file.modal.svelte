@@ -1,18 +1,18 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
     import { notCommon } from "not-bulma";
 
     import UIUpload from "../../../standalone/upload.svelte";
     import { UIModal } from "not-bulma/src/elements/modal";
 
-    export let show = false;
-    export let storeName = "";
-    export let title = "Загрузка файла";
-
-    export let fieldname = "file";
-    export let accept = "image/*";
-    export let multiple = true;
+    let {
+        show = false,
+        storeName = "",
+        title = "Загрузка файла",
+        fieldname = "file",
+        accept = "image/*",
+        multiple = true,
+        onresolve = () => {},
+    } = $props();
 
     const closeButton = {
         title: "Закрыть",
@@ -22,7 +22,7 @@
         },
     };
 
-    function onFilesAdded({ detail }) {
+    function onFilesAdded(detail) {
         console.log("onFilesAdded", detail);
         const nsStore = notCommon.getApp().getService("nsStore");
         nsStore
@@ -30,15 +30,15 @@
             .then((results) => {
                 notCommon.log("file upload results", results);
                 if (results.error.length === 0) {
-                    dispatch("resolve", results.success);
+                    onresolve(results.success);
                 } else {
-                    dispatch("reject", results.error);
+                    onreject(results.error);
                 }
                 show = false;
             })
             .catch((er) => {
                 notCommon.report(er);
-                dispatch("reject", er);
+                onreject(er);
                 show = false;
             });
     }
@@ -48,7 +48,7 @@
     <UIUpload
         bind:id={storeName}
         show={true}
-        on:filesAdded={onFilesAdded}
+        {onFilesAdded}
         short={true}
         {fieldname}
         {accept}

@@ -5,15 +5,18 @@
     import { UIColumns, UIColumn } from "not-bulma/src/elements/layout";
     import UIUpload from "../../../standalone/upload.svelte";
 
-    import { createEventDispatcher, onMount } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
-    export let storeName = "";
+    let {
+        storeName = "",
+        onchange = () => {},
+        onFilesAdded = () => {},
+    } = $props();
 
     let stores = [];
 
     function setFilter() {
-        dispatch("change", filter);
+        onchange(filter);
     }
 
     onMount(() => {
@@ -41,13 +44,13 @@
             });
     });
 
-    function onFileSelect({ detail }) {
+    function onFileSelect(detail) {
         const data = {
             storeName: storeName,
             files: detail,
         };
         //console.log("file selected", data);
-        dispatch("filesAdded", data);
+        onFilesAdded(data);
     }
 </script>
 
@@ -57,7 +60,7 @@
             placeholder="Все хранилища"
             bind:value={storeName}
             bind:variants={stores}
-            on:change={({ detail }) => {
+            onchange={(detail) => {
                 if (detail.value === "__CLEAR__") {
                     storeName = "";
                 } else {
@@ -69,5 +72,5 @@
 </UIColumns>
 
 {#if storeName}
-    <UIUpload bind:id={storeName} show={true} on:filesAdded={onFileSelect} />
+    <UIUpload bind:id={storeName} show={true} onFilesAdded={onFileSelect} />
 {/if}

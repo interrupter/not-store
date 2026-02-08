@@ -179,7 +179,7 @@ class notStore {
     }
 
     async removeFiles(ev) {
-        let uuids = ev.detail.selected;
+        let uuids = ev.selected;
         let reqOpts = {
             session: this.options.session,
             store: this.options.store,
@@ -237,8 +237,7 @@ class notStore {
         });
     }
 
-    async onUploads(data) {
-        let files = data.detail;
+    async onUploads(files) {        
         for (let file of files) {
             let preview = await this.preloadFilePreview(file);
             file.id = `fid_` + Math.random();

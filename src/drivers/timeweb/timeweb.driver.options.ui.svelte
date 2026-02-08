@@ -1,6 +1,6 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     import { MODULE_NAME, OPT_ACLs } from "../../const.cjs";
     import { Elements } from "not-bulma";
     import * as DEFAULT_OPTIONS from "./timeweb.driver.options.cjs";
@@ -13,9 +13,12 @@
 
     const UIBox = Elements.Blocks.UIBox;
 
-    export let value = { ...DEFAULT_OPTIONS };
-    export let fieldname = "options";
-    export let readonly = false;
+    let {
+        value = { ...DEFAULT_OPTIONS },
+        fieldname = "options",
+        readonly = false,
+        onchange = () => {},
+    } = $props();
 
     let valueIsValid = false;
 
@@ -38,11 +41,11 @@
         valueIsValid = true;
     };
 
-    const onChange = ({ detail }) => {
+    const onChange = (detail) => {
         initValue();
         value[detail.field] = detail.value;
         value = value;
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -62,7 +65,7 @@
                 })}
                 bind:readonly
                 bind:value={value.ACL}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="ACL"
             />
         </div>
@@ -74,7 +77,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.accessKeyId}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="accessKeyId"
             />
         </div>
@@ -86,7 +89,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.secretAccessKey}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="secretAccessKey"
             />
         </div>
@@ -98,7 +101,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.apiVersion}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="apiVersion"
             />
         </div>
@@ -110,7 +113,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.endpoint}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="endpoint"
             />
         </div>
@@ -122,7 +125,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.region}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="region"
             />
         </div>
@@ -134,7 +137,7 @@
             <UISwitch
                 bind:readonly
                 bind:value={value.s3ForcePathStyle}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="s3ForcePathStyle"
             />
         </div>
@@ -147,7 +150,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.bucket}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="bucket"
             />
         </div>
@@ -159,7 +162,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.path}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="path"
             />
         </div>
@@ -171,7 +174,7 @@
             <UITextfield
                 bind:readonly
                 bind:value={value.tmp}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="tmp"
             />
         </div>
@@ -183,7 +186,7 @@
             <UISwitch
                 bind:readonly
                 bind:value={value.groupFiles}
-                on:change={onChange}
+                onchange={onChange}
                 fieldname="groupFiles"
             />
         </div>

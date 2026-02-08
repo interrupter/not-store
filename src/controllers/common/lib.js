@@ -104,7 +104,7 @@ export default class Common {
             validated: false,
             valid: false,
         };
-        if (Object.prototype.hasOwnProperty.call(this.FIELDS, type)) {
+        if (Object.hasOwn(this.FIELDS, type)) {
             Object.assign(field, this.FIELDS[type]);
         }
         if (mutation) {

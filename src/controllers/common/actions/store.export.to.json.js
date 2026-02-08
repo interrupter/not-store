@@ -52,11 +52,8 @@ class notStoreCRUDActionExportToJSON extends CRUDGenericActionRead {
     static prepareUIOptions(controller, reponse) {
         const actionName = super.getModelActionName(controller);
         return {
-            target: controller.getContainerInnerElement(),
-            props: {
-                value: reponse.result,
-                actionName,
-            },
+            value: reponse.result,
+            actionName,
         };
     }
 
@@ -74,11 +71,10 @@ class notStoreCRUDActionExportToJSON extends CRUDGenericActionRead {
             if (super.isResponseBad(response)) {
                 return controller.showErrorMessage(response);
             }
-            //creating action UI component
-            const uiComponent = this.UIConstructor;
-            super.setUI(
+            //creating action UI component            
+            super.buildUI(
                 controller,
-                new uiComponent(this.prepareUIOptions(controller, response))
+                this.prepareUIOptions(controller, response)
             );
             //bind events to UI
             super.bindUIEvents(controller, params, response);

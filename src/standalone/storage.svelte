@@ -3,24 +3,27 @@
     let inlineList = null;
     let modalList = null;
 
-    import { onMount, createEventDispatcher } from "svelte";
-
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     import { Confirmation } from "./confirm.js";
     import * as FileStores from "./file.stores.js";
     import NotFileItem from "./file.svelte";
 
-    export let files = [];
-    export let selected = [];
-    export let id;
-    export let selectMany;
-    export let popup = false;
-    export let show = false;
-    export let elementSize = 3;
-
-    export let onReject = null;
-    export let onResolve = null;
+    let {
+        files = [],
+        selected = [],
+        id,
+        selectMany,
+        popup = false,
+        show = false,
+        elementSize = 3,
+        onReject = null,
+        onResolve = null,
+        onreject = () => {},
+        onresolve = () => {},
+        onselected = () => {},
+        onremove = () => {},
+    } = $props();
 
     /*
 	function getListContainer() {
@@ -63,7 +66,7 @@
             onReject();
             onReject = null;
         } else {
-            dispatch("reject");
+            onreject();
         }
     }
 
@@ -77,7 +80,7 @@
                 onResolve(images);
                 onResolve = null;
             } else {
-                dispatch("resolve", {
+                onresolve({
                     selected: images,
                 });
             }
@@ -86,7 +89,7 @@
                 onResolve([]);
                 onResolve = null;
             } else {
-                dispatch("resolve", {
+                onresolve({
                     selected: [],
                 });
             }
@@ -101,7 +104,7 @@
         })
             .then(() => {
                 console.log("remove approved");
-                dispatch("remove", {
+                onremove({
                     selected,
                 });
             })
@@ -112,8 +115,8 @@
 
     function removeFile(ev) {
         console.log("removeFile", ev);
-        dispatch("remove", {
-            selected: [ev.detail.uuid],
+        onremove({
+            selected: [ev.uuid],
         });
     }
 </script>
@@ -127,8 +130,8 @@
                     {elementSize}
                     storeId={id}
                     {selectMany}
-                    on:remove={removeFile}
-                    on:selected
+                    onremove={removeFile}
+                    {onselected}
                 />
             {/each}
         </div>
@@ -141,7 +144,7 @@
         <div class="modal-card">
             <header class="modal-card-head">
                 <p class="modal-card-title">Выберите файл</p>
-                <button class="delete" aria-label="close" on:click={closePopup}
+                <button class="delete" aria-label="close" onclick={closePopup}
                 ></button>
             </header>
             <section class="modal-card-body">
@@ -151,20 +154,20 @@
                             bind:data={file}
                             storeId={id}
                             {selectMany}
-                            on:remove={removeFile}
-                            on:selected
+                            onremove={removeFile}
+                            {onselected}
                         />
                     {/each}
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <button class="button is-success" on:click={resolvePopup}
+                <button class="button is-success" onclick={resolvePopup}
                     >Выбрать</button
                 >
-                <button class="button is-danger" on:click={removeSelected}
+                <button class="button is-danger" onclick={removeSelected}
                     >Удалить</button
                 >
-                <button class="button" on:click={rejectPopup}>Закрыть</button>
+                <button class="button" onclick={rejectPopup}>Закрыть</button>
             </footer>
         </div>
     </div>

@@ -1,16 +1,18 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     import FUIProcessorsActionPipelines from "./field.ui.processors.action.pipelines.svelte";
 
     import { COMPONENTS } from "not-bulma/src/frame";
 
-    export let fieldname = "processors";
-    export let value;
-    export let readonly = false;
-
-    export let actions = [];
-    export let processors = [];
+    let {
+        fieldname = "processors",
+        value,
+        readonly = false,
+        actions = [],
+        processors = [],
+        onchange = () => {},
+    } = $props();
 
     onMount(() => {
         checkProcessorsContent();
@@ -33,24 +35,24 @@
         value = value;
     }
 
-    function addProcessor({ detail }) {
+    function addProcessor(detail) {
         const { action, processorName, place } = detail;
     }
 
     function onChange() {
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
     }
 </script>
 
-{#if actions}
+{#if actions && value}
     {#each actions as action}
         <FUIProcessorsActionPipelines
-            on:change={onChange}
-            bind:value={value[action]}
-            bind:readonly
+            onchange={onChange}
+            value={value[action]}
+            readonly
             {action}
             {actions}
             {processors}

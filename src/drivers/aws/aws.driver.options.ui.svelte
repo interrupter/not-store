@@ -6,7 +6,7 @@
 
     const UIBox = Elements.Blocks.UIBox;
 
-    export let value = { ...DEFALT_OPTIONS };
+    let { value = { ...DEFALT_OPTIONS } } = $props();
 </script>
 
 <UIBox>

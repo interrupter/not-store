@@ -1,21 +1,22 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     import NotFileUpload from "./file.upload.svelte";
     import * as FileStores from "./file.stores.js";
 
     let dropzone;
 
-    export let id;
-    export let uploads = [];
-
-    export let show = false;
-    export let short = false;
-
-    export let fieldname = "file";
-    export let accept = "image/*";
-    export let multiple = true;
+    let {
+        id,
+        uploads = [],
+        show = false,
+        short = false,
+        fieldname = "file",
+        accept = "image/*",
+        multiple = true,
+        onresolve = () => {},
+        onFilesAdded = () => {},
+    } = $props();
 
     onMount(() => {
         FileStores.get(id, true).uploads.subscribe((value) => {
@@ -47,7 +48,7 @@
             e.preventDefault();
             e.stopPropagation();
             dropzone.classList.remove("has-background-white");
-            dispatch("filesAdded", e.dataTransfer.files);
+            onFilesAdded(e.dataTransfer.files);
         });
     }
 
@@ -57,11 +58,11 @@
 
     export function resolvePopup() {
         closePopup();
-        dispatch("resolve");
+        resolve();
     }
 
     function onChange(ev) {
-        dispatch("filesAdded", ev.target.files);
+        onFilesAdded(ev.target.files);
     }
 </script>
 
@@ -78,7 +79,7 @@
                     name={fieldname}
                     {accept}
                     {multiple}
-                    on:change={onChange}
+                    onchange={onChange}
                 />
                 Выберите изображения для загрузки
             </form>

@@ -126,7 +126,7 @@
         <div class="file-list columns is-mobile is-multiline">
             {#each files as file, index}
                 <NotFileItem
-                    bind:data={file}
+                    bind:data={files[index]}
                     {elementSize}
                     storeId={id}
                     {selectMany}
@@ -149,9 +149,9 @@
             </header>
             <section class="modal-card-body">
                 <div class="file-list columns is-multiline">
-                    {#each files as file (file.id)}
+                    {#each files as file, index (file.id)}
                         <NotFileItem
-                            bind:data={file}
+                            bind:data={files[index]}
                             storeId={id}
                             {selectMany}
                             onremove={removeFile}

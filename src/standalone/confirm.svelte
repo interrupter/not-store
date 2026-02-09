@@ -13,7 +13,7 @@
         },
     } = $props();
 
-    $: disabled = !approved;
+    let disabled = $derived(!approved);
 
     function disapprove() {
         onreject();

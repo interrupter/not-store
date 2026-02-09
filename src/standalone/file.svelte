@@ -58,7 +58,7 @@
             .catch(() => {});
     }
 
-    $: ifSelected = selected ? "selected" : "";
+    let ifSelected = $derived(selected ? "selected" : "");
 </script>
 
 <div

@@ -58,7 +58,7 @@
 
     export function resolvePopup() {
         closePopup();
-        resolve();
+        onresolve();
     }
 
     function onChange(ev) {

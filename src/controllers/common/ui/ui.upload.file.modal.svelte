@@ -12,6 +12,7 @@
         accept = "image/*",
         multiple = true,
         onresolve = () => {},
+        onreject = () => {},
     } = $props();
 
     const closeButton = {
@@ -46,7 +47,7 @@
 
 <UIModal {show} {closeButton} {title}>
     <UIUpload
-        bind:id={storeName}
+        id={storeName}
         show={true}
         {onFilesAdded}
         short={true}

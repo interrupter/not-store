@@ -93,8 +93,8 @@ class ncFile extends notCRUD {
                             return [
                                 {
                                     title: item.name,
-                                    url: item.info.variantURL.micro,
-                                    urlFull: item.cloud.Location,
+                                    src: item.info.variantURL.micro,
+                                    srcFull: item.cloud.Location,
                                     cors: "anonymous",
                                 },
                             ];

@@ -26,7 +26,7 @@
             });
             value[to] = value[to];
             value = value;
-            onchange();
+            onchange({ action, value: $state.snapshot(value) });
         }
     }
 
@@ -41,12 +41,12 @@
     function onChangePost(detail) {
         value.post = detail.value;
         value = value;
-        onchange();
+        onchange({ action, value: $state.snapshot(value) });
     }
     function onChangePre(detail) {
         value.pre = detail.value;
         value = value;
-        onchange();
+        onchange({ action, value: $state.snapshot(value) });
     }
 </script>
 
@@ -55,7 +55,7 @@
         <UIColumns>
             <UIColumn classes="is-5">
                 <FUIProcessorsPipeline
-                    readonly
+                    {readonly}
                     pipeline={value.pre}
                     title="pre"
                     onadd={addPre}
@@ -70,7 +70,7 @@
             </UIColumn>
             <UIColumn classes="is-5">
                 <FUIProcessorsPipeline
-                    readonly
+                    {readonly}
                     pipeline={value.post}
                     title="post"
                     onadd={addPost}

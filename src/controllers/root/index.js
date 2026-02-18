@@ -35,14 +35,17 @@ let manifest = {
         side: {
             items: [
                 {
+                    id: 'system.resources',
                     section: "system",
                     title: "Ресурсы",
                     items: [
                         {
+                            id: 'system.resources.files',
                             title: "Файлы",
                             href: `/${MODULE_NAME}/file`,
                         },
                         {
+                            id: 'system.resources.stores',
                             title: "Хранилища",
                             href: `/${MODULE_NAME}/store`,
                         },

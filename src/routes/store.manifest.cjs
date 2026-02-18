@@ -151,6 +151,7 @@ module.exports = {
             rules: [
                 {
                     root: true,
+                    return: ['id','title', 'optionsDefault','optionsUI']
                 },
             ],
         },

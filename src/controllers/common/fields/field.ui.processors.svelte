@@ -14,10 +14,6 @@
         onchange = () => {},
     } = $props();
 
-    onMount(() => {
-        checkProcessorsContent();
-    });
-
     function checkProcessorsContent() {
         if (
             typeof value === "undefined" ||
@@ -35,24 +31,30 @@
         value = value;
     }
 
+    onMount(() => {
+        checkProcessorsContent();
+    });
+
     function addProcessor(detail) {
         const { action, processorName, place } = detail;
     }
 
-    function onChange() {
+    function onChange({ action: actionName, value: actionPipelines }) {
+        value[actionName] = actionPipelines;
+        value = value;
         onchange({
             field: fieldname,
-            value,
+            value: $state.snapshot(value),
         });
     }
 </script>
 
-{#if actions && value}
+{#if value}
     {#each actions as action}
         <FUIProcessorsActionPipelines
             onchange={onChange}
             value={value[action]}
-            readonly
+            {readonly}
             {action}
             {actions}
             {processors}

@@ -17,8 +17,8 @@
 <UITextarea bind:value rows={20} disabled={loading} placeholder={""} />
 
 <UIButton
-    action={() => {
-        onimport(value);
+    onclick={() => {
+        onimport($state.snapshot(value));
     }}
     color={"primary"}
     disabled={loading}

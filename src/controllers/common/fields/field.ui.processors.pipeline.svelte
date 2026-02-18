@@ -16,37 +16,36 @@
         processors = [],
         action,
         readonly = false,
+        onadd = () => {},
+        onchange = () => {},
     } = $props();
-
-    function actionAdd() {
-        dispatch("add");
-    }
 
     function moveUp(detail) {
         const index = detail;
         notCommon.moveItem(pipeline, index, index - 1);
         pipeline = pipeline;
-        onchange({ field: fieldname, value: pipeline });
+        onchange({ field: fieldname, value: $state.snapshot(pipeline) });
     }
 
     function moveDown(detail) {
         const index = detail;
         notCommon.moveItem(pipeline, index, index + 1);
         pipeline = pipeline;
-        onchange({ field: fieldname, value: pipeline });
+        onchange({ field: fieldname, value: $state.snapshot(pipeline) });
     }
 
     function onChange(detail) {
         const { index, value } = detail;
         pipeline[index] = value;
         pipeline = pipeline;
-        onchange({ field: fieldname, value: pipeline });
+        console.log("pipeline changed", $state.snapshot(pipeline));
+        onchange({ field: fieldname, value: $state.snapshot(pipeline) });
     }
 
     function removeItem(detail) {
         pipeline.splice(detail, 1);
         pipeline = pipeline;
-        onchange({ field: fieldname, value: pipeline });
+        onchange({ field: fieldname, value: $state.snapshot(pipeline) });
     }
 </script>
 
@@ -54,7 +53,7 @@
     <UITitle {title} {size} />
     {#each pipeline as processor, index (processor.id)}
         <FUIProcessorOptions
-            readonly
+            {readonly}
             value={processor}
             {processors}
             {action}
@@ -66,6 +65,6 @@
         />
     {/each}
     {#if !readonly}
-        <UIButton {icon} action={actionAdd} />
+        <UIButton {icon} action={onadd} />
     {/if}
 </div>

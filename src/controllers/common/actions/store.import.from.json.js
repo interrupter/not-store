@@ -40,7 +40,7 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
     }
 
     static prepareUIOptions(controller) {
-        const actionName = super.getModelActionName(controller);
+        const actionName = this.getModelActionName(controller);
         const events = this.createUIEvents(controller);
         return {
             actionName,
@@ -65,16 +65,16 @@ class notStoreCRUDActionImportFromJSON extends CRUDGenericActionCreate {
             //inform that we are starting
             controller.emit(`before:render:${this.ACTION}`, params);
             //if UI for this action exists exiting
-            if (super.isUIRendered(controller)) {
+            if (this.isUIRendered(controller)) {
                 return;
             }
             //setting initial state of breadcrumbs tail
-            super.presetBreadcrumbs(controller, params);
+            this.presetBreadcrumbs(controller, params);
             //creating action UI component
             const response = {};
-            super.buildUI(
+            this.buildUI(
                 controller,
-                super.prepareUIOptions(controller, response)
+                this.prepareUIOptions(controller, response)
             );
             //inform that we are ready
             controller.emit(`after:render:${this.ACTION}`, params, response);

@@ -18,38 +18,37 @@
     } = $props();
 
     let id = Math.random();
-    let name = "generic";
-    let options = {};
-    let optionsUI;
+    let optionsUI = $state("");
 
     const CLASSES = "is-small";
 
     onMount(() => {
         id = value.id;
-        name = value.name;
-        options = value.options;
-        updateUI(name);
+
+        updateUI();
         console.log(JSON.stringify(processors, null, 4));
     });
 
     function updateUI() {
         const proc = processors.find((item) => {
-            return item.id === name;
+            return item.id === value.name;
         });
         if (proc) {
             if (proc.optionsUI) {
                 optionsUI = proc.optionsUI;
             } else {
                 optionsUI = undefined;
-                options = {};
+                value.options = {};
             }
         }
     }
 
-    function onOptionsChange() {
-        value.options = options;
+    function onOptionsChange(event) {
+        console.log("options changes", event);
+        value.options = event.value;
         value = value;
-        onchange({ index, value });
+        console.log("options changed", $state.snapshot(value));
+        onchange({ index, value: $state.snapshot(value) });
     }
 
     function onProcessorChange(detail) {
@@ -61,10 +60,9 @@
                 optionsUI = proc.optionsUI;
             } else {
                 optionsUI = undefined;
-                options = {};
+                value.options = {};
             }
             value.name = detail.value;
-            value.options = options;
             value = value;
             onchange({ index, value });
         }
@@ -72,29 +70,32 @@
 
     const ACTIONS = [
         {
+            id: 1,
             icon: "angle-up",
             action: () => {
                 console.log("move up", value);
                 onup(index);
             },
-            classes: CLASSES,
+            class: CLASSES,
         },
         {
+            id: 2,
             icon: "angle-down",
             action: () => {
                 console.log("move down", value);
                 ondown(index);
             },
-            classes: CLASSES,
+            class: CLASSES,
         },
         {
+            id: 3,
             icon: "minus",
             action: () => {
                 console.log("remove", index);
                 onremove(index);
             },
             color: "danger",
-            classes: CLASSES,
+            class: CLASSES,
         },
     ];
 </script>
@@ -104,11 +105,11 @@
         <div class="field is-narrow">
             <UISelect
                 variants={processors}
-                bind:readonly
-                bind:value={name}
+                {readonly}
+                value={value.name}
                 onchange={onProcessorChange}
                 fieldname="processor"
-                classes={CLASSES}
+                class={CLASSES}
             />
         </div>
     </UIColumn>
@@ -118,11 +119,12 @@
         </UIColumn>
     {/if}
 </UIColumns>
-{#if optionsUI && COMPONENTS.get(optionsUI)}
+
+{#if optionsUI}
     <svelte:component
         this={COMPONENTS.get(optionsUI)}
-        bind:value={options}
-        bind:readonly
+        value={value.options}
+        {readonly}
         onchange={onOptionsChange}
     />
 {/if}

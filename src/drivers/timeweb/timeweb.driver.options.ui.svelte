@@ -22,10 +22,6 @@
 
     let valueIsValid = false;
 
-    onMount(() => {
-        initValue();
-    });
-
     const valueTypeIsNotOK = () => {
         return (
             typeof value !== "object" ||
@@ -40,6 +36,8 @@
         }
         valueIsValid = true;
     };
+
+    initValue();
 
     const onChange = (detail) => {
         initValue();
@@ -63,8 +61,8 @@
                 variants={OPT_ACLs.map((val) => {
                     return { id: val, title: val };
                 })}
-                bind:readonly
-                bind:value={value.ACL}
+                {readonly}
+                value={value.ACL}
                 onchange={onChange}
                 fieldname="ACL"
             />
@@ -75,8 +73,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_accessKeyId`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.accessKeyId}
+                {readonly}
+                value={value.accessKeyId}
                 onchange={onChange}
                 fieldname="accessKeyId"
             />
@@ -87,8 +85,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_secretAccessKey`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.secretAccessKey}
+                {readonly}
+                value={value.secretAccessKey}
                 onchange={onChange}
                 fieldname="secretAccessKey"
             />
@@ -99,8 +97,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_apiVersion`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.apiVersion}
+                {readonly}
+                value={value.apiVersion}
                 onchange={onChange}
                 fieldname="apiVersion"
             />
@@ -111,8 +109,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_endpoint`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.endpoint}
+                {readonly}
+                value={value.endpoint}
                 onchange={onChange}
                 fieldname="endpoint"
             />
@@ -123,8 +121,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_region`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.region}
+                {readonly}
+                value={value.region}
                 onchange={onChange}
                 fieldname="region"
             />
@@ -135,8 +133,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_s3ForcePathStyle`}
             />
             <UISwitch
-                bind:readonly
-                bind:value={value.s3ForcePathStyle}
+                {readonly}
+                value={value.s3ForcePathStyle}
                 onchange={onChange}
                 fieldname="s3ForcePathStyle"
             />
@@ -148,8 +146,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_bucket`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.bucket}
+                {readonly}
+                value={value.bucket}
                 onchange={onChange}
                 fieldname="bucket"
             />
@@ -160,8 +158,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_path`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.path}
+                {readonly}
+                value={value.path}
                 onchange={onChange}
                 fieldname="path"
             />
@@ -172,8 +170,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_tmp`}
             />
             <UITextfield
-                bind:readonly
-                bind:value={value.tmp}
+                {readonly}
+                value={value.tmp}
                 onchange={onChange}
                 fieldname="tmp"
             />
@@ -184,8 +182,8 @@
                 label={`${MODULE_NAME}:field_store_driver_timeweb_options_groupFiles`}
             />
             <UISwitch
-                bind:readonly
-                bind:value={value.groupFiles}
+                {readonly}
+                value={value.groupFiles}
                 onchange={onChange}
                 fieldname="groupFiles"
             />

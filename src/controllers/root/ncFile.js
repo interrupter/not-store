@@ -92,16 +92,22 @@ class ncFile extends notCRUD {
                         if (item.info.variantURL) {
                             return [
                                 {
+                                    id:1,
                                     title: item.name,
                                     src: item.info.variantURL.micro,
-                                    srcFull: item.cloud.Location,
-                                    cors: "anonymous",
+                                    srcFull: item.cloud.Location,                                    
                                 },
                             ];
                         } else {
                             return [];
                         }
                     },
+                },
+                {
+                    path: ":createdAt",
+                    title: "Создан",         
+                    searchable: true,
+                    sortable: true,           
                 },
                 {
                     path: ":_id",

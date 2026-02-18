@@ -39,6 +39,8 @@
         onchange({ filter: copyFilter, actionName: getActionName() });
     }
 
+    let _stores = $state(stores);
+
     onMount(() => {
         notCommon
             .getApp()
@@ -47,7 +49,7 @@
             .$listAndCount()
             .then((result) => {
                 if (result && result.status === "ok") {
-                    stores.push(
+                    _stores.push(
                         ...result.result.list.map((itm) => {
                             return {
                                 id: itm.name,
@@ -55,7 +57,7 @@
                             };
                         })
                     );
-                    stores = stores;
+                    _stores = _stores;
                 }
                 notCommon.log(result);
             })
@@ -82,7 +84,7 @@
         <UISelect
             placeholder="Все хранилища"
             value={filter.store}
-            variants={stores}
+            variants={_stores}
             onchange={(detail) => {
                 if (detail.value === "__CLEAR__") {
                     filter.store = "";

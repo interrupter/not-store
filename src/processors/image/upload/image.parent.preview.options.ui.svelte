@@ -51,7 +51,7 @@
                 label={`${MODULE_NAME}:field_store_processor_image.parent.preview_options_variant`}
             />
             <UITextfield
-                readonly
+                {readonly}
                 disabled={value.all}
                 value={value.variant}
                 onchange={onChange}
@@ -63,7 +63,7 @@
         <div class="field">
             <UISwitch
                 label="Все"
-                readonly
+                {readonly}
                 value={value.all}
                 onchange={onChange}
                 fieldname="all"

@@ -34,6 +34,25 @@
         });
     };
 
+    function onChangeResizeFit(event) {
+        value.resize.fit = event.value;
+        value = value;
+        onchange({
+            field: fieldname,
+            value,
+        });
+    }
+
+    function onChangeSizesList(event) {
+        value.sizes = event.value;
+        value = value;
+        console.log("options sizes list", value.sizes);
+        onchange({
+            field: fieldname,
+            value,
+        });
+    }
+
     const RESET_OPTIONS_BUTTON = {
         title: "not-store:processors_options_reset_button_label",
         action() {
@@ -53,19 +72,19 @@
                 variants={SHARP_RESIZE_FIT_VARIANTS.map((t) => {
                     return { id: t, title: t };
                 })}
-                bind:readonly
-                bind:value={value.resize.fit}
-                onchange={onChange}
+                {readonly}
+                value={value.resize.fit}
+                onchange={onChangeResizeFit}
                 fieldname="resize.fit"
             />
         {/if}
     </div>
     {#if Object.hasOwn(value, "sizes")}
         <UINamedNumbersList
-            bind:value={value.sizes}
-            bind:readonly
+            value={value.sizes}
+            {readonly}
             label={`${MODULE_NAME}:field_store_processor_image.thumbs.create_options_sizes`}
-            onchange={onChange}
+            onchange={onChangeSizesList}
             fieldname="sizes"
         />
     {/if}

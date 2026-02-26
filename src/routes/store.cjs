@@ -46,6 +46,10 @@ class StoreRoute extends StoreGenericRoute {
     static async _exportToJSON(req, res, next, prepared){        
         return await getLogic().listAll({...prepared});
     }
+
+    static async _listAll(req, res, next, prepared){        
+        return await getLogic().listAll({...prepared});
+    }
 }
 
 module.exports = StoreRoute;

@@ -117,6 +117,20 @@ module.exports = {
                 },
             ],
         },
+        listAll: {
+            data: ["pager", "sorter", "filter", "search"],
+            method: "get",
+            postFix: "/:actionName",
+            rules: [
+                {
+                    root: true,                    
+                },
+                {
+                    auth: true,
+                    role: ["admin", "confirmed"],
+                },
+            ],
+        },
         importFromJSON: {
             data: ["data"],
             method: "PUT",

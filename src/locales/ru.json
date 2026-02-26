@@ -40,5 +40,11 @@
     "action_export_to_json_title": "Экспорт в JSON",
     "action_export_success": "Экспорт завершен успешно",
     "action_import_from_json_title": "Импорт из JSON",
-    "action_import_success": "Импорт завершен успешно"
+    "action_import_success": "Импорт завершен успешно",
+    "transfer_plural": "Переносы",
+    "transfer_single": "Перенос",
+    "action_transfer_title": "Перенос",
+    "field_target_store_label": "В какое хранилище переносим?",
+    "field_new_store_name_label": "Нужно заменить название хранилища?",
+    "field_source_models_label": "Файлы каких моделей переносим?"
 }

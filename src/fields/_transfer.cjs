@@ -1,6 +1,6 @@
 const notNode = require("not-node");
 const Schema = require("mongoose").Schema;
-const { MODULE_NAME } = require("../const.cjs");
+const { MODULE_NAME } = require("not-store/src/const.cjs");
 
 module.exports = {
     model: {
@@ -8,10 +8,10 @@ module.exports = {
         type: Schema.Types.Mixed,
         validate: [
             {
-                message: `${MODULE_NAME}:validation_message_transfer_data_is_not_valid`,
+                message: `${MODULE_NAME}:validation_message_store_data_is_not_valid`,
                 validator(val) {
                     return notNode.Application.getForm(
-                        `${MODULE_NAME}//_transfer`
+                        `${MODULE_NAME}//_store`
                     ).run(val);
                 },
             },

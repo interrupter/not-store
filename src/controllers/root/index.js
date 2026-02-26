@@ -1,5 +1,6 @@
 import ncStore from "./ncStore.js";
 import ncFile from "./ncFile.js";
+import ncTransfer from "./ncTransfer.js";
 
 import FUIFileMetadata from "../common/fields/field.ui.metadata.svelte";
 import FUIStoreOptions from "../common/fields/field.ui.options.svelte";
@@ -29,7 +30,7 @@ const uis = {
 
 let manifest = {
     router: {
-        manifest: [ncStore.getRoutes(), ncFile.getRoutes()],
+        manifest: [ncStore.getRoutes(), ncFile.getRoutes(),ncTransfer.getRoutes()],
     },
     menu: {
         side: {
@@ -48,6 +49,11 @@ let manifest = {
                             id: 'system.resources.stores',
                             title: "Хранилища",
                             href: `/${MODULE_NAME}/store`,
+                        },
+                        {
+                            id: 'system.resources.transfer',
+                            title: "Трансфер",
+                            href: `/${MODULE_NAME}/transfer`,
                         },
                     ],
                 },

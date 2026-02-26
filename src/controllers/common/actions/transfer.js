@@ -1,0 +1,138 @@
+import CRUDGenericAction from "not-bulma/src/frame/crud/actions/generic/action";
+
+import UIStoreTransfer from "./transfer.svelte";
+import { MODULE_NAME } from "./../../../const.cjs";
+import notCommon from "not-bulma/src/frame/common";
+
+const DEFAULT_BREADCRUMB_TAIL = `${MODULE_NAME}:action_transfer_title`;
+
+class notStoreCRUDActionTransfer extends CRUDGenericAction {
+    static get deafultBreadcrumbsTail() {
+        return DEFAULT_BREADCRUMB_TAIL;
+    }
+
+    static get breadcrumbsTails() {
+        return {
+            preset: DEFAULT_BREADCRUMB_TAIL,
+            set: DEFAULT_BREADCRUMB_TAIL,
+        };
+    }
+
+    /**
+     * @static {string} ACTION this controller action name, used in URI
+     */
+    static get ACTION() {
+        return "transfer";
+    }
+
+    static get MODEL_ACTION_GET() {
+        return undefined;
+    }
+
+    static get MODEL_ACTION_PUT() {
+        return "transfer";
+    }
+
+    /**
+     * @static {object} UIConstructor    constructor of UI component
+     */
+    static get UIConstructor() {
+        return UIStoreTransfer;
+    }
+
+    static prepareUIOptions(controller) {
+        const actionName = this.getModelActionName(controller);
+        const events = this.createUIEvents(controller);
+        return {
+            actionName,
+            ...events,
+            variants: controller.getOptions(`variants.${this.ACTION}`, {}),
+        };
+    }
+
+    static actionButton(controller) {
+        return {
+            action() {
+                controller.navigateAction(
+                    undefined,
+                    notStoreCRUDActionTransfer.ACTION
+                );
+            },
+            title: `${MODULE_NAME}:action_transfer_title`,
+        };
+    }
+
+    static async run(controller, params) {
+        try {
+            //inform that we are starting
+            controller.emit(`before:render:${this.ACTION}`, params);
+            //if UI for this action exists exiting
+            if (this.isUIRendered(controller)) {
+                return;
+            }
+            //setting initial state of breadcrumbs tail
+            this.presetBreadcrumbs(controller, params);
+            //creating action UI component
+            const response = {};
+            this.buildUI(
+                controller,
+                this.prepareUIOptions(controller, response)
+            );
+            //inform that we are ready
+            controller.emit(`after:render:${this.ACTION}`, params, response);
+        } catch (e) {
+            //informing about exception
+            controller.emit(`exception:render:${this.ACTION}`, params, e);
+            //reporting exception
+            controller.report(e);
+            //showing error message
+            controller.showErrorMessage(e);
+        }
+    }
+
+    static createUIEvents(controller) {
+        const events = {};
+        if (notCommon.isFunc(controller.goBack)) {
+            events.onreject = () => controller.goBack();
+        }
+        events.onimport = (value) => {
+            notStoreCRUDActionTransfer.transfer(controller, value);
+        };
+        return events;
+    }
+
+    static setUILoading(controller) {
+        super.getUI(controller).set('loading', true);
+    }
+
+    static setUILoaded(controller) {
+        super.getUI(controller).set('loading', false );
+    }
+
+    static setUIError(controller, message) {
+        super.getUI(controller).set( 'error', message );
+    }
+
+    static async transfer(controller, jsonAsText) {
+        try {
+            notStoreCRUDActionTransfer.setUILoading(controller);
+            const actionName = `$${notStoreCRUDActionTransfer.MODEL_ACTION_PUT}`;
+            const model = controller.getModel({ import: jsonAsText });
+            const res = await model[actionName]();
+            if (super.isResponseBad(res)) {
+                controller.showErrorMessage(res);
+            } else {
+                controller.showSuccessMessage(
+                    "",
+                    `${MODULE_NAME}:action_transfer_success`
+                );                
+            }
+        } catch (e) {
+            controller.showErrorMessage(e);
+        } finally {
+            notStoreCRUDActionTransfer.setUILoaded(controller);
+        }
+    }
+}
+
+export default notStoreCRUDActionTransfer;

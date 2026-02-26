@@ -26,5 +26,11 @@
     "field_store_processor_image.thumbs.create_options_saveOriginal": "Save original",
     "field_store_processor_image.thumbs.create_options_resize.fit": "Resize Fit",
     "field_store_processor_image.thumbs.create_options_sizes": "Thumbs sizes",
-    "processors_options_reset_button_label": "Reset"
+    "processors_options_reset_button_label": "Reset",
+    "transfer_plural": "Transfers",
+    "transfer_single": "Transfer",
+    "action_transfer_title": "Transfer",
+    "field_target_store_label": "Target store",
+    "field_new_store_name_label": "New store label for files (if needed)",
+    "field_source_models_label": "Models, files of which should be transfered"
 }

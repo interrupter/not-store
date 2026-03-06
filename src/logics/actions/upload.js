@@ -230,10 +230,20 @@ module.exports = class UploadAction {
             identity
         );
 
-        logic.logDebugAction("uploadFile", storeBucket.name, documentData);
+        //logic.logDebugAction("uploadFile", storeBucket.name, documentData);
 
-        logic.logDebugAction(documentData);
-        const document = await logic.getModel().add(documentData);
+        //logic.logDebugAction(documentData);
+        if(!Object.hasOwn(documentData,'cloud')){
+            console.error(documentData);
+        }
+        let document;
+        try{
+           document  = await logic.getModel().add(documentData);
+        }catch(e){
+            console.log(e, documentData);
+            throw e;
+        }
+        
 
         if (this.anyChildrenToUpload(uploadResult)) {
             await this.uploadChildren(
@@ -271,8 +281,10 @@ module.exports = class UploadAction {
                     [OPT_INFO_PARENT]: parent._id,
                     [OPT_INFO_PREVIEW]: itm[OPT_INFO_PREVIEW],
                     [OPT_INFO_VARIANT]: variant,
+                    'prepared': itm
                 },
                 name: parent.name,
+                format: itm.format,                
             };
         });
         let results = await this.uploadSet(
@@ -288,6 +300,7 @@ module.exports = class UploadAction {
         );
         if (this.countErrors(results)) {
             if (!logic.config.get("keepPartiallySuccessful")) {
+                console.error('Partialy successfull upload, remove data', this.countErrors(results), results.filter(res=>res.status==='rejected'));
                 await this.removeFiles(
                     {
                         children: results,

@@ -104,7 +104,7 @@ describe("notStoreDriverTimeweb", () => {
             expect(typeof fileParams.Key).to.be.equal("string");
             expect(fileParams.Body).to.be.instanceOf(ReadableStream);
             //
-            expect(fileParams.Key).to.be.equal("test/alps_1.jpg");
+            expect(fileParams.Key).to.be.equal("alps_1.jpg");
         });
 
         it("file is not exists", (done) => {
@@ -138,8 +138,8 @@ describe("notStoreDriverTimeweb", () => {
                 "ETag",
                 "Location",
                 "Local",
-                "key",
                 "Key",
+                "key",
                 "Bucket",
             ]);
         });

@@ -26,14 +26,25 @@
         onchange = () => {},
     } = $props();
 
-    const onChange = (detail) => {
-        notPath.set(`:${detail.field}`, value, {}, detail.value);
+    function onChangeVariant(event) {
+        value.variant = event.value;
         value = value;
+        console.log("options variant", value.variant);
         onchange({
             field: fieldname,
             value,
         });
-    };
+    }
+
+    function onChangeAll(event) {
+        value.all = event.value;
+        value = value;
+        console.log("options all", value.all);
+        onchange({
+            field: fieldname,
+            value,
+        });
+    }
 
     const RESET_OPTIONS_BUTTON = {
         title: "not-store:processors_options_reset_button_label",
@@ -54,7 +65,7 @@
                 {readonly}
                 disabled={value.all}
                 value={value.variant}
-                onchange={onChange}
+                onchange={onChangeVariant}
                 fieldname="variant"
             />
         </div>
@@ -65,7 +76,7 @@
                 label="Все"
                 {readonly}
                 value={value.all}
-                onchange={onChange}
+                onchange={onChangeAll}
                 fieldname="all"
             />
         </div>

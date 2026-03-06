@@ -4,6 +4,7 @@ const {
 } = require("./exceptions.cjs");
 //class to load configs from somewhere
 const DEFAULT_CONFIG_READER = require("./config.readers/not-store.reader.cjs");
+const DEFAULT_MODULE_CONFIG_READER = require("./config.readers/not-config.reader.cjs");
 //drivers of storage medium
 const DEFAULT_DRIVERS = require("./drivers/index.cjs");
 //file pre/post processors
@@ -49,7 +50,8 @@ class notStore {
             return new this.#drivers[storeConfig.driver](
                 storeConfig.options,
                 storeConfig.processors,
-                storeName
+                storeName,
+                DEFAULT_MODULE_CONFIG_READER
             );
         }
         throw new notStoreExceptionDriverIsNotExists(storeConfig.driver);
@@ -57,3 +59,4 @@ class notStore {
 }
 
 module.exports = notStore;
+

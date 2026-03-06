@@ -20,6 +20,7 @@ class notStoreConfigReaderNotStoreMongoDB extends notStoreConfigReader {
             let config = await Store.makeQuery("findOne", {
                 name: storeName,
             }).exec();
+            
             if (config) {
                 if (!config.active) {
                     throw new notStoreExceptionStoreIsNotActive(

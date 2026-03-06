@@ -7,7 +7,7 @@ module.exports = [
     },
     {
         validator(val) {
-            return ['Location', 'Key', 'key', 'ETag', 'Bucket'].every(key=>Object.hasOwn(val, key));
+            return ['Location', 'Key', 'ETag', 'Bucket'].every(key=>Object.hasOwn(val, key));
         },
         message: "not-store:cloud_is_missing_property",
     },

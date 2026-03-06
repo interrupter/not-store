@@ -74,6 +74,9 @@ class notStoreProcessorImageExtractMetadata extends notStoreProcessor {
                     Object.assign(file.info, {
                         metadata: { ...sharpMetadata },
                     });
+                    if(!Object.hasOwn(file, 'format') && Object.hasOwn(sharpMetadata, 'format')){
+                        file.format = sharpMetadata.format;
+                    }
                     resolve(file.info);
                 }
             });

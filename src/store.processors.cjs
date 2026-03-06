@@ -84,10 +84,10 @@ class notStoreProcessors {
         try {
             if (Array.isArray(list)) {
                 for (let item of list) {
-                    Log && Log.debug("store processor:", item);
+                    //Log && Log.debug("store processor:", item);
                     const [processor, options] =
                         this.getProcessorAndOptions(item);
-                    Log && Log.debug(options);
+                    //Log && Log.debug(options);
                     await processor.run(file, options, driver);
                 }
             }

@@ -53,6 +53,16 @@
         });
     }
 
+    function onChangeFormat(event) {
+        value.format = event.value;
+        value = value;
+        console.log("options format", value.format);
+        onchange({
+            field: fieldname,
+            value,
+        });
+    }
+
     const RESET_OPTIONS_BUTTON = {
         title: "not-store:processors_options_reset_button_label",
         action() {
@@ -88,5 +98,18 @@
             fieldname="sizes"
         />
     {/if}
-    <div class="field"><UIButton {...RESET_OPTIONS_BUTTON} /></div>
+    {#if Object.hasOwn(value, "format")}
+        <UILabel
+            id="form-field-textfield-resize-format"
+            label={`${MODULE_NAME}:field_store_processor_image.thumbs.create_options_format`}
+        />
+        <UITextfield
+            {readonly}
+            value={value.format}
+            onchange={onChangeFormat}
+            placeholder={`${MODULE_NAME}:field_store_processor_image.thumbs.create_options_format_placeholder`}
+            fieldname="format"
+        />
+    {/if}
+    <div class="field mt-3"><UIButton {...RESET_OPTIONS_BUTTON} /></div>
 </UIBox>

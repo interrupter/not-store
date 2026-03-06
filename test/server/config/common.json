@@ -44,6 +44,7 @@
     "defaultUserRole": "user",
     "modules": {
         "store": {
+            "globalPath": "global_prefix/",
             "sessionRequired": true,
             "configReader": "not-config",
             "guestStoreName": "test_store_guest",

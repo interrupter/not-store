@@ -306,22 +306,28 @@ describe("Proto/notStoreDriverFilenameResolver", function () {
                     variant: {
                         size: 10,
                     },
+                    format: undefined,
                     local: `/some/dir/${uuid}${DEFAULT_FILENAME_SPLIT}small.jpg`,
                     filename: `${uuid}${DEFAULT_FILENAME_SPLIT}small.jpg`,
+                    fullFilenameInStore: `${uuid}${DEFAULT_FILENAME_SPLIT}small.jpg`,
                 },
                 normal: {
                     variant: {
                         size: 40,
                     },
+                    format: undefined,
                     local: `/some/dir/${uuid}${DEFAULT_FILENAME_SPLIT}normal.jpg`,
                     filename: `${uuid}${DEFAULT_FILENAME_SPLIT}normal.jpg`,
+                    fullFilenameInStore: `${uuid}${DEFAULT_FILENAME_SPLIT}normal.jpg`,
                 },
                 big: {
                     variant: {
                         size: 80,
                     },
+                    format: undefined,
                     local: `/some/dir/${uuid}${DEFAULT_FILENAME_SPLIT}big.jpg`,
                     filename: `${uuid}${DEFAULT_FILENAME_SPLIT}big.jpg`,
+                    fullFilenameInStore: `${uuid}${DEFAULT_FILENAME_SPLIT}big.jpg`,
                 },
             });
         });
@@ -337,21 +343,27 @@ describe("Proto/notStoreDriverFilenameResolver", function () {
                     variant: {
                         size: 10,
                     },
+                    format: "png",
                     local: `/some/dir/${uuid}${DEFAULT_FILENAME_SPLIT}small.png`,
                     filename: `${uuid}${DEFAULT_FILENAME_SPLIT}small.png`,
+                    fullFilenameInStore: `${uuid}${DEFAULT_FILENAME_SPLIT}small.png`,
                 },
                 normal: {
                     variant: {
                         size: 40,
                     },
+                    format: "png",
                     local: `/some/dir/${uuid}${DEFAULT_FILENAME_SPLIT}normal.png`,
+                    fullFilenameInStore: `${uuid}${DEFAULT_FILENAME_SPLIT}normal.png`,
                     filename: `${uuid}${DEFAULT_FILENAME_SPLIT}normal.png`,
                 },
                 big: {
                     variant: {
                         size: 80,
                     },
+                    format: "png",
                     local: `/some/dir/${uuid}${DEFAULT_FILENAME_SPLIT}big.png`,
+                    fullFilenameInStore: `${uuid}${DEFAULT_FILENAME_SPLIT}big.png`,
                     filename: `${uuid}${DEFAULT_FILENAME_SPLIT}big.png`,
                 },
             });

@@ -35,7 +35,7 @@ class notStoreProcessorImageParentPreview extends notStoreProcessor {
      * @returns {Promise<undefined>}
      * @memberof notStoreProcessorImageUpload
      */
-    static async run(file, options) {
+    static async run(file, options = {}) {
         if (file.parent && (options.all || file.variant === options.variant)) {
             await getApp()
                 .getModel("File")

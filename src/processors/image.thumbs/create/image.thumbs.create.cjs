@@ -22,14 +22,16 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
         };
     }
 
-    static makeThumb(src, dest, size, options) {
+    static makeThumb(src, dest, size, options = {}) {
         let image = sharp(src, {
             failOnError: false,
         });
         //console.log(src, resolve(dest), size);
-        return image
-            .resize(size, size, (options && options?.resize) || {})
-            .toFile(dest); //.catch((e)=>{ console.error(dest,e);});
+        image.resize(size, size, (options && options?.resize) || {});
+        if (options && options.format) {
+            image.toFormat(options.format);
+        }
+        return image.toFile(dest); //.catch((e)=>{ console.error(dest,e);});
     }
 
     static async makeThumbs(src, thumbs, options) {
@@ -51,15 +53,20 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
         if (file.parent) {
             return;
         }
+        const format = options.format || file?.format;
         const thumbs = driver.composeVariantsPaths(
             file.path,
             options.sizes,
-            options.format
+            format,
+            {
+                groupFiles: driver.getOptionValueCheckENV("groupFiles"),
+                path: driver.getOptionValueCheckENV("path"),
+            }
         );
         if (options.preview && notCommon.objHas(thumbs, options.preview)) {
             thumbs[options.preview][OPT_INFO_PREVIEW] = true;
         }
-        await this.makeThumbs(file.path, thumbs, options);
+        await this.makeThumbs(file.path, thumbs, { ...options, format });
         file.info[OPT_INFO_CHILDREN] = thumbs;
     }
 }

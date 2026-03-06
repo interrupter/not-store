@@ -25,7 +25,7 @@ describe("notStoreProcessorImageThumbsCreate", () => {
     describe("getOptions", () => {
         it("props: sizes, resize", () => {
             const opts = notStoreProcessorImageThumbsCreate.getOptions();
-            expect(opts).to.have.all.keys(["sizes", "resize"]);
+            expect(opts).to.have.all.keys(["sizes", "resize", "format"]);
         });
     });
 

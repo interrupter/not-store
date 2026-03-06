@@ -2,6 +2,7 @@
 
 const notStoreProcessor = require("../../../proto/processor.cjs");
 const { OPT_INFO_CHILDREN } = require("../../../const.cjs");
+
 /**
  *
  *
@@ -55,7 +56,8 @@ class notStoreProcessorImageThumbsUpload extends notStoreProcessor {
         );
         if (filenames.length) {
             const cloudNames = await driver.directUploadManyTransformed(
-                filenames
+                filenames,
+                //path.join(driver.getModuleOptionValueCheckENV('globalPath'))
             );
             this.updateFileInfo(file.info, cloudNames);
         }

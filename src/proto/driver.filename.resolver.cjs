@@ -181,13 +181,18 @@ class notStoreDriverFilenameResolver {
      * @param {string} format 	file extension
      * @returns {object}
      */
-    static composeVariantsPaths(src, variants, format = undefined) {
+    static composeVariantsPaths(src, variants, format = undefined, options = undefined) {
         let srcParts = path.parse(src),
             result = {};
         if (format) {
             srcParts.ext = `.${format}`;
         }
         Object.keys(variants).forEach((variantShortName) => {
+            const filename = notStoreDriverFilenameResolver.composeVariantFilename(
+                srcParts,
+                variantShortName,
+                variants[variantShortName]
+            );
             result[variantShortName] = {
                 variant: variants[variantShortName],
                 local: notStoreDriverFilenameResolver.composeVariantPath(
@@ -195,11 +200,14 @@ class notStoreDriverFilenameResolver {
                     variantShortName,
                     variants[variantShortName]
                 ),
-                filename: notStoreDriverFilenameResolver.composeVariantFilename(
-                    srcParts,
-                    variantShortName,
-                    variants[variantShortName]
+                filename,
+                fullFilenameInStore: this.composeFullFilename(
+                    filename, //<-inludes ext
+                    undefined,
+                    undefined, //<-- another ext not needed
+                    options
                 ),
+                format
             };
         });
         return result;

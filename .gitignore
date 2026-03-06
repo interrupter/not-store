@@ -38,3 +38,4 @@ jspm_packages
 cypress/video
 cypress/screenshots
 test/browser/files
+test/tmp

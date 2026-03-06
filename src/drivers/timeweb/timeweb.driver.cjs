@@ -56,7 +56,7 @@ const notStoreDriver = require("../../proto/driver.cjs");
  */
 class notStoreDriverTimeweb extends notStoreDriver {
     #s3;
-    #name;
+    #name;    
     /**
      * options object
      * properties values starting with `ENV$` will be processed as request to retrieve process.ENV[part_of_value_past_ENV$]
@@ -86,9 +86,9 @@ class notStoreDriverTimeweb extends notStoreDriver {
      * @param {string} storeName		             name of this driver store
      * @memberof notStoreDriverTimeweb
      */
-    constructor(options, processors, storeName) {
-        super(options, processors);
-        this.#name = storeName;
+    constructor(options, processors, storeName, moduleConfigReader) {
+        super(options, processors, moduleConfigReader);
+        this.#name = storeName;        
         this.#initS3Client();
     }
 
@@ -180,7 +180,18 @@ class notStoreDriverTimeweb extends notStoreDriver {
         try {
             //saving input data to local temp file
             Log.debug("start stash");
-            const { name_tmp, uuid } = await this.stashFile(file);
+            let fileIds, fullFileName;
+            if(fileInfo.prepared ){
+                fileIds = {
+                    uuid: this.uuid(),
+                    name_tmp: fileInfo.prepared.local
+                };
+                fullFileName = fileInfo.prepared.fullFilenameInStore;
+            }else{
+                fileIds = await this.stashFile(file);
+                fullFileName = this.composeFullFilename(fileIds.uuid, undefined, fileInfo.format);
+            }
+            const { name_tmp, uuid } = fileIds;            
             tmpFilename = name_tmp;
             //fill file info
             fileInfo.uuid = uuid;
@@ -198,7 +209,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
             );
             const result = await this.directUpload(
                 name_tmp,
-                this.composeFullFilename(uuid)
+                fullFileName
             );
             fileInfo.cloud = partCopyObjExcept(result, ["name_tmp"]);
             await this.processors.runPost(
@@ -212,11 +223,12 @@ class notStoreDriverTimeweb extends notStoreDriver {
                 },
                 this
             );
-            //
-            Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);
+            //Log.debug("done", [name_tmp, JSON.stringify(fileInfo, null, 4)]);
+            Log.debug("done", fullFileName);
             return fileInfo;
         } catch (e) {
             let err = e;
+            console.error(e);
             //if error is our specialized version - reporting
             if (!(err instanceof notError)) {
                 //extending to notError compatible

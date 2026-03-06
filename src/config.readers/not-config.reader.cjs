@@ -7,6 +7,10 @@ class notStoreConfigReaderNotConfig extends notStoreConfigReader {
     static async for(storeName) {
         return config.get(`stores.${storeName}`);
     }
+
+    static get(pathToOption = ''){
+        return config.get(pathToOption);
+    }
 }
 
 module.exports = notStoreConfigReaderNotConfig;

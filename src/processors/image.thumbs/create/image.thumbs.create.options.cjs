@@ -10,4 +10,5 @@ module.exports = {
     resize: {
         fit: "outside",
     },
+    format: ''
 };

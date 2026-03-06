@@ -364,6 +364,8 @@ describe("Proto/Driver", function () {
                 "variant",
                 "local",
                 "filename",
+                "format",
+                "fullFilenameInStore",
             ]);
             expect(result.small.variant).to.be.deep.equal({ variant: true });
             expect(result.small.local).to.be.equal("/some/path/file-small.ext");
@@ -390,6 +392,8 @@ describe("Proto/Driver", function () {
                 "variant",
                 "local",
                 "filename",
+                "format",
+                "fullFilenameInStore",
             ]);
             expect(result.small.variant).to.be.deep.equal({ variant: true });
             expect(result.small.local).to.be.equal("/some/path/file-small.png");

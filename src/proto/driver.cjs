@@ -36,10 +36,12 @@ class notStoreDriver {
 
     #options;
     #processors;
+    #moduleConfigReader;
 
-    constructor(options = {}, processors = {}) {
+    constructor(options = {}, processors = {}, moduleConfigReader = null) {
         this.#options = options;
         this.#processors = new notStoreDriver.processorsManager(processors);
+        this.#moduleConfigReader = moduleConfigReader;
     }
 
     /**
@@ -79,6 +81,22 @@ class notStoreDriver {
      */
     get processors() {
         return this.#processors;
+    }
+
+    /**
+     * Gets value of option of `name`, than checks if its `value` is in special format,
+     * which is mean that we should check process.ENV[value] for real value that we need
+     * @param {string} name 	name of options property
+     * @returns {any}	value from options or process.ENV
+     * @memberof notStoreDriver
+     */
+    getModuleOptionValueCheckENV(name) {
+        const moduleConfig = Object.freeze(this.#moduleConfigReader ? this.#moduleConfigReader.get(): {});
+        return notNode.Common.getValueFromEnv(
+            moduleConfig,
+            name,
+            OPT_ENV_CHECKS
+        );
     }
 
     /**
@@ -163,7 +181,7 @@ class notStoreDriver {
      */
     resolvePath(pathInStore) {
         return notStoreDriver.filenameResolver.resolvePath(pathInStore, {
-            path: this.getOptionValueCheckENV("path"),
+            path: this.getModuleOptionValueCheckENV("globalPath"),
         });
     }
 
@@ -234,11 +252,12 @@ class notStoreDriver {
      * @returns     {object}
      * @memberof    notStoreDriver
      */
-    composeVariantsPaths(src, variants, format = undefined) {
+    composeVariantsPaths(src, variants, format = undefined, options = {}) {
         return notStoreDriver.filenameResolver.composeVariantsPaths(
             src,
             variants,
-            format
+            format,
+            options
         );
     }
 

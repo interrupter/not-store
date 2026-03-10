@@ -45,6 +45,10 @@ class FileRoute extends FileGenericRoute {
     static async _listAndCountOriginal(req, res, next, prepared) {
         return await getLogic(prepared).listAndCountOriginal(prepared);
     }
+
+    static async _deleteMany(req, res, next, prepared){
+        return await getLogic(prepared).deleteMany(prepared);
+    }
 }
 
 module.exports = FileRoute;

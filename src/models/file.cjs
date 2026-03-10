@@ -29,7 +29,7 @@ const FIELDS = [
     //size of file in bytes
     "size",
     //owner
-    ["userIp", {}, "ip"],
+    ["userIp", {required:false}, "ip"],
     [DOCUMENT_OWNER_FIELD_NAME, "not-node//owner"],
     "not-node//ownerModel",
     ["session", { required: !!config.get("sessionRequired") }],
@@ -65,22 +65,32 @@ exports.thisStatics = {
                 });
         }
     },
-    //
-    async closeOneAndRemoveFile(rec, childrenToo = false) {
-        try {
+
+    async removeFileFromStorage(rec){
+        try{
             const storage = await store.get(rec.store);
-            if (!storage) {
+            if (!storage){
                 return false;
-            }
-            //removing file
-            const plainObj = rec.toObject();
-            const result = await storage.delete(plainObj);
+            }                   
+            //removing file                
+            const result = await storage.delete(rec);
             if (result instanceof Error) {
                 throw result;
-            }
-            const [, info] = result;
+            }            
             //updating document as closed
-            await rec.close({ info });
+            return result[1];
+        }catch(e){
+            log.error(e);
+            return {};
+        }        
+    },
+    //
+    async closeOneAndRemoveFile(rec, childrenToo = false, force = false) {                
+        try {
+            const plainObj = rec.toObject(); 
+            const info = await this.removeFileFromStorage(plainObj);
+            //updating document as closed
+            await rec.close({ info, cloud: undefined}, {validateBeforeSave: false});            
             //removing children elements
             if (childrenToo) {
                 const children = await this.listAll({
@@ -90,7 +100,7 @@ exports.thisStatics = {
                 if (children && children.length) {
                     await Promise.all(
                         children.map((child) =>
-                            this.closeOneAndRemoveFile(child, childrenToo)
+                            this.closeOneAndRemoveFile(child, childrenToo, force)
                         )
                     );
                 }
@@ -118,6 +128,21 @@ exports.thisStatics = {
             log.error(e);
         }
     },
+    async deleteMany(ids, filter = {}, childrenToo = true) {
+        try {
+            const list = await this.listAll({
+                _id:{ $in: ids },
+                ...filter,
+            });
+            return await Promise.all(
+                list.map((file) =>
+                    this.closeOneAndRemoveFile(file, childrenToo)
+                )
+            );
+        } catch (e) {
+            log.error(e);
+        }
+    },
     //
     async deleteAllOriginalInStore(
         storeName,
@@ -134,7 +159,7 @@ exports.thisStatics = {
                 childrenToo
             );
         } catch (e) {
-            log.error(e);
+            log.error(e);            
         }
     },
     //

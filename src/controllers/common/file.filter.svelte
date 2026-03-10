@@ -95,13 +95,31 @@
         />
     </UIColumn>
     <UIColumn>
-        <UISwitch label="Оригиналы" value={onlyOriginal} />
+        <UISwitch
+            label="Оригиналы"
+            value={onlyOriginal}
+            onchange={(ev) => {
+                onlyOriginal = ev.value;
+            }}
+        />
     </UIColumn>
     <UIColumn>
-        <UITextfield placeholder="Название" value={filter.name} />
+        <UITextfield
+            placeholder="Название"
+            value={filter.name}
+            onchange={(ev) => {
+                filter.name = ev.value;
+            }}
+        />
     </UIColumn>
     <UIColumn>
-        <UITextfield placeholder="Тип" value={filter.extension} />
+        <UITextfield
+            placeholder="Тип"
+            value={filter.extension}
+            onchange={(ev) => {
+                filter.extension = ev.value;
+            }}
+        />
     </UIColumn>
     <UIColumn>
         <UIButton action={setFilter} title="Применить" color="primary" />

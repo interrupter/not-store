@@ -186,10 +186,10 @@ class notStoreDriverTimeweb extends notStoreDriver {
                     uuid: this.uuid(),
                     name_tmp: fileInfo.prepared.local
                 };
-                
+                fullFileName = fileInfo.prepared.fullFilenameInStore;
             }else{
                 fileIds = await this.stashFile(file);
-                
+                fullFileName = this.composeFullFilename(fileIds.uuid, undefined, fileInfo.format);
             }
             const { name_tmp, uuid } = fileIds;            
             tmpFilename = name_tmp;
@@ -207,11 +207,6 @@ class notStoreDriverTimeweb extends notStoreDriver {
                 },
                 this
             );
-            if(fileInfo.prepared ){
-                fullFileName = fileInfo.prepared.fullFilenameInStore;
-            }else{
-                fullFileName = this.composeFullFilename(fileIds.uuid, undefined, fileInfo.format || fileInfo?.metadata?.format);
-            }
             const result = await this.directUpload(
                 name_tmp,
                 fullFileName
@@ -363,7 +358,7 @@ class notStoreDriverTimeweb extends notStoreDriver {
      */
     async directDelete(file, inStorePath = true) {
         try {
-            if (typeof file !== "object") {
+            if (typeof file !== "object" || typeof file.cloud !== 'object' || !file.cloud.Key) {
                 throw new TypeError(
                     `Argument "file" should be an object, provided ${typeof file}`
                 );

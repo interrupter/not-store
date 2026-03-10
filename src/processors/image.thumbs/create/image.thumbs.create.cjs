@@ -27,9 +27,8 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
             failOnError: false,
         });
         //console.log(src, resolve(dest), size);
-         image
-            .resize(size, size, (options && options?.resize) || {});
-        if(options && options.format){
+        image.resize(size, size, (options && options?.resize) || {});
+        if (options && options.format) {
             image.toFormat(options.format);
         }
         return image.toFile(dest); //.catch((e)=>{ console.error(dest,e);});
@@ -62,12 +61,12 @@ class notStoreProcessorImageThumbsCreate extends notStoreProcessor {
             {
                 groupFiles: driver.getOptionValueCheckENV("groupFiles"),
                 path: driver.getOptionValueCheckENV("path"),
-            }            
+            }
         );
         if (options.preview && notCommon.objHas(thumbs, options.preview)) {
             thumbs[options.preview][OPT_INFO_PREVIEW] = true;
         }
-        await this.makeThumbs(file.path, thumbs, {...options, format});
+        await this.makeThumbs(file.path, thumbs, { ...options, format });
         file.info[OPT_INFO_CHILDREN] = thumbs;
     }
 }

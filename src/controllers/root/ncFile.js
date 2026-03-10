@@ -42,6 +42,45 @@ class ncFile extends notCRUD {
                 combined: true,
                 combinedAction: "listAndCount",
             },
+            showTotals: true,
+            actions: [
+                {
+                    title: 'Снять выбор',                    
+                    action: ()=>{
+                        console.log('Clear selection');
+                        this.getUI('list').selectNone();
+                        const selItems = this.getUI('list').getSelected();
+                        console.log(selItems.length, selItems);
+                    }
+                },
+                {
+                    title: 'Выбрать все на странице',
+                    color: 'warning',
+                    action: ()=>{
+                        console.log('Select whole page');
+                        this.getUI('list').selectAll();
+                        const selItems = this.getUI('list').getSelected();
+                        console.log(selItems.length, selItems);
+                    }
+                },
+                {
+                    title: 'Удалить выбранные',
+                    color: 'danger',
+                    action: async()=>{
+                        try{
+                            console.log('Remove selected');
+                            const selItems = this.getUI('list').getSelected();
+                            console.log(selItems.length, selItems);
+                            if (confirm("Удалить все выбранные документы?")) {                                
+                                await this.getModel({_ids:selItems}).$deleteMany();
+                                this.getUI('list').refresh();
+                            }
+                        }catch(e){
+                            this.error(e);
+                        }
+                    }
+                }
+            ],
             pager: {
                 size: 100,
                 page: 0,

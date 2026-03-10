@@ -50,6 +50,7 @@ const FileLogic = GenericLogic({
         listAndCountOriginal: FileListAndCountOriginalAction,
         listAndCountOriginalOwn: FileListAndCountOriginalAction,
         upload: require("./actions/upload"),
+        deleteMany: require("./actions/deleteMany"),
     },
     actionsSets: [], //reset to empty standart set
     populateBuilders: {

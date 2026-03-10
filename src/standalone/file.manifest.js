@@ -30,8 +30,17 @@ module.exports = {
                 },
                 {
                     auth: false,
-                },
+                }
             ],
+        },
+        deleteMany: {
+            method: "DELETE",           
+            postFix: "/:actionName",
+            rules: [
+                {
+                    root: true
+                }
+            ]
         },
         delete: {
             method: "DELETE",
@@ -47,7 +56,7 @@ module.exports = {
                     auth: false,
                 },
             ],
-        },
+        },        
         listAndCountOriginal: {
             data: ["pager", "sorter", "filter", "search"],
             fields: safeFields,

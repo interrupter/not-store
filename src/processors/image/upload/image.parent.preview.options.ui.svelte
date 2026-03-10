@@ -82,5 +82,5 @@
         </div>
     {/if}
 
-    <div class="field mt-4"><UIButton {...RESET_OPTIONS_BUTTON} /></div>
+    <div class="field"><UIButton {...RESET_OPTIONS_BUTTON} /></div>
 </UIBox>

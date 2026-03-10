@@ -8,7 +8,6 @@
 
     let {
         id,
-        uploads = [],
         show = false,
         short = false,
         fieldname = "file",
@@ -16,12 +15,12 @@
         multiple = true,
         onresolve = () => {},
         onFilesAdded = () => {},
+        files = [],
+        selected = [],
+        uploads = [],
     } = $props();
 
     onMount(() => {
-        FileStores.get(id, true).uploads.subscribe((value) => {
-            uploads = value;
-        });
         if (dropzone) {
             initDropzone();
         }
@@ -90,12 +89,14 @@
             <h2 class="subtitle">Нет загружаемых файлов</h2>
         </div>
     {:else}
-        <div class="previews {short ? 'short' : 'long'}">
-            {#if uploads.length > 0}
-                {#each uploads as upload}
-                    <NotFileUpload data={upload} />
-                {/each}
-            {/if}
+        <div class="fixed-grid has-6-cols">
+            <div class="grid">
+                {#if uploads.length > 0}
+                    {#each uploads as upload}
+                        <NotFileUpload data={upload} />
+                    {/each}
+                {/if}
+            </div>
         </div>
     {/if}
 {/if}

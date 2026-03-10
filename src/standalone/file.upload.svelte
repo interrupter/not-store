@@ -9,7 +9,7 @@
     } = $props();
 </script>
 
-<div class="tile file is-3 is-child" data-id={data.id}>
+<div class="cell" data-id={data.id}>
     {#if !uploaded}
         <progress class="progress is-link"></progress>
     {/if}
@@ -19,28 +19,3 @@
         </figure>
     {/if}
 </div>
-
-<style>
-    .file {
-        float: left;
-        margin: 1em;
-        padding: 0.5em;
-    }
-
-    figure.image {
-        overflow: hidden;
-    }
-
-    figure.image img {
-        opacity: 1;
-        display: block;
-        width: 100%;
-        object-fit: cover;
-        transition: 0.5s ease;
-        backface-visibility: hidden;
-    }
-
-    .image:hover img {
-        opacity: 0.3;
-    }
-</style>

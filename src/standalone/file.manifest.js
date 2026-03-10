@@ -20,16 +20,19 @@ module.exports = {
         create: {
             data: ["data"],
             method: "PUT",
-            postFix: "/{:store}",
+            postFix: "/:record[store]",
             rules: [
                 {
                     root: true,
+                    returnRoot: "file"
                 },
                 {
                     auth: true,
+                    returnRoot: "file"
                 },
                 {
                     auth: false,
+                    returnRoot: "file"
                 }
             ],
         },

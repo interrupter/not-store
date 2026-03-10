@@ -29,10 +29,10 @@ const FIELDS = [
     //size of file in bytes
     "size",
     //owner
-    ["userIp", {required:false}, "ip"],
+    ["userIp", {required:false, searchable: false}, "ip"],
     [DOCUMENT_OWNER_FIELD_NAME, "not-node//owner"],
     "not-node//ownerModel",
-    ["session", { required: !!config.get("sessionRequired") }],
+    ["session", { required: !!config.get("sessionRequired"), searchable: false }],
     //dates
     "createdAt",
     "updatedAt",
@@ -60,7 +60,7 @@ exports.thisStatics = {
         switch (name) {
             case "original":
                 return Object.freeze({
-                    parent: { $exists: false },
+                    parent: null,
                     variant: { $exists: false },
                 });
         }

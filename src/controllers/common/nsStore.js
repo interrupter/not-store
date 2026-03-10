@@ -1,8 +1,7 @@
-import * as FileStores from "../../standalone/file.stores";
 import { getExtension } from "../../mimes";
 import { notCommon } from "not-bulma";
 
-const PREVIEW_SIZE = 48;
+const PREVIEW_SIZE = 256;
 const ICON_TYPE_FOLDER = "/img/file.type/";
 const getFileTypeIconUrl = (ext) =>
     `${ICON_TYPE_FOLDER}${ext.toLowerCase()}.png`;
@@ -10,11 +9,11 @@ const getDefaultFileTypeIconUrl = () => `${ICON_TYPE_FOLDER}unknown.svg`;
 
 class nsStore{
     
-    TIMEOUT = 10000;
+    TIMEOUT = 60000;
     INTERVAL = 10;
 
     constructor(app){
-        this.app =app;
+        this.app = app;
     }
 
     get PREVIEW_SIZE() {
@@ -78,9 +77,9 @@ class nsStore{
         resultsSet.error.push({id: upload.id, result});
     }
 
-    async onFilesAdded(store, files) {       
+    async onFilesAdded(store, filesToUpload, { files, selected, uploads }) {       
         const resultsSet = this.createResultsSet();
-        for (let file of files) {
+        for (let file of filesToUpload) {
             let preview = await this.getPreview(file);
             file.id = `fid_` + Math.random();
             let upload = {
@@ -91,7 +90,7 @@ class nsStore{
                 size: file.size,
                 type: file.type,
             };            
-            this.addToUploads(store, upload, resultsSet.id);
+            this.addToUploads(store, upload, resultsSet.id, uploads);
         }
         return this.createResultsPromise(resultsSet);
     }
@@ -185,17 +184,17 @@ class nsStore{
         }
     }
 
-    addToUploads( storeName, upload, resultsSetId) {        
-        this.uploadFile( storeName, upload, resultsSetId).catch((e)=>notCommon.report(e));
-        FileStores.get(storeName).uploads.update((val) => {
-            val.push(upload);
-            this.notFinished.push(upload.id);
-            this.addUploadToSet(resultsSetId, upload);
-            return val;
-        });
+    addToUploads( storeName, upload, resultsSetId,uploads) {        
+        this.uploadFile( storeName, upload, resultsSetId, uploads).catch((e)=>notCommon.report(e));        
+        uploads.push(upload);
+        uploads = uploads;
+
+        this.notFinished.push(upload.id);
+        this.addUploadToSet(resultsSetId, upload);
+        
     }
     
-    uploadFile(storeName, upload, resultsSetId) {
+    uploadFile(storeName, upload, resultsSetId, uploads) {
         let reqOpts = {
             store: storeName,            
         };
@@ -206,25 +205,23 @@ class nsStore{
             }else{
                 this.addUploadToErrorSet(resultsSetId, upload, data.message);
             }
-            this.uploadFinished(upload, storeName);
+            this.uploadFinished(upload, uploads);
         });
     }
 
-    uploadFinished(upload, storeName) {
-        FileStores.get(storeName).uploads.update((val) => {
-            let toRemove;
-            val.forEach((item) => {
-                if (item.id === upload.id) {
-                    upload.uploaded = true;
-                    toRemove = upload;
-                }
-            });
-            if (toRemove) {
-                val.splice(val.indexOf(toRemove), 1);
-                this.notFinished.splice(this.notFinished.indexOf(toRemove.id), 1);
+    uploadFinished(upload, uploads) {
+        let toRemove;
+        uploads.forEach((item) => {
+            if (item.id === upload.id) {
+                upload.uploaded = true;
+                toRemove = upload;
             }
-            return val;
-        });        
+        });
+        if (toRemove) {
+            uploads.splice(uploads.indexOf(toRemove), 1);
+            this.notFinished.splice(this.notFinished.indexOf(toRemove.id), 1);
+        }
+        uploads=uploads;
     }
 
     createResultsPromise(resultsSet){
@@ -259,7 +256,7 @@ class nsStore{
 
 
     async awaitTimeout(){
-        await notCommon.wait(this.TIMEOUT/1000);
+        await notCommon.wait(this.TIMEOUT / 1000);
         throw new Error('nsStore upload timeout, '+this.TIMEOUT);
     }
 
